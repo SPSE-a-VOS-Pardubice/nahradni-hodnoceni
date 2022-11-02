@@ -25,9 +25,9 @@ class Ucitel extends DatabaseEntity {
         $ucitel = new Ucitel($database);
         $ucitel->setProperty("id",    intval($row[0]));
         $ucitel->setProperty("jmeno", $row[1]);
-        $ucitel->setProperty("prijmeni" $row[2]);
-        $ucitel->setProperty("prefix" $row[3]);
-        $ucitel->setProperty("suffix" $row[4]);
+        $ucitel->setProperty("prijmeni", $row[2]);
+        $ucitel->setProperty("prefix", $row[3]);
+        $ucitel->setProperty("suffix", $row[4]);
         return $ucitel;
     }
 

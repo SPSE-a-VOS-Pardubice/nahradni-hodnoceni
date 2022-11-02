@@ -9,7 +9,7 @@ class Student extends DatabaseEntity {
     private string $jmeno;
     private string $primeni;
 
-    protected function setProrerty(string $key, $value): void {
+    protected function setProperty(string $key, $value): void {
         $this->$key = $value;
     }
 
