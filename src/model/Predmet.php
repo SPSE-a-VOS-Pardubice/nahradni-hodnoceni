@@ -30,7 +30,7 @@
         
 
         public function write(): void {
-            $parameters [
+            $parameters = [
                 new DatabaseParameter("id",     $this->id),
                 new DatabaseParameter("nazev",  $this->nazev),
                 new DatabaseParameter("zkratka", $this->zkratka)
@@ -81,4 +81,4 @@
             ]);
 
     }
-?>
+}
