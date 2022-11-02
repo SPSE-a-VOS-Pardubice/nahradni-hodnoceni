@@ -34,7 +34,7 @@ class Trida extends DatabaseEntity {
         $parameters = [
             new DatabaseParameter("id",     $this->id),
             new DatabaseParameter("rocnik",  $this->rocnik),
-            new DatabaseParameter("oznaceni",  $this->oznaceni)
+            new DatabaseParameter("oznaceni",  $this->oznaceni),
             new DatabaseParameter("tridni_ucitel_id",  $this->tridni_ucitel_id)
         ];
 
