@@ -63,6 +63,7 @@ class Student extends DatabaseEntity {
             DELETE FROM studenti
             WHERE
                 id = :id
+            LIMIT 1
         ", [
             new DatabaseParameter("id", $this->id)
         ]);
