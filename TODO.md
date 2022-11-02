@@ -2,6 +2,7 @@
 
 - [x] Vytvorit TODO
 - [ ] Pridat composer.json
+- [ ] Pripravit se na Vecka
 
 # DATABASE TODO
 - [x] Pridat autoincrement vsem id v databazi
