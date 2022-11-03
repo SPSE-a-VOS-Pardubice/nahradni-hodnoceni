@@ -75,7 +75,7 @@ class Trida extends DatabaseEntity {
         ]);
     }
     
-    static public function get(Database $database, string $id): trida {
+    static public function get(Database $database, string $id): Trida {
         $row = $database->fetchSingle("
             SELECT
                 *
@@ -88,6 +88,6 @@ class Trida extends DatabaseEntity {
 
         // TODO: Check empty result
 
-        return Priznak::fromDatabaseRow($database, $row);
+        return Trida::fromDatabaseRow($database, $row);
     }
 }

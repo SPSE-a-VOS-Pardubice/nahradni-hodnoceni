@@ -82,6 +82,6 @@ class Student extends DatabaseEntity {
 
         // TODO: Check empty result
 
-        return Priznak::fromDatabaseRow($database, $row);
+        return Student::fromDatabaseRow($database, $row);
     }
 }
