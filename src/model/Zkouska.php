@@ -14,7 +14,7 @@ class Zkouska extends DatabaseEntity {
     private time $cas_konani;
     private date $den_konani;
 
-    protected function setProrerty(string $key, $value): void {
+    protected function setProperty(string $key, $value): void {
         $this->$key = $value;
     }
 
