@@ -80,5 +80,7 @@
                 new DatabaseParameter("id", $id)
             ]);
 
+        }
     }
+
 ?>
