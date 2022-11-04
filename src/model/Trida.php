@@ -10,7 +10,7 @@ class Trida extends DatabaseEntity {
     private string $oznaceni;
     private int $tridni_ucitel_id;
 
-    protected function setProrerty(string $key, $value): void {
+    protected function setProperty(string $key, $value): void {
         $this->$key = $value;
     }
 
@@ -75,7 +75,7 @@ class Trida extends DatabaseEntity {
         ]);
     }
     
-    static public function get(Database $database, string $id): trida {
+    static public function get(Database $database, string $id): Trida {
         $row = $database->fetchSingle("
             SELECT
                 *
@@ -88,6 +88,6 @@ class Trida extends DatabaseEntity {
 
         // TODO: Check empty result
 
-        return Priznak::fromDatabaseRow($database, $row);
+        return Trida::fromDatabaseRow($database, $row);
     }
 }
