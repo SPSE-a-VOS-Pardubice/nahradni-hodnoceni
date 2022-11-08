@@ -75,6 +75,7 @@ class Ucitel extends DatabaseEntity {
             DELETE FROM ucitele
             WHERE
                 id = :id
+                LIMIT 1
         ", [
             new DatabaseParameter("id", $this->id)
         ]);
