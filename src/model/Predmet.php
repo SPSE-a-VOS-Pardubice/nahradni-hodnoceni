@@ -80,6 +80,8 @@
                 new DatabaseParameter("id", $id)
             ]);
 
+            return Predmet::fromDatabaseRow($database, $row);
+            
         }
     }
 ?>
