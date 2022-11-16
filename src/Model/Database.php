@@ -30,7 +30,7 @@ class Database {
     }
 
     public function check(): void {
-        
+
     }
 
     public function execute(string $query, array $params = []): void {

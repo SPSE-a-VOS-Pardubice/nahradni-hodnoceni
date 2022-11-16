@@ -1,0 +1,26 @@
+{
+    "name": "spse/nahradni-hodnoceni",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Spse\\NahradniHodnoceni\\": "src/"
+        }
+    },
+    "require": {
+        "slim/slim": "4.*",
+        "httpsoft/http-message": "1.*",
+        "httpsoft/http-server-request": "1.*",
+        "php-di/slim-bridge": "3.*",
+        "phpoffice/phpspreadsheet": "^1.25"
+    },
+    "require-dev": {
+        "phpcompatibility/php-compatibility": "9.*"
+    },
+    "scripts": {
+        "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+        "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+
+        "check"             : "./vendor/bin/phpcs . -p --standard=PHPCompatibility --runtime-set testVersion 7.4- --ignore=dev/*,vendor/*",
+        "check-dependencies": "./vendor/bin/phpcs . -p --standard=PHPCompatibility --runtime-set testVersion 7.4- --ignore=dev/*,public/*,src/*,vendor/phpcompatibility/*,vendor/squizlabs/*"
+    }
+}
