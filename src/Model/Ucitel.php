@@ -96,4 +96,17 @@ class Ucitel extends DatabaseEntity {
 
         return Ucitel::fromDatabaseRow($database, $row);
     }
+    static public function getAll(Database $database): array {
+        $rows = $database->fetchMultiple("
+            SELECT
+                *
+            FROM ucitele
+        ");
+
+        // TODO: Check empty result
+
+        return array_map(function (array $row) use($database){
+            Ucitel::fromDatabaseRow($database, $row);
+        }, $rows);
+    }
 }
