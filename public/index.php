@@ -17,7 +17,7 @@ use Slim\Routing\RouteCollectorProxy;
 $container = new Container();
 
 $container->set("config", $config);
-$container->set("messages", $messages);
+$container->set("messages", []);
 
 $container->set("database", function () use ($config) {
     return new Database(

@@ -10,7 +10,7 @@ abstract class DatabaseEntity {
     /**
      * ID is the only required parameter for a database entity.
      */
-    abstract protected $id;
+    protected int $id;
 
     public function __construct(Database $database) {
         $this->database = $database;
