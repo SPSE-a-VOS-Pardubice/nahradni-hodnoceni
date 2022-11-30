@@ -81,4 +81,16 @@ class Priznak extends DatabaseEntity {
 
         return Priznak::fromDatabaseRow($database, $row);
     }
+
+    static public function getAll(Database $database): array {
+        $rows = $database->fetchMultiple("
+            SELECT
+                *
+            FROM priznaky
+        ");
+
+        return array_map(function (array $row) use($database) {
+            return Priznak::fromDatabaseRow($database, $row);
+        }, $rows);
+    }
 }

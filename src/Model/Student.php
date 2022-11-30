@@ -88,4 +88,16 @@ class Student extends DatabaseEntity {
 
         return Student::fromDatabaseRow($database, $row);
     }
+
+    static public function getAll(Database $database): array {
+        $rows = $database->fetchMultiple("
+            SELECT
+                *
+            FROM studenti
+        ");
+
+        return array_map(function (array $row) use($database) {
+            return Student::fromDatabaseRow($database, $row);
+        }, $rows);
+    }
 }
