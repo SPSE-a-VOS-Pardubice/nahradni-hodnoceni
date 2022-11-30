@@ -11,6 +11,10 @@ class Ucitel extends DatabaseEntity {
     private string $prefix;
     private string $suffix;
 
+    public function getProperty(string $key){
+        return $this->$key;
+    }
+
     protected function setProperty(string $key, $value): void {
         $this->$key = $value;
     }

@@ -9,6 +9,10 @@ class Student extends DatabaseEntity {
     private string $jmeno;
     private string $primeni;
 
+    public function getProperty(string $key){
+        return $this->$key;
+    }
+
     protected function setProperty(string $key, $value): void {
         $this->$key = $value;
     }

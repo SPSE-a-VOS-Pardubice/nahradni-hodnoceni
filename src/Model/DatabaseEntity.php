@@ -23,10 +23,16 @@ abstract class DatabaseEntity {
         $this->setProperty($name, $value);
     }
 
+    public function __get(string $name){
+        return $this->getProperty($name);
+    }
+
     /**
      * Internal method for handling all database `set` calls.
      */
     abstract protected function setProperty(string $key, $value): void;
+
+    abstract protected function getProperty(string $key);
 
     /**
      * Construct a single instance from given database row.

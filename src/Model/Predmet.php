@@ -10,9 +10,18 @@
         private string $nazev;
         private string $zkratka;
 
+        protected function getProperty(string $key){
+            return $this->$key;
+        }
+
         protected function setProperty(string $key, $value): void {
             $this->$key = $value;
         }
+
+        public static function getProperties(): array{
+            return ["id"=>"ID", "nazev"=>"Název", "zkratka"=> "Zkratka"];
+        }
+
 
         public static function fromDatabaseRow(Database $database, array $row, ) {
             // Zkontroluj délku dané řady.
@@ -96,6 +105,6 @@
             return array_map(function (array $row) use($database) {
                 return Predmet::fromDatabaseRow($database, $row);
             }, $rows);
-            }
+        }
     }
 ?>

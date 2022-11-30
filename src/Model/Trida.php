@@ -10,6 +10,10 @@ class Trida extends DatabaseEntity {
     private string $oznaceni;
     private int $tridni_ucitel_id;
 
+    public function getProperty(string $key){
+        return $this->$key;
+    }
+
     protected function setProperty(string $key, $value): void {
         $this->$key = $value;
     }

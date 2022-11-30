@@ -12,6 +12,7 @@ use Spse\NahradniHodnoceni\View;
 use DI\Container;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
+use Spse\NahradniHodnoceni\Controller\TableController;
 
 // Sestav kontejner.
 $container = new Container();
@@ -49,6 +50,7 @@ $app = AppFactory::create(null, $container);
 $app->group("", function (RouteCollectorProxy $group) {
     // Domovská stránka:
     $group->get("/", [HomeController::class, "home"]);
+    $group->get("/table/{name}", [TableController::class, "show"]);
 
     // Správa uživatele:
     $group->get("/import/menu", [ImportController::class, "menu"]);

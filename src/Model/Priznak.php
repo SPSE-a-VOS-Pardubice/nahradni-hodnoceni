@@ -8,6 +8,10 @@ class Priznak extends DatabaseEntity {
     protected int $id = 0;
     private string $nazev;
 
+    public function getProperty(string $key){
+        return $this->$key;
+    }
+
     protected function setProperty(string $key, $value): void {
         $this->$key = $value;
     }
