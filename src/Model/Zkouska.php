@@ -114,4 +114,16 @@ class Zkouska extends DatabaseEntity {
 
         return Zkouska::fromDatabaseRow($database, $row);
     }
+
+    static public function getAll(Database $database): array {
+        $rows = $database->fetchMultiple("
+            SELECT
+                *
+            FROM zkousky
+        ");
+
+        return array_map(function (array $row) use($database) {
+            return Zkouska::fromDatabaseRow($database, $row);
+        }, $rows);
+    }
 }

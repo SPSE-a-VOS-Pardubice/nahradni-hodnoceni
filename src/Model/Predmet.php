@@ -91,11 +91,9 @@
                 FROM predmety
             ");
 
-            
-
             return array_map(function (array $row) use($database) {
                 return Predmet::fromDatabaseRow($database, $row);
             }, $rows);
-            }
+        }
     }
 ?>

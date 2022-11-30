@@ -90,4 +90,16 @@ class Trida extends DatabaseEntity {
 
         return Trida::fromDatabaseRow($database, $row);
     }
+
+    static public function getAll(Database $database): array {
+        $rows = $database->fetchMultiple("
+            SELECT
+                *
+            FROM tridy
+        ");
+
+        return array_map(function (array $row) use($database) {
+            return Trida::fromDatabaseRow($database, $row);
+        }, $rows);
+    }
 }
