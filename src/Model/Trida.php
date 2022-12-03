@@ -18,6 +18,10 @@ class Trida extends DatabaseEntity {
         $this->$key = $value;
     }
 
+    public static function getProperties(): array{
+        return ["id"=>"ID", "rocnik"=>"Ročník", "oznaceni"=>"Označení", "tridni_ucitel_id"=>"ID třídního učitele"];
+    }
+
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
         if (count($row) !== 4) {

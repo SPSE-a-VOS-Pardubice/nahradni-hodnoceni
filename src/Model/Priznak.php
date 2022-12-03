@@ -16,6 +16,10 @@ class Priznak extends DatabaseEntity {
         $this->$key = $value;
     }
 
+    public static function getProperties(): array{
+        return ["id"=>"ID", "nazev"=>"Název"];
+    }
+
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
         if (count($row) !== 2) {
@@ -58,7 +62,7 @@ class Priznak extends DatabaseEntity {
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM priznaku
+            DELETE FROM priznaky
             WHERE
                 id = :id
         ", [

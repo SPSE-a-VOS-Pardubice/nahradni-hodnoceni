@@ -17,6 +17,10 @@ class Student extends DatabaseEntity {
         $this->$key = $value;
     }
 
+    public static function getProperties(): array{
+        return ["id"=>"ID", "jmeno"=>"Jméno", "primeni"=>"Příjmení"];
+    }
+
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
         if (count($row) !== 3) {

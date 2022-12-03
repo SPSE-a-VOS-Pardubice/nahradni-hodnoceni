@@ -22,6 +22,11 @@ class Zkouska extends DatabaseEntity {
         $this->$key = $value;
     }
 
+    public static function getProperties(): array{
+        return ["id"=>"ID", "student_id"=>"ID strudenta", "zkratka"=>"Zkratka", "predmet_id"=>"ID předmětu", "ucebna_id"=>"ID učebny", 
+        "puvodni_znamka"=>"Původní známka", "vyslednaZnamka"=>"Výsledná známka", "cas_konani"=>"Čas konání", "den_konani"=>"Den konání"];
+    }
+
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
         if (count($row) !== 8) {

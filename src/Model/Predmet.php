@@ -19,7 +19,7 @@
         }
 
         public static function getProperties(): array{
-            return ["id"=>"ID", "nazev"=>"Název", "zkratka"=> "Zkratka"];
+            return ["id"=>"ID", "nazev"=>"Název", "zkratka"=>"Zkratka"];
         }
 
 

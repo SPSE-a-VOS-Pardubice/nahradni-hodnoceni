@@ -17,6 +17,10 @@
             $this->$key = $value;
         }
 
+        public static function getProperties(): array{
+            return ["id"=>"ID", "oznaceni"=>"Označení"];
+        }
+
         public static function fromDatabaseRow(Database $database, array $row) {
             if (count($row) !== 3) {
                 throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");

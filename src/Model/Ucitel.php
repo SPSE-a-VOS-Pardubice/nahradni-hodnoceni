@@ -19,6 +19,10 @@ class Ucitel extends DatabaseEntity {
         $this->$key = $value;
     }
 
+    public static function getProperties(): array{
+        return ["id"=>"ID", "jmeno"=>"Jméno", "prijmeni"=>"Příjmení", "prefix"=>"Prefix", "suffix"=>"Suffix"];
+    }
+
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
         if (count($row) !== 5) {
