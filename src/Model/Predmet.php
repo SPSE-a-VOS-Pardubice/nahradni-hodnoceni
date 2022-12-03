@@ -23,7 +23,7 @@
         }
 
 
-        public static function fromDatabaseRow(Database $database, array $row, ) {
+        public static function fromDatabaseRow(Database $database, array $row) {
             // Zkontroluj délku dané řady.
             if (count($row) !== 3) {
                 throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
