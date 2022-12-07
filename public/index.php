@@ -13,6 +13,7 @@ use DI\Container;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Spse\NahradniHodnoceni\Controller\TableController;
+use Spse\NahradniHodnoceni\Controller\FormController;
 
 // Sestav kontejner.
 $container = new Container();
@@ -51,6 +52,9 @@ $app->group("", function (RouteCollectorProxy $group) {
     // Domovská stránka:
     $group->get("/", [HomeController::class, "home"]);
     $group->get("/table/{name}", [TableController::class, "show"]);
+
+    $group->get("/table/{name}/{id}", [FormController::class, "show"]);
+    $group->post("/table/{name}/{id}", [FormController::class, "post"]);
 
     // Správa uživatele:
     $group->get("/import/menu", [ImportController::class, "menu"]);
