@@ -18,6 +18,8 @@ const tableMap = [
     "ucebny" => "Ucebna"
 ];
 
+const tables = ["predmety", "studenti", "tridy", "zkousky", "ucitele", "priznaky", "ucebny"];
+
 class TableController extends AbstractController {
     public function show(Request $request, Response $response, array $args): Response {
         /** @var View */
@@ -32,10 +34,16 @@ class TableController extends AbstractController {
         }
         $model = modelNamespace . tableMap[$name];
 
+        $tableRoute = "/table/" . $args["name"] . "/";
+
+
+
         // Vyrenderuj webovou stránku.
         return $view->renderResponse($request, $response, "/table.php", [
             "items" => $model::getAll($database),
             "header" => $model::getProperties(),
+            "path" => $tableRoute,
+            "list" => tables
         ]);
     }
 }
