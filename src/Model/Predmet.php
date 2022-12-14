@@ -19,7 +19,11 @@
         }
 
         public static function getProperties(): array{
-            return ["id"=>"ID", "nazev"=>"Název", "zkratka"=>"Zkratka"];
+            return [
+                ["propertyName" => "id", "name" => "ID", "type" => gettype(0)],
+                ["propertyName" => "nazev", "name" => "Název", "type" => gettype("")], 
+                ["propertyName" => "zkratka", "name" => "Zkratka", "type" => gettype("")]
+            ];
         }
 
 

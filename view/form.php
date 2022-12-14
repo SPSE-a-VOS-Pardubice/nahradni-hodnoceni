@@ -22,25 +22,29 @@ use Spse\NahradniHodnoceni\Model\Predmet;
     </h1>
     
     <form action="<?= $args["data"]["path"] ?>" method="post">
-        <?php foreach ($args["data"]["header"] as $key => $nazev): ?>
-            <?php if ($key !== "id") { ?>
+        <?php foreach ($args["data"]["schema"] as $vlastnost): ?>
+            <?php if ($vlastnost["propertyName"] !== "id"): ?>
                 <div>
-                    <label for="<?= $key ?>">
-                    <?= $nazev ?>
+                    
+                    <label for="<?= $vlastnost["propertyName"] ?>">
+                    <?= $vlastnost["name"] ?>
                     </label>
+                    
                     <br>
-                
-                    <?php if (gettype($args["data"]["item"]->$key) === gettype([])) { ?>
-                        <select name="<?= $key ?>">
-                            <?php foreach ($args["data"]["item"]->$key as $val): ?>
+
+                    <?php if ($vlastnost["type"] === gettype([])):?>
+                        <select name="<?= $vlastnost["propertyName"] ?>">
+                        <!-- TODO
+                            <?php foreach ($args["data"]["item"]->$vlastnost["propertyName"] as $val): ?>
                             <option value="<?= $val?>">
                                 <?= $val?>
                             </option>
                             <?php endforeach; ?>
+                            -->
                         </select>
-                    <?php } else { ?>
-                        <input name="<?= $key ?>" value=<?= $args["data"]["item"]->$key ?> type="<?php
-                            switch (gettype($args["data"]["item"]->$key)) { 
+                    <?php  else:  ?>
+                        <input name="<?= $vlastnost["propertyName"] ?>" value="<?= $args["data"]["item"]!== null?   $args["data"]["item"]->{$vlastnost["propertyName"]}: "" ?>" type="<?php
+                            switch ($vlastnost["type"]) { 
                                 case "boolean":
                                     echo "checkbox";
                                     break;  
@@ -49,15 +53,16 @@ use Spse\NahradniHodnoceni\Model\Predmet;
                                     echo "number";
                                 break;
                                 case "string":
-                                    echo "string";
+                                    echo "text";
                                     break;
+                                }
                             ?>">
-                            <?php } ?>
-                    <?php } ?>
+                    <?php endif; ?>
 
                     <br>
-                </div>
-            <?php } ?>
+                 </div>
+               
+            <?php endif; ?>
         <?php endforeach; ?>
 
         <input type="submit" value="Submit">

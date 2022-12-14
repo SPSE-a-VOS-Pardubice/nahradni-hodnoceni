@@ -43,8 +43,8 @@ class FormController extends AbstractController
             $path = "/tables/" . $args["name"] . "/new"; 
             
             return $view->renderResponse($request, $response, "/form.php", [
-                "item" => new $model($database),
-                "header" => $model::getProperties(),
+                "item" => null,
+                "schema" => $model::getProperties(),
                 "type" => tableMap[$name],
                 "path" => $path,
             ]);
@@ -55,7 +55,7 @@ class FormController extends AbstractController
             if ($item != null) {
                 return $view->renderResponse($request, $response, "/form.php", [
                     "item" => $item,
-                    "header" => $model::getProperties(),
+                    "schema" => $model::getProperties(),
                     "type" => tableMap[$name],
                     "path" => $path, 
                 ]);

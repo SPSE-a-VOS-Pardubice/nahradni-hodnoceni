@@ -20,18 +20,18 @@ use Spse\NahradniHodnoceni\Model\Predmet;
 
     <table>
         <tr>
-            <?php foreach ($args["data"]["header"] as $nazev): ?>
+            <?php foreach ($args["data"]["schema"] as $vlastnost): ?>
             <th>
-                <?= $nazev; ?>
+                <?= $vlastnost["name"] ?>
             </th>
             <?php endforeach; ?>
         </tr>
         <?php foreach ($args["data"]["items"] as $predmet): ?>
         <tr>
-            <?php foreach ($args["data"]["header"]  as $key => $nazev): ?>
+            <?php foreach ($args["data"]["schema"]  as $vlastnost): ?>
             <td>
                 <a href="<?= $args["data"]["path"] . $predmet->id ?>">
-                    <?= $predmet->$key ?>
+                    <?= $predmet->{$vlastnost["propertyName"]} ?>
                 </a>
             </td>
             <?php endforeach; ?>

@@ -40,7 +40,7 @@ class TableController extends AbstractController {
         // Vyrenderuj webovou stránku.
         return $view->renderResponse($request, $response, "/table.php", [
             "items" => $model::getAll($database),
-            "header" => $model::getProperties(),
+            "schema" => $model::getProperties(),
             "path" => $tableRoute,
             "list" => tables
         ]);

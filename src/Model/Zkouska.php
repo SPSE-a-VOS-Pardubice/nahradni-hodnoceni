@@ -23,9 +23,27 @@ class Zkouska extends DatabaseEntity {
     }
 
     public static function getProperties(): array{
-        return ["id"=>"ID", "student_id"=>"ID strudenta", "zkratka"=>"Zkratka", "predmet_id"=>"ID předmětu", "ucebna_id"=>"ID učebny", 
-        "puvodni_znamka"=>"Původní známka", "vyslednaZnamka"=>"Výsledná známka", "cas_konani"=>"Čas konání", "den_konani"=>"Den konání"];
+        return [
+            ["propertyName" => "id", "name" => "ID", "type" => gettype(0)],
+            ["propertyName" => "student_id", "name" => "ID studenta", "type" => gettype(0)],
+            ["propertyName" => "predmet_id", "name" => "ID předmětu", "type" => gettype([])],
+            ["propertyName" => "ucebna_id", "name" => "ID učebny", "type" => gettype(0)],
+            ["propertyName" => "puvodni_znamka", "name" => "Původní známka", "type" => gettype("")], 
+            ["propertyName" => "vysledna_znamka", "name" => "Výsledná známka", "type" => gettype("")], 
+            ["propertyName" => "cas_konani", "name" => "Čas konání", "type" => gettype("")], 
+            ["propertyName" => "den_konani", "name" => "Den konání", "type" => gettype("")], 
+            ["propertyName" => "zkratka", "name" => "Zkratka", "type" => gettype("")]
+        ];
     }
+    // TODO doděláme příště, nesmíme zapomenout, velice důležité dodělat
+    /*public static function xxx(Database $database): array {
+        return [
+            "predmet_id" => array_map(function (Predmet $p) {
+
+            })[Predmet::getAll($database)],
+            "vysledna_znamka" => ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"],
+        ];
+    }*/
 
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
