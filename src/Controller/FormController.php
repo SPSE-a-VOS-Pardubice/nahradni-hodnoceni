@@ -67,7 +67,7 @@ class FormController extends AbstractController
         }
     }
 
-    public function FunctionName(Request $request, Response $response, array $args): Response
+    public function post(Request $request, Response $response, array $args): Response
     {
         // TODO: 
     }

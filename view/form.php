@@ -17,16 +17,49 @@ use Spse\NahradniHodnoceni\Model\Predmet;
 
 <body>
 
-
-    <h1 for=""><?= $args["data"]["type"] ?></h1>
-    <form action="<?= $args["data"]["path"]?>" method="post">
+    <h1 for="">
+        <?= $args["data"]["type"] ?>
+    </h1>
+    
+    <form action="<?= $args["data"]["path"] ?>" method="post">
         <?php foreach ($args["data"]["header"] as $key => $nazev): ?>
-            <label for="<?= $key?>"><?= $nazev?></label>
-            <br>
-            <input name="<?= $key?>" value=<?= $args["data"]["item"]->$key?>>
-            <br>
+            <?php if ($key !== "id") { ?>
+                <div>
+                    <label for="<?= $key ?>">
+                    <?= $nazev ?>
+                    </label>
+                    <br>
+                
+                    <?php if (gettype($args["data"]["item"]->$key) === gettype([])) { ?>
+                        <select name="<?= $key ?>">
+                            <?php foreach ($args["data"]["item"]->$key as $val): ?>
+                            <option value="<?= $val?>">
+                                <?= $val?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php } else { ?>
+                        <input name="<?= $key ?>" value=<?= $args["data"]["item"]->$key ?> type="<?php
+                            switch (gettype($args["data"]["item"]->$key)) { 
+                                case "boolean":
+                                    echo "checkbox";
+                                    break;  
+                                case "double": 
+                                case "integer": 
+                                    echo "number";
+                                break;
+                                case "string":
+                                    echo "string";
+                                    break;
+                            ?>">
+                            <?php } ?>
+                    <?php } ?>
+
+                    <br>
+                </div>
+            <?php } ?>
         <?php endforeach; ?>
-            
+
         <input type="submit" value="Submit">
     </form>
 </body>
