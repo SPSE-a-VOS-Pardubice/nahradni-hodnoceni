@@ -16,6 +16,8 @@ use Spse\NahradniHodnoceni\Model\Predmet;
 </head>
 
 <body>
+    <a href="<?= $args["data"]["path"]?>new">Přidat nový</a>
+
     <table>
         <tr>
             <?php foreach ($args["data"]["header"] as $nazev): ?>
@@ -28,12 +30,19 @@ use Spse\NahradniHodnoceni\Model\Predmet;
         <tr>
             <?php foreach ($args["data"]["header"]  as $key => $nazev): ?>
             <td>
-                <?= $predmet->$key ?>
+                <a href="<?= $args["data"]["path"] . $predmet->id ?>">
+                    <?= $predmet->$key ?>
+                </a>
             </td>
             <?php endforeach; ?>
         </tr>
         <?php endforeach; ?>
     </table>
+    <?php foreach ($args["data"]["list"]  as $table): ?>
+    <a href="<?= "/table/" . $table ?>">
+        <?= $table ?>
+    </a>
+    <?php endforeach; ?>
 </body>
 
 </html>

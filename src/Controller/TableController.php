@@ -37,7 +37,6 @@ class TableController extends AbstractController {
         $tableRoute = "/table/" . $args["name"] . "/";
 
 
-
         // Vyrenderuj webovou stránku.
         return $view->renderResponse($request, $response, "/table.php", [
             "items" => $model::getAll($database),
