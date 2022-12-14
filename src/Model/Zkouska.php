@@ -36,7 +36,7 @@ class Zkouska extends DatabaseEntity {
         ];
     }
     // TODO doděláme příště, nesmíme zapomenout, velice důležité dodělat
-    /*public static function xxx(Database $database): array {
+    /*public static function getSelectOptions(Database $database): array {
         return [
             "predmet_id" => array_map(function (Predmet $p) {
 
