@@ -4,26 +4,31 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Ucitel extends DatabaseEntity {
+class Ucitel extends DatabaseEntity
+{
     protected int $id = 0;
     private string $jmeno;
     private string $prijmeni;
     private string $prefix;
     private string $suffix;
 
-    public function getProperty(string $key){
+    public function getProperty(string $key)
+    {
         return $this->$key;
     }
 
-    protected function setProperty(string $key, $value): void {
+    protected function setProperty(string $key, $value): void
+    {
         $this->$key = $value;
     }
 
-    public static function getProperties(): array{
-        return ["id"=>"ID", "jmeno"=>"Jméno", "prijmeni"=>"Příjmení", "prefix"=>"Prefix", "suffix"=>"Suffix"];
+    public static function getProperties(): array
+    {
+        return ["id" => "ID", "jmeno" => "Jméno", "prijmeni" => "Příjmení", "prefix" => "Prefix", "suffix" => "Suffix"];
     }
 
-    public static function fromDatabaseRow(Database $database, array $row) {
+    public static function fromDatabaseRow(Database $database, array $row)
+    {
         // Zkontroluj délku dané řady.
         if (count($row) !== 5) {
             throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
@@ -31,7 +36,7 @@ class Ucitel extends DatabaseEntity {
 
         // Vybuduj novou instanci a vrať ji.
         $ucitel = new Ucitel($database);
-        $ucitel->setProperty("id",    intval($row[0]));
+        $ucitel->setProperty("id", intval($row[0]));
         $ucitel->setProperty("jmeno", $row[1]);
         $ucitel->setProperty("prijmeni", $row[2]);
         $ucitel->setProperty("prefix", $row[3]);
@@ -39,11 +44,12 @@ class Ucitel extends DatabaseEntity {
         return $ucitel;
     }
 
-    public function write(): void {
+    public function write(): void
+    {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id",     $this->id),
-            new DatabaseParameter("jmeno",  $this->jmeno),
+            new DatabaseParameter("id", $this->id),
+            new DatabaseParameter("jmeno", $this->jmeno),
             new DatabaseParameter("prijmeni", $this->prijmeni),
             new DatabaseParameter("prefix", $this->prefix),
             new DatabaseParameter("suffix", $this->suffix)
@@ -78,18 +84,20 @@ class Ucitel extends DatabaseEntity {
         }
     }
 
-    public function remove(): void {
+    public function remove(): void
+    {
         $this->database->execute("
             DELETE FROM ucitele
             WHERE
                 id = :id
                 LIMIT 1
         ", [
-            new DatabaseParameter("id", $this->id)
-        ]);
+                new DatabaseParameter("id", $this->id)
+            ]);
     }
 
-    static public function get(Database $database, string $id): Ucitel {
+    static public function get(Database $database, string $id): Ucitel
+    {
         $row = $database->fetchSingle("
             SELECT
                 *
@@ -97,14 +105,15 @@ class Ucitel extends DatabaseEntity {
             WHERE
                 id = :id
         ", [
-            new DatabaseParameter("id", $id)
-        ]);
+                new DatabaseParameter("id", $id)
+            ]);
 
         // TODO: Check empty result
 
         return Ucitel::fromDatabaseRow($database, $row);
     }
-    static public function getAll(Database $database): array {
+    static public function getAll(Database $database): array
+    {
         $rows = $database->fetchMultiple("
             SELECT
                 *
@@ -113,8 +122,8 @@ class Ucitel extends DatabaseEntity {
 
         // TODO: Check empty result
 
-        return array_map(function (array $row) use($database){
-            Ucitel::fromDatabaseRow($database, $row);
+        return array_map(function (array $row) use ($database) {
+            return Ucitel::fromDatabaseRow($database, $row);
         }, $rows);
     }
 }

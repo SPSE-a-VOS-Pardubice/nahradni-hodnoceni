@@ -38,9 +38,9 @@ use Spse\NahradniHodnoceni\Model\Predmet;
         </tr>
         <?php endforeach; ?>
     </table>
-    <?php foreach ($args["data"]["list"]  as $table): ?>
-    <a href="<?= "/table/" . $table ?>">
-        <?= $table ?>
+    <?php foreach ($args["header"]["tables"]  as $key => $name): ?>
+    <a href="<?= "/table/" . $key ?>">
+        <?= $name ?>
     </a>
     <?php endforeach; ?>
 </body>
