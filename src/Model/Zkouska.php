@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
+use DateTime;
 
 class Zkouska extends DatabaseEntity {
     protected int $id = 0;
@@ -11,8 +12,7 @@ class Zkouska extends DatabaseEntity {
     private int $ucebna_id;
     private string $puvodni_znamka;
     private string $vyslednaZnamka;
-    private time $cas_konani;
-    private date $den_konani;
+    private DateTime $termin_konani;
 
     public function getProperty(string $key){
         return $this->$key;
@@ -100,7 +100,7 @@ class Zkouska extends DatabaseEntity {
             ", $parameters);
         } else {
             $this->database->execute("
-                UPDATE tridy
+                UPDATE zkousky
                 SET
                 student_id = :student_id
                 predmet_id = :predmet_id
@@ -117,7 +117,7 @@ class Zkouska extends DatabaseEntity {
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM tridy
+            DELETE FROM zkousky
             WHERE
                 id = :id
             LIMIT 1
@@ -130,7 +130,7 @@ class Zkouska extends DatabaseEntity {
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM tridy
+            FROM zkousky
             WHERE
                 id = :id
         ", [
