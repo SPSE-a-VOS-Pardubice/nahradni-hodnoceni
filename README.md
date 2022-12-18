@@ -12,7 +12,11 @@ sudo dnf install php-gd php-pecl-zip
 
 ### Závislosti
 Projekt používá [Composer](https://getcomposer.org/).
-Pro instalaci/aktualizaci závislostí musíte spustit
+Pro instalaci závislostí musíte ve složce projektu spustit
+```bash
+composer install
+```
+a pro provedení aktualizací
 ```bash
 composer update
 ```
