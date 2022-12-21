@@ -8,6 +8,8 @@ class Student extends DatabaseEntity {
     protected int $id = 0;
     private string $jmeno;
     private string $primeni;
+    // TODO: třídaid
+    private int $trida_id;
 
     public function getProperty(string $key){
         return $this->$key;
@@ -23,7 +25,7 @@ class Student extends DatabaseEntity {
 
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
-        if (count($row) !== 3) {
+        if (count($row) !== 4) {
             throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
         }
 
@@ -32,6 +34,7 @@ class Student extends DatabaseEntity {
         $student->setProperty("id",    intval($row[0]));
         $student->setProperty("jmeno", $row[1]);
         $student->setProperty("primeni", $row[2]);
+        $student->setProperty("trida_id", $row[3]);
         return $student;
     }
 
@@ -40,18 +43,21 @@ class Student extends DatabaseEntity {
         $parameters = [
             new DatabaseParameter("id",     $this->id),
             new DatabaseParameter("jmeno",  $this->jmeno),
-            new DatabaseParameter("primeni",  $this->primeni)
+            new DatabaseParameter("primeni",  $this->primeni),
+            new DatabaseParameter("trida_id",  $this->trida_id)
         ];
 
         if ($this->id === 0) {
             $this->database->execute("
                 INSERT INTO studenti (
                     jmeno,
-                    primeni
+                    primeni,
+                    trida_id
                 )
                 VALUES (
                     :jmeno,
-                    :primeni
+                    :primeni,
+                    :trida_id
                 )
             ", $parameters);
         } else {
@@ -59,7 +65,8 @@ class Student extends DatabaseEntity {
                 UPDATE studenti
                 SET
                     jmeno = :jmeno,
-                    primeni = :primeni
+                    primeni = :primeni,
+                    trida_id = :trida_id
                 WHERE
                     id = :id
             ", $parameters);
