@@ -30,13 +30,11 @@ class Zkouska extends EditableDatabaseEntity {
             ["propertyName" => "ucebna_id", "name" => "ID učebny", "type" => gettype(0)],
             ["propertyName" => "puvodni_znamka", "name" => "Původní známka", "type" => gettype("")], 
             ["propertyName" => "vysledna_znamka", "name" => "Výsledná známka", "type" => gettype("")], 
-            ["propertyName" => "cas_konani", "name" => "Čas konání", "type" => gettype("")], 
-            ["propertyName" => "den_konani", "name" => "Den konání", "type" => gettype("")], 
+            ["propertyName" => "termin_konani", "name" => "Termín konání", "type" => gettype("")], 
             ["propertyName" => "zkratka", "name" => "Zkratka", "type" => gettype("")]
         ];
     }
 
-    // TODO doděláme příště, nesmíme zapomenout, velice důležité dodělat
     public static function getSelectOptions(Database $database): array {
         return [
             "predmet_id" => array_map(function ($predmet) {
@@ -48,21 +46,20 @@ class Zkouska extends EditableDatabaseEntity {
 
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
-        if (count($row) !== 8) {
+        if (count($row) !== 7) {
             throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
         }
 
         // Vybuduj novou instanci a vrať ji.
-        $trida = new trida($database);
-        $trida->setProperty("id",    intval($row[0]));
-        $trida->setProperty("student_id", $row[1]);
-        $trida->setProperty("predmet_id", $row[2]);
-        $trida->setProperty("ucebna_id", $row[3]);
-        $trida->setProperty("puvodni_znamka", $row[4]);
-        $trida->setProperty("vyslednaZnamka", $row[5]);
-        $trida->setProperty("cas_konani", $row[6]);
-        $trida->setProperty("den_konani", $row[7]);
-        return $trida;
+        $zkouska = new Zkouska($database);
+        $zkouska->setProperty("id",    intval($row[0]));
+        $zkouska->setProperty("student_id", $row[1]);
+        $zkouska->setProperty("predmet_id", $row[2]);
+        $zkouska->setProperty("ucebna_id", $row[3]);
+        $zkouska->setProperty("puvodni_znamka", $row[4]);
+        $zkouska->setProperty("vyslednaZnamka", $row[5]);
+        $zkouska->setProperty("termin_konani", $row[6]);
+        return $zkouska;
     }
 
     public function write(): void {
@@ -74,20 +71,18 @@ class Zkouska extends EditableDatabaseEntity {
             new DatabaseParameter("ucebna_id",  $this->ucebna_id),
             new DatabaseParameter("puvodni_znamka",  $this->puvodni_znamka),
             new DatabaseParameter("vyslednaZnamka",  $this->vyslednaZnamka),
-            new DatabaseParameter("cas_konani",  $this->cas_konani),
-            new DatabaseParameter("den_konani",  $this->den_konani)
+            new DatabaseParameter("termin_konani",  $this->termin_konani),
         ];
 
         if ($this->id === 0) {
             $this->database->execute("
-                INSERT INTO tridy (
+                INSERT INTO zkousky (
                     student_id,
                     predmet_id,
                     ucebna_id,
                     puvodni_znamka,
                     vyslednaZnamka,
-                    cas_konani,
-                    den_konani
+                    termin_konani
                 )
                 VALUES (
                     :student_id,
@@ -95,8 +90,7 @@ class Zkouska extends EditableDatabaseEntity {
                     :ucebna_id,
                     :puvodni_znamka,
                     :vyslednaZnamka,
-                    :cas_konani,
-                    :den_konani
+                    :termin_konani
                 )
             ", $parameters);
         } else {
@@ -108,8 +102,7 @@ class Zkouska extends EditableDatabaseEntity {
                 ucebna_id = :ucebna_id
                 puvodni_znamka = :puvodni_znamka
                 vyslednaZnamk = :vyslednaZnamk
-                cas_konani = :cas_konani
-                den_konani = :den_konani
+                termin_konani = :termin_konani
                 WHERE
                     id = :id
             ", $parameters);
