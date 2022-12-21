@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 use DateTime;
 
-class Zkouska extends DatabaseEntity {
+class Zkouska extends EditableDatabaseEntity {
     protected int $id = 0;
     private int $student_id;
     private int $predmet_id;
@@ -35,15 +35,16 @@ class Zkouska extends DatabaseEntity {
             ["propertyName" => "zkratka", "name" => "Zkratka", "type" => gettype("")]
         ];
     }
-    // TODO doděláme příště, nesmíme zapomenout, velice důležité dodělat
-    /*public static function getSelectOptions(Database $database): array {
-        return [
-            "predmet_id" => array_map(function (Predmet $p) {
 
-            })[Predmet::getAll($database)],
+    // TODO doděláme příště, nesmíme zapomenout, velice důležité dodělat
+    public static function getSelectOptions(Database $database): array {
+        return [
+            "predmet_id" => array_map(function ($predmet) {
+                return [$predmet->id, $predmet->nazev];
+            }, Predmet::getAll($database)) ,
             "vysledna_znamka" => ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"],
         ];
-    }*/
+    }
 
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.

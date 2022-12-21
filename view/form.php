@@ -33,14 +33,15 @@ use Spse\NahradniHodnoceni\Model\Predmet;
                     <br>
 
                     <?php if ($vlastnost["type"] === gettype([])):?>
+                        
                         <select name="<?= $vlastnost["propertyName"] ?>">
-                        <!-- TODO
-                            <?php foreach ($args["data"]["item"]->$vlastnost["propertyName"] as $val): ?>
-                            <option value="<?= $val?>">
-                                <?= $val?>
-                            </option>
+                        <!-- TODO  -->
+                            <?php foreach ($args["data"]["options"][$vlastnost["propertyName"]] as $row): ?>
+                                <option value="<?= $row[0]?>">
+                                    <?= $row[1]?>
+                                </option>   
                             <?php endforeach; ?>
-                            -->
+                           
                         </select>
                     <?php  else:  ?>
                         <input name="<?= $vlastnost["propertyName"] ?>" value="<?= $args["data"]["item"]!== null?   $args["data"]["item"]->{$vlastnost["propertyName"]}: "" ?>" type="<?php
