@@ -8,7 +8,6 @@ class Student extends DatabaseEntity {
     protected int $id = 0;
     private string $jmeno;
     private string $primeni;
-    // TODO: třídaid
     private int $trida_id;
 
     public function getProperty(string $key){
