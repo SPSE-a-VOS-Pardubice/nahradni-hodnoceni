@@ -4,7 +4,7 @@
 
     namespace Spse\NahradniHodnoceni\Model;
 
-    class Ucebna extends DatabaseEntity {
+    class Ucebna extends DatabaseEntity implements EditableDatabaseEntity {
 
         protected int $id = 0;
         private string $oznaceni;
@@ -17,8 +17,24 @@
             $this->$key = $value;
         }
 
-        public static function getProperties(): array{
-            return ["id"=>"ID", "oznaceni"=>"Označení"];
+        public static function getProperties(): array {
+            return [
+                ["propertyName" => "id", "name" => "ID", "type" => gettype(0)],
+                ["propertyName" => "oznaceni", "name" => "Označení", "type" => gettype("")],
+                ["propertyName" => "priznaky", "name" => "Priznak", "type" => gettype([]), "canBeMultiple" => true]
+            ];
+        }
+
+        public static function getSelectOptions(Database $database): array {
+            $priznaky = [];
+
+            foreach(Priznak::getAll($database) as $tempTrait) {
+                $priznaky[$tempTrait->id] = $tempTrait->nazev;
+            }
+            
+            return [
+                "priznaky" => $priznaky
+            ];
         }
 
         public static function fromDatabaseRow(Database $database, array $row) {

@@ -29,7 +29,7 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
             ["propertyName" => "predmet_id", "name" => "ID předmětu", "type" => gettype([])],
             ["propertyName" => "ucebna_id", "name" => "ID učebny", "type" => gettype(0)],
             ["propertyName" => "puvodni_znamka", "name" => "Původní známka", "type" => gettype("")], 
-            ["propertyName" => "vysledna_znamka", "name" => "Výsledná známka", "type" => gettype("")], 
+            ["propertyName" => "vysledna_znamka", "name" => "Výsledná známka", "type" => gettype([])], 
             ["propertyName" => "termin_konani", "name" => "Termín konání", "type" => gettype("")], 
             ["propertyName" => "zkratka", "name" => "Zkratka", "type" => gettype("")]
         ];
