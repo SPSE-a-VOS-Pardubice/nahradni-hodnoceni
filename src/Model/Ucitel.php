@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Ucitel extends DatabaseEntity
+class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
 {
     protected int $id = 0;
     private string $jmeno;

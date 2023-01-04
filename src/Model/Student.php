@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Student extends DatabaseEntity {
+class Student extends DatabaseEntity implements EditableDatabaseEntity {
     protected int $id = 0;
     private string $jmeno;
-    private string $primeni;
+    private string $prijmeni;
     private int $trida_id;
 
     public function getProperty(string $key){
@@ -22,6 +22,11 @@ class Student extends DatabaseEntity {
         return ["id"=>"ID", "jmeno"=>"Jméno", "primeni"=>"Příjmení"];
     }
 
+    public static function getSelectOptions(Database $database): array {
+        //TODO: dodělat metodu
+        return [];
+    }
+
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
         if (count($row) !== 4) {
@@ -32,7 +37,7 @@ class Student extends DatabaseEntity {
         $student = new Student($database);
         $student->setProperty("id",    intval($row[0]));
         $student->setProperty("jmeno", $row[1]);
-        $student->setProperty("primeni", $row[2]);
+        $student->setProperty("prijmeni", $row[2]);
         $student->setProperty("trida_id", $row[3]);
         return $student;
     }
@@ -42,7 +47,7 @@ class Student extends DatabaseEntity {
         $parameters = [
             new DatabaseParameter("id",     $this->id),
             new DatabaseParameter("jmeno",  $this->jmeno),
-            new DatabaseParameter("primeni",  $this->primeni),
+            new DatabaseParameter("prijmeni",  $this->primeni),
             new DatabaseParameter("trida_id",  $this->trida_id)
         ];
 
@@ -50,12 +55,12 @@ class Student extends DatabaseEntity {
             $this->database->execute("
                 INSERT INTO studenti (
                     jmeno,
-                    primeni,
+                    prijmeni,
                     trida_id
                 )
                 VALUES (
                     :jmeno,
-                    :primeni,
+                    :prijmeni,
                     :trida_id
                 )
             ", $parameters);
@@ -64,7 +69,7 @@ class Student extends DatabaseEntity {
                 UPDATE studenti
                 SET
                     jmeno = :jmeno,
-                    primeni = :primeni,
+                    prijmeni = :prijmeni,
                     trida_id = :trida_id
                 WHERE
                     id = :id

@@ -39,8 +39,8 @@ class FormController extends AbstractController
   
 
 
-        if (preg_match("/^new$/", $id)) { // je nový
-            $path = "/tables/" . $args["name"] . "/new"; 
+        if ($id == "new") { // je nový
+            $path = "/table/" . $args["name"] . "/new"; 
             
             return $view->renderResponse($request, $response, "/form.php", [
                 "item" => null,
@@ -51,14 +51,15 @@ class FormController extends AbstractController
             ]);
         } else if (preg_match("/^\d+$/", $id)) { // je id
             $item = $model::get($database, $id);
-            $path = "/tables/" . $args["name"] . "/" . $id; 
+            $path = "/table/" . $args["name"] . "/" . $id; 
 
             if ($item != null) {
                 return $view->renderResponse($request, $response, "/form.php", [
                     "item" => $item,
                     "schema" => $model::getProperties(),
                     "type" => tableMap[$name],
-                    "path" => $path, 
+                    "path" => $path,
+                    "options" => $model::getSelectOptions($database)
                 ]);
             } else {
                 return $view->renderResponse($request, $response, "/error.php", []);
@@ -71,5 +72,7 @@ class FormController extends AbstractController
     public function post(Request $request, Response $response, array $args): Response
     {
         // TODO: 
+        $parsedBody = $request->getParsedBody();
+        var_dump($parsedBody);
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Trida extends DatabaseEntity {
+class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
     protected int $id = 0;
     private int $rocnik;
     private string $oznaceni;

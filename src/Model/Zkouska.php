@@ -11,7 +11,7 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
     private int $predmet_id;
     private int $ucebna_id;
     private string $puvodni_znamka;
-    private string $vyslednaZnamka;
+    private string $vysledna_znamka;
     private DateTime $termin_konani;
 
     public function getProperty(string $key){
@@ -25,27 +25,36 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
     public static function getProperties(): array{
         return [
             ["propertyName" => "id", "name" => "ID", "type" => gettype(0)],
-            ["propertyName" => "student_id", "name" => "ID studenta", "type" => gettype(0)],
-            ["propertyName" => "predmet_id", "name" => "ID předmětu", "type" => gettype([])],
-            ["propertyName" => "ucebna_id", "name" => "ID učebny", "type" => gettype(0)],
+            ["propertyName" => "student_id", "name" => "Student", "type" => gettype([])],
+            ["propertyName" => "predmet_id", "name" => "Předmět", "type" => gettype([])],
+            ["propertyName" => "ucebna_id", "name" => "Učebna", "type" => gettype([])],
             ["propertyName" => "puvodni_znamka", "name" => "Původní známka", "type" => gettype("")], 
-            ["propertyName" => "vysledna_znamka", "name" => "Výsledná známka", "type" => gettype([])], 
-            ["propertyName" => "termin_konani", "name" => "Termín konání", "type" => gettype("")], 
-            ["propertyName" => "zkratka", "name" => "Zkratka", "type" => gettype("")]
+            ["propertyName" => "vysledna_znamka", "name" => "Výsledná známka", "type" => gettype("")], 
+            ["propertyName" => "termin_konani", "name" => "Termín konání", "type" => "datetime"]
         ];
     }
 
     public static function getSelectOptions(Database $database): array {
 
         $predmet_ids = [];
+        $student_ids = [];
+        $ucebna_ids = [];
 
         foreach (Predmet::getAll($database) as $tempPredmet) {
             $predmet_ids[$tempPredmet->id] = $tempPredmet->nazev; 
+        }
+        foreach (Student::getAll($database) as $tempStudent) {
+            $student_ids[$tempStudent->id] = sprintf("%s %s", $tempStudent->prijmeni, $tempStudent->jmeno); 
+        }
+        foreach (Ucebna::getAll($database) as $tempUcebna) {
+            $ucebna_ids[$tempUcebna->id] = $tempUcebna->oznaceni; 
         }
 
         return [
             "predmet_id" => $predmet_ids,
             "vysledna_znamka" => ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"],
+            "student_id" => $student_ids,
+            "ucebna_id" => $ucebna_ids
         ];
     }
 
@@ -62,8 +71,8 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
         $zkouska->setProperty("predmet_id", $row[2]);
         $zkouska->setProperty("ucebna_id", $row[3]);
         $zkouska->setProperty("puvodni_znamka", $row[4]);
-        $zkouska->setProperty("vyslednaZnamka", $row[5]);
-        $zkouska->setProperty("termin_konani", $row[6]);
+        $zkouska->setProperty("vysledna_znamka", $row[5]);
+        $zkouska->setProperty("termin_konani", new DateTime($row[6]));
         return $zkouska;
     }
 

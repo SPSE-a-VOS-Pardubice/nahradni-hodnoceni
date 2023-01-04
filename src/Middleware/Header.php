@@ -6,7 +6,7 @@ namespace Spse\NahradniHodnoceni\Middleware;
 
 use Psr\Container\ContainerInterface as Container;
 use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as Request};
-use \Slim\Handlers\Strategies\RequestHandler as RequestHandler;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 const tables = [
     "predmety" => "Predmety",

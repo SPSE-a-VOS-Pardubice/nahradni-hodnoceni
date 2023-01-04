@@ -4,7 +4,7 @@
 
     namespace Spse\NahradniHodnoceni\Model;
 
-    class Predmet extends DatabaseEntity {
+    class Predmet extends DatabaseEntity implements EditableDatabaseEntity {
 
         protected int $id = 0;
         private string $nazev;
@@ -24,6 +24,10 @@
                 ["propertyName" => "nazev", "name" => "Název", "type" => gettype("")], 
                 ["propertyName" => "zkratka", "name" => "Zkratka", "type" => gettype("")]
             ];
+        }
+
+        public static function getSelectOptions(Database $database): array {
+            return [];
         }
 
 

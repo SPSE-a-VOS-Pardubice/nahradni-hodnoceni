@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Spse\NahradniHodnoceni\Model\Predmet;
+use Vtiful\Kernel\Format;
 
 ?>
 <!DOCTYPE html>
@@ -31,7 +32,7 @@ use Spse\NahradniHodnoceni\Model\Predmet;
             <?php foreach ($args["data"]["schema"]  as $vlastnost): ?>
             <td>
                 <a href="<?= $args["data"]["path"] . $predmet->id ?>">
-                    <?= $predmet->{$vlastnost["propertyName"]} ?>
+                    <?= $vlastnost["type"] == "datetime" ? $predmet->{$vlastnost["propertyName"]}->format("j. n. Y") : $predmet->{$vlastnost["propertyName"]} ?>
                 </a>
             </td>
             <?php endforeach; ?>

@@ -35,7 +35,6 @@ use Spse\NahradniHodnoceni\Model\Predmet;
                     <?php if ($vlastnost["type"] === gettype([])):?>
                         
                         <select name="<?= $vlastnost["propertyName"] ?>" data-isList="<?= $vlastnost["canBeMultiple"] ? 1 : 0 ?>" >
-                        <!-- TODO  -->
                             <?php foreach ($args["data"]["options"][$vlastnost["propertyName"]] as $name => $displayName): ?>
                                 <option value="<?= $name?>">
                                     <?= $displayName?>
@@ -44,7 +43,7 @@ use Spse\NahradniHodnoceni\Model\Predmet;
                            
                         </select>
                     <?php  else:  ?>
-                        <input name="<?= $vlastnost["propertyName"] ?>" value="<?= $args["data"]["item"]!== null?   $args["data"]["item"]->{$vlastnost["propertyName"]}: "" ?>" type="<?php
+                        <input name="<?= $vlastnost["propertyName"] ?>" value="<?= $args["data"]["item"]!== null ? ($vlastnost["type"] == "datetime" ? $args["data"]["item"]->{$vlastnost["propertyName"]}->format("Y-m-d\TH:i") : $args["data"]["item"]->{$vlastnost["propertyName"]}) : "" ?>" type="<?php
                             switch ($vlastnost["type"]) { 
                                 case "boolean":
                                     echo "checkbox";
@@ -55,6 +54,9 @@ use Spse\NahradniHodnoceni\Model\Predmet;
                                 break;
                                 case "string":
                                     echo "text";
+                                    break;
+                                case "datetime": //TODO: prasárna
+                                    echo "datetime-local";
                                     break;
                                 }
                             ?>">

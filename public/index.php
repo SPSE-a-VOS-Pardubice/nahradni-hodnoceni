@@ -14,6 +14,7 @@ use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Spse\NahradniHodnoceni\Controller\TableController;
 use Spse\NahradniHodnoceni\Controller\FormController;
+use Spse\NahradniHodnoceni\Middleware\Header;
 
 // Sestav kontejner.
 $container = new Container();
@@ -45,6 +46,7 @@ $container->set("view", function () {
 $app = AppFactory::create(null, $container);
 
 // Zhotov middlewary.
+$header = new Header($container);
 // TODO
 
 // Webový interface:
@@ -59,7 +61,7 @@ $app->group("", function (RouteCollectorProxy $group) {
     // Správa uživatele:
     $group->get("/import/menu", [ImportController::class, "menu"]);
 
-});// TODO->add($webAuthentication);
+})->add($header);
 
 // API:
 $app->group("/api", function (RouteCollectorProxy $group) {

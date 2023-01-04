@@ -37,8 +37,12 @@
             ];
         }
 
+        public static function getSelectOptions(Database $database): array {
+            return [];
+        }
+
         public static function fromDatabaseRow(Database $database, array $row) {
-            if (count($row) !== 3) {
+            if (count($row) !== 2) {
                 throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
             }
 

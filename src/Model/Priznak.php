@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Priznak extends DatabaseEntity {
+class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
     protected int $id = 0;
     private string $nazev;
 
