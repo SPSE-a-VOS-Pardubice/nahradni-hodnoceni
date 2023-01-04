@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 use DateTime;
 
-class Zkouska extends EditableDatabaseEntity {
+class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
     protected int $id = 0;
     private int $student_id;
     private int $predmet_id;
@@ -36,10 +36,15 @@ class Zkouska extends EditableDatabaseEntity {
     }
 
     public static function getSelectOptions(Database $database): array {
+
+        $predmet_ids = [];
+
+        foreach (Predmet::getAll($database) as $tempPredmet) {
+            $predmet_ids[$tempPredmet->id] = $tempPredmet->nazev; 
+        }
+
         return [
-            "predmet_id" => array_map(function ($predmet) {
-                return [$predmet->id, $predmet->nazev];
-            }, Predmet::getAll($database)) ,
+            "predmet_id" => $predmet_ids,
             "vysledna_znamka" => ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"],
         ];
     }

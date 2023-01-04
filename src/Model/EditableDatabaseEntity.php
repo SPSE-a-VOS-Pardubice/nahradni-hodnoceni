@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-abstract class EditableDatabaseEntity extends ViewableDatabaseEntity{
-    public abstract static function getSelectOptions(Database $database): array;
+interface EditableDatabaseEntity extends ViewableDatabaseEntity {
+    public static function getSelectOptions(Database $database): array;
 }

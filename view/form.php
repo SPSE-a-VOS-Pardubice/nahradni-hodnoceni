@@ -36,9 +36,9 @@ use Spse\NahradniHodnoceni\Model\Predmet;
                         
                         <select name="<?= $vlastnost["propertyName"] ?>">
                         <!-- TODO  -->
-                            <?php foreach ($args["data"]["options"][$vlastnost["propertyName"]] as $row): ?>
-                                <option value="<?= $row[0]?>">
-                                    <?= $row[1]?>
+                            <?php foreach ($args["data"]["options"][$vlastnost["propertyName"]] as $val => $show): ?>
+                                <option value="<?= $val?>">
+                                    <?= $show?>
                                 </option>   
                             <?php endforeach; ?>
                            
