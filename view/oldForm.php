@@ -25,7 +25,7 @@ use Spse\NahradniHodnoceni\Model\Predmet;
         <?php foreach ($args["data"]["schema"] as $vlastnost): ?>
             <?php if ($vlastnost->getPropertyName() !== "id"): ?>
                 <div>
-
+                    <?php $warType?>
                     <label for="<?= $vlastnost->getPropertyName() ?>">
                         <?= $vlastnost->getName() ?>
                     </label>
@@ -46,21 +46,7 @@ use Spse\NahradniHodnoceni\Model\Predmet;
                         <input name="<?= $vlastnost->getPropertyName() ?>"
                             value="<?= $args["data"]["item"] !== null ? ($vlastnost->getType() == "datetime" ? $args["data"]["item"]->{$vlastnost->getPropertyName()}->format("Y-m-d\TH:i") : $args["data"]["item"]->{$vlastnost->getPropertyName()}) : "" ?>"
                             type="<?php
-                            switch ($vlastnost->getType()) {
-                                case "boolean":
-                                    echo "checkbox";
-                                    break;
-                                case "double":
-                                case "integer":
-                                    echo "number";
-                                    break;
-                                case "string":
-                                    echo "text";
-                                    break;
-                                case "datetime": //TODO: prasárna
-                                    echo "datetime-local";
-                                    break;
-                            }
+
                             ?>">
                     <?php endif; ?>
 
