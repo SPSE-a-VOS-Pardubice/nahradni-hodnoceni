@@ -1,22 +1,22 @@
 # Náhradní hodnocení
 
 ## Instalace
-Pro instalaci závislostí je zapotřebí `ext-gd *` a `ext-zip *`
-### Windows
-???
 
-### Fedora
-```bash
-sudo dnf install php-gd php-pecl-zip
-```
+## Vývoj
+Pro lokální instalaci je zapotřebí následujících rozšířeni PHP:
+- ext-json *
 
 ### Závislosti
-Projekt používá [Composer](https://getcomposer.org/).
-Pro instalaci závislostí musíte ve složce projektu spustit
+Projekt používá [Composer](https://getcomposer.org/) pro správu závislostí.
+Pro instalaci musíte mít Composer v PATH a ve složce projektu spustit
 ```bash
 composer install
 ```
-a pro provedení aktualizací
+
+A pro následné aktualizace
 ```bash
 composer update
 ```
+
+## Deployment
+Sledujte zde #8 

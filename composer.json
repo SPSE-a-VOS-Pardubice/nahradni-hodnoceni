@@ -1,6 +1,7 @@
 {
     "name": "spse/nahradni-hodnoceni",
     "type": "project",
+    "license": "AGPL-3.0-or-later",
     "autoload": {
         "psr-4": {
             "Spse\\NahradniHodnoceni\\": "src/"
@@ -10,8 +11,7 @@
         "slim/slim": "4.*",
         "httpsoft/http-message": "1.*",
         "httpsoft/http-server-request": "1.*",
-        "php-di/slim-bridge": "3.*",
-        "phpoffice/phpspreadsheet": "^1.25"
+        "php-di/slim-bridge": "3.*"
     },
     "require-dev": {
         "phpcompatibility/php-compatibility": "9.*"
