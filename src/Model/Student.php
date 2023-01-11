@@ -24,7 +24,27 @@ class Student extends DatabaseEntity implements EditableDatabaseEntity {
 
     public static function getSelectOptions(Database $database): array {
         //TODO: dodělat metodu
-        return [];
+        $jmeno = [];
+        $prijmeni = [];
+        $trida_id = [];
+
+        foreach (Student::getAll($database) as $tempJmeno) {
+            $jmeno[$tempJmeno->jmeno] = $tempJmeno->jmeno; 
+        }
+        
+        foreach (Student::getAll($database) as $tempPrijmeni) {
+            $prijmeni[$tempPrijmeni->prijmeni] = $tempPrijmeni->Prijmeni; 
+        }
+
+        foreach (Trida::getAll($database) as $tempTrida) {
+            $trida_id[$tempTrida->id] = $tempTrida->oznaceni; 
+        }
+
+        return [
+            "jmeno" => $jmeno,
+            "prijmeni" => $prijmeni,
+            "trida_id" =>  $trida_id
+        ];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {

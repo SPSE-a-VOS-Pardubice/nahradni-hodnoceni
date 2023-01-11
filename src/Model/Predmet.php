@@ -27,7 +27,7 @@
         }
 
         public static function getSelectOptions(Database $database): array {
-            return [];
+            $
         }
 
 

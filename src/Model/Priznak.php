@@ -20,6 +20,10 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
         return ["id"=>"ID", "nazev"=>"Název"];
     }
 
+    public static function getSelectOptions(): array{
+        
+    }
+
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
         if (count($row) !== 2) {
