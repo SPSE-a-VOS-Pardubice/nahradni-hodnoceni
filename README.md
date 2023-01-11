@@ -1,7 +1,5 @@
 # Náhradní hodnocení
 
-## Instalace
-
 ## Vývoj
 Pro lokální instalaci je zapotřebí následujících rozšířeni PHP:
 - ext-json *
