@@ -19,4 +19,4 @@ composer update
 ```
 
 ## Deployment
-Sledujte zde #8 
+Sledujte [zde](https://github.com/SPSE-a-VOS-Pardubice/nahradni-hodnoceni/issues/8)

@@ -1,5 +1,6 @@
 {
     "name": "spse/nahradni-hodnoceni",
+    "description": "Školní projekt pro organizaci náhradních hodnocení a správu jejich záznamů",
     "type": "project",
     "license": "AGPL-3.0-or-later",
     "autoload": {
