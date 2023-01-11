@@ -22,15 +22,15 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
         $this->$key = $value;
     }
 
-    public static function getProperties(): array{
+    public static function getProperties(): array {
         return [
-            ["propertyName" => "id", "name" => "ID", "type" => gettype(0)],
-            ["propertyName" => "student_id", "name" => "Student", "type" => gettype([])],
-            ["propertyName" => "predmet_id", "name" => "Předmět", "type" => gettype([])],
-            ["propertyName" => "ucebna_id", "name" => "Učebna", "type" => gettype([])],
-            ["propertyName" => "puvodni_znamka", "name" => "Původní známka", "type" => gettype("")], 
-            ["propertyName" => "vysledna_znamka", "name" => "Výsledná známka", "type" => gettype("")], 
-            ["propertyName" => "termin_konani", "name" => "Termín konání", "type" => "datetime"]
+            new ViewableProperty("id", "ID", gettype(0)),
+            new ViewableProperty("student_id", "Student", gettype([])),
+            new ViewableProperty("predmet_id", "Předmět", gettype([])),
+            new ViewableProperty("ucebna_id", "Učebna", gettype([])),
+            new ViewableProperty("puvodni_znamka", "Původní známka", gettype("")),
+            new ViewableProperty("vysledna_znamka", "Výsledná známka", gettype("")),
+            new ViewableProperty("termin_konani", "Termín konání", "datetime")
         ];
     }
 

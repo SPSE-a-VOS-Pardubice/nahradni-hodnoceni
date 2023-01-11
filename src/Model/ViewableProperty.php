@@ -41,7 +41,7 @@ class ViewableProperty {
 	/**
 	 * @return bool
 	 */
-	public function getIsList(): bool {
+	public function isList(): bool {
 		return $this->isList;
 	}
 }

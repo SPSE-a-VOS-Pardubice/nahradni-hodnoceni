@@ -17,32 +17,32 @@ use Vtiful\Kernel\Format;
 </head>
 
 <body>
-    <a href="<?= $args["data"]["path"]?>new">Přidat nový</a>
+    <a href="<?= $args["data"]["path"] ?>new">Přidat nový</a>
 
     <table>
         <tr>
             <?php foreach ($args["data"]["schema"] as $vlastnost): ?>
-            <th>
-                <?= $vlastnost["name"] ?>
-            </th>
+                <th>
+                    <?= $vlastnost->getName() ?>
+                </th>
             <?php endforeach; ?>
         </tr>
         <?php foreach ($args["data"]["items"] as $predmet): ?>
-        <tr>
-            <?php foreach ($args["data"]["schema"]  as $vlastnost): ?>
-            <td>
-                <a href="<?= $args["data"]["path"] . $predmet->id ?>">
-                    <?= $vlastnost["type"] == "datetime" ? $predmet->{$vlastnost["propertyName"]}->format("j. n. Y") : $predmet->{$vlastnost["propertyName"]} ?>
-                </a>
-            </td>
-            <?php endforeach; ?>
-        </tr>
+            <tr>
+                <?php foreach ($args["data"]["schema"] as $vlastnost): ?>
+                    <td>
+                        <a href="<?= $args["data"]["path"] . $predmet->id ?>">
+                            <?= $vlastnost->getType() == "datetime" ? $predmet->{$vlastnost->getPropertyName()}->format("j. n. Y") : $predmet->{$vlastnost->getPropertyName()} ?>
+                        </a>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
         <?php endforeach; ?>
     </table>
-    <?php foreach ($args["header"]["tables"]  as $key => $name): ?>
-    <a href="<?= "/table/" . $key ?>">
-        <?= $name ?>
-    </a>
+    <?php foreach ($args["header"]["tables"] as $key => $name): ?>
+        <a href="<?="/table/" . $key ?>">
+            <?= $name ?>
+        </a>
     <?php endforeach; ?>
 </body>
 

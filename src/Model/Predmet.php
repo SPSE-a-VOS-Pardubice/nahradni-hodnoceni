@@ -18,16 +18,16 @@
             $this->$key = $value;
         }
 
-        public static function getProperties(): array{
+        public static function getProperties(): array {
             return [
-                ["propertyName" => "id", "name" => "ID", "type" => gettype(0)],
-                ["propertyName" => "nazev", "name" => "Název", "type" => gettype("")], 
-                ["propertyName" => "zkratka", "name" => "Zkratka", "type" => gettype("")]
+                new ViewableProperty("id", "ID", gettype(0)),
+                new ViewableProperty("nazev", "Název", gettype("")),
+                new ViewableProperty("zkratka", "Zkratka", gettype("")),
             ];
         }
 
         public static function getSelectOptions(Database $database): array {
-            $
+            return [];
         }
 
 

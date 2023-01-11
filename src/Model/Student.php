@@ -18,8 +18,13 @@ class Student extends DatabaseEntity implements EditableDatabaseEntity {
         $this->$key = $value;
     }
 
-    public static function getProperties(): array{
-        return ["id"=>"ID", "jmeno"=>"Jméno", "primeni"=>"Příjmení"];
+    public static function getProperties(): array {
+        return [
+            new ViewableProperty("id", "ID", gettype(0)),
+            new ViewableProperty("jmeno", "Jméno", gettype("")),
+            new ViewableProperty("primeni", "Příjmení", gettype("")),
+            new ViewableProperty("trida_id", "Třída", gettype(0))
+        ];
     }
 
     public static function getSelectOptions(Database $database): array {

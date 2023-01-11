@@ -47,7 +47,7 @@ class FormController extends AbstractController
                 "schema" => $model::getProperties(),
                 "type" => tableMap[$name],
                 "path" => $path,
-                "options" => $model::getSelectOptions($database)
+                "options" => $model::getSelectOptions($database)  
             ]);
         } else if (preg_match("/^\d+$/", $id)) { // je id
             $item = $model::get($database, $id);

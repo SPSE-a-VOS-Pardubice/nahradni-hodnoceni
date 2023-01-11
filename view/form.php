@@ -18,53 +18,55 @@ use Spse\NahradniHodnoceni\Model\Predmet;
 <body>
 
     <h1 for="">
-        <?= $args["data"]["type"] ?>
+        <?= $args["data"]["type"]?>
     </h1>
-    
+
     <form action="<?= $args["data"]["path"] ?>" method="post">
         <?php foreach ($args["data"]["schema"] as $vlastnost): ?>
-            <?php if ($vlastnost["propertyName"] !== "id"): ?>
+            <?php if ($vlastnost->getPropertyName() !== "id"): ?>
                 <div>
-                    
-                    <label for="<?= $vlastnost["propertyName"] ?>">
-                    <?= $vlastnost["name"] ?>
+
+                    <label for="<?= $vlastnost->getPropertyName() ?>">
+                        <?= $vlastnost->getName() ?>
                     </label>
-                    
+
                     <br>
 
-                    <?php if ($vlastnost["type"] === gettype([])):?>
-                        
-                        <select name="<?= $vlastnost["propertyName"] ?>" data-isList="<?= $vlastnost["isList"] ? 1 : 0 ?>" >
-                            <?php foreach ($args["data"]["options"][$vlastnost["propertyName"]] as $name => $displayName): ?>
-                                <option value="<?= $name?>">
-                                    <?= $displayName?>
-                                </option>   
+                    <?php if ($vlastnost->getType() === gettype([])): ?>
+
+                        <select name="<?= $vlastnost->getPropertyName() ?>" data-isList="<?= $vlastnost->isList() ? 1 : 0 ?>">
+                            <?php foreach ($args["data"]["options"][$vlastnost->getPropertyName()] as $name => $displayName): ?>
+                                <option value="<?= $name ?>">
+                                    <?= $displayName ?>
+                                </option>
                             <?php endforeach; ?>
-                           
+
                         </select>
-                    <?php  else:  ?>
-                        <input name="<?= $vlastnost["propertyName"] ?>" value="<?= $args["data"]["item"]!== null ? ($vlastnost["type"] == "datetime" ? $args["data"]["item"]->{$vlastnost["propertyName"]}->format("Y-m-d\TH:i") : $args["data"]["item"]->{$vlastnost["propertyName"]}) : "" ?>" type="<?php
-                            switch ($vlastnost["type"]) { 
+                    <?php else: ?>
+                        <input name="<?= $vlastnost->getPropertyName() ?>"
+                            value="<?= $args["data"]["item"] !== null ? ($vlastnost->getType() == "datetime" ? $args["data"]["item"]->{$vlastnost->getPropertyName()}->format("Y-m-d\TH:i") : $args["data"]["item"]->{$vlastnost->getPropertyName()}) : "" ?>"
+                            type="<?php
+                            switch ($vlastnost->getType()) {
                                 case "boolean":
                                     echo "checkbox";
-                                    break;  
-                                case "double": 
-                                case "integer": 
+                                    break;
+                                case "double":
+                                case "integer":
                                     echo "number";
-                                break;
+                                    break;
                                 case "string":
                                     echo "text";
                                     break;
                                 case "datetime": //TODO: prasárna
                                     echo "datetime-local";
                                     break;
-                                }
+                            }
                             ?>">
                     <?php endif; ?>
 
                     <br>
-                 </div>
-               
+                </div>
+
             <?php endif; ?>
         <?php endforeach; ?>
 

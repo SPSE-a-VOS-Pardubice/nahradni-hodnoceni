@@ -16,8 +16,11 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
         $this->$key = $value;
     }
 
-    public static function getProperties(): array{
-        return ["id"=>"ID", "nazev"=>"Název"];
+    public static function getProperties(): array {
+        return [
+            new ViewableProperty("id", "ID", gettype(0)),
+            new ViewableProperty("nazev", "Název", gettype(""))
+        ];
     }
 
     public static function getSelectOptions(): array{

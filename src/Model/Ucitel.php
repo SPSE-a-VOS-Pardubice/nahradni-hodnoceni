@@ -24,7 +24,13 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
 
     public static function getProperties(): array
     {
-        return ["id" => "ID", "jmeno" => "Jméno", "prijmeni" => "Příjmení", "prefix" => "Prefix", "suffix" => "Suffix"];
+        return [
+            new ViewableProperty("id", "ID", gettype(0)),
+            new ViewableProperty("jmeno", "Jméno", gettype("")),
+            new ViewableProperty("prijmeni", "Příjmení", gettype("")),
+            new ViewableProperty("prefix", "Prefix", gettype("")),
+            new ViewableProperty("suffix", "Suffix", gettype(""))
+        ];
     }
 
     public static function fromDatabaseRow(Database $database, array $row)

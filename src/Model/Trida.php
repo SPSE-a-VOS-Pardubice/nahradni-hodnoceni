@@ -18,8 +18,13 @@ class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
         $this->$key = $value;
     }
 
-    public static function getProperties(): array{
-        return ["id"=>"ID", "rocnik"=>"Ročník", "oznaceni"=>"Označení", "tridni_ucitel_id"=>"ID třídního učitele"];
+    public static function getProperties(): array {
+        return [
+            new ViewableProperty("id", "ID", gettype(0)),
+            new ViewableProperty("rocnik", "Ročník", gettype(0)),
+            new ViewableProperty("oznaceni", "Označení", gettype("")),
+            new ViewableProperty("tridni_ucitel_id", "ID třídního učitele", gettype(0))
+        ];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {

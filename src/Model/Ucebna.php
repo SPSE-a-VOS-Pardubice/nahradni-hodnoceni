@@ -19,9 +19,9 @@
 
         public static function getProperties(): array {
             return [
-                ["propertyName" => "id", "name" => "ID", "type" => gettype(0)],
-                ["propertyName" => "oznaceni", "name" => "Označení", "type" => gettype("")],
-                ["propertyName" => "priznaky", "name" => "Priznak", "type" => gettype([]), "canBeMultiple" => true]
+                new ViewableProperty("id", "ID", gettype(0)),
+                new ViewableProperty("oznaceni", "Označení", gettype("")),
+                new ViewableProperty("priznaky", "Priznak", gettype([]), true)
             ];
         }
 
