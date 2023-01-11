@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Student extends DatabaseEntity implements EditableDatabaseEntity {
+class Student extends DatabaseEntity implements ViewableDatabaseEntity {
     protected int $id = 0;
     private string $jmeno;
     private string $prijmeni;
@@ -24,31 +24,6 @@ class Student extends DatabaseEntity implements EditableDatabaseEntity {
             new ViewableProperty("jmeno", "Jméno", gettype("")),
             new ViewableProperty("primeni", "Příjmení", gettype("")),
             new ViewableProperty("trida_id", "Třída", gettype(0))
-        ];
-    }
-
-    public static function getSelectOptions(Database $database): array {
-        //TODO: dodělat metodu
-        $jmeno = [];
-        $prijmeni = [];
-        $trida_id = [];
-
-        foreach (Student::getAll($database) as $tempJmeno) {
-            $jmeno[$tempJmeno->jmeno] = $tempJmeno->jmeno; 
-        }
-        
-        foreach (Student::getAll($database) as $tempPrijmeni) {
-            $prijmeni[$tempPrijmeni->prijmeni] = $tempPrijmeni->Prijmeni; 
-        }
-
-        foreach (Trida::getAll($database) as $tempTrida) {
-            $trida_id[$tempTrida->id] = $tempTrida->oznaceni; 
-        }
-
-        return [
-            "jmeno" => $jmeno,
-            "prijmeni" => $prijmeni,
-            "trida_id" =>  $trida_id
         ];
     }
 

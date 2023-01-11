@@ -23,8 +23,16 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
         ];
     }
 
-    public static function getSelectOptions(): array{
-        
+    public static function getSelectOptions(Database $database): array{
+        $priznak = [];
+
+        foreach(Priznak::getAll($database) as $tempTrait) {
+            $priznak[$tempTrait->id] = $tempTrait->nazev;
+        }
+
+        return [
+            "priznak" => $priznak
+        ];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {

@@ -27,9 +27,22 @@
         }
 
         public static function getSelectOptions(Database $database): array {
-            return [];
-        }
+            $priznaky = [];
+            $ucitel_ids = [];
+            
+            foreach(Priznak::getAll($database) as $tempTrait) {
+                $priznaky[$tempTrait->id] = $tempTrait->nazev;
+            }
 
+            foreach(Ucitel::getAll($database) as $tempUcitel){
+            $ucitel_ids[$tempUcitel->id] = sprintf("%s %s %s %s",$tempUcitel->prefix, $tempUcitel->jmeno, $tempUcitel->prijmeni, $tempUcitel->suffix);
+            }
+
+            return [
+                "priznaky" => $priznaky,
+                "ucitele" => $ucitel_ids
+            ];
+        }
 
         public static function fromDatabaseRow(Database $database, array $row) {
             // Zkontroluj délku dané řady.
