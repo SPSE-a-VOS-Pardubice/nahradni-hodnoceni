@@ -34,7 +34,7 @@ use Spse\NahradniHodnoceni\Model\Predmet;
 
                     <?php if ($vlastnost["type"] === gettype([])):?>
                         
-                        <select name="<?= $vlastnost["propertyName"] ?>" data-isList="<?= $vlastnost["canBeMultiple"] ? 1 : 0 ?>" >
+                        <select name="<?= $vlastnost["propertyName"] ?>" data-isList="<?= $vlastnost["isList"] ? 1 : 0 ?>" >
                             <?php foreach ($args["data"]["options"][$vlastnost["propertyName"]] as $name => $displayName): ?>
                                 <option value="<?= $name?>">
                                     <?= $displayName?>
