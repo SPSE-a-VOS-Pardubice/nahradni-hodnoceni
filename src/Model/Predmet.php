@@ -23,6 +23,7 @@
                 new ViewableProperty("id", "ID", gettype(0)),
                 new ViewableProperty("nazev", "Název", gettype("")),
                 new ViewableProperty("zkratka", "Zkratka", gettype("")),
+                new ViewableProperty("priznaky", "Priznak", gettype([]), true)
             ];
         }
 

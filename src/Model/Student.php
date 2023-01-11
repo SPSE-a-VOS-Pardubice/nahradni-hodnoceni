@@ -23,7 +23,7 @@ class Student extends DatabaseEntity implements ViewableDatabaseEntity {
             new ViewableProperty("id", "ID", gettype(0)),
             new ViewableProperty("jmeno", "Jméno", gettype("")),
             new ViewableProperty("primeni", "Příjmení", gettype("")),
-            new ViewableProperty("trida_id", "Třída", gettype(0))
+            new ViewableProperty("trida_id", "ID Třídy", gettype(0))
         ];
     }
 
