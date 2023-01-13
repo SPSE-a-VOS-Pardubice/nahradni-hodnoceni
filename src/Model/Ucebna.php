@@ -3,6 +3,7 @@
     declare(strict_types=1);
 
     namespace Spse\NahradniHodnoceni\Model;
+    use Type;
 
     class Ucebna extends DatabaseEntity implements EditableDatabaseEntity {
 
@@ -19,9 +20,9 @@
 
         public static function getProperties(): array {
             return [
-                new ViewableProperty("id", "ID", gettype(0)),
-                new ViewableProperty("oznaceni", "Označení", gettype("")),
-                new ViewableProperty("priznaky", "Priznak", gettype([]), true)
+                new ViewableProperty("id", "ID", Type::integer),
+                new ViewableProperty("oznaceni", "Označení", Type::string),
+                new ViewableProperty("priznaky", "Priznak", Type::array, true)
             ];
         }
 

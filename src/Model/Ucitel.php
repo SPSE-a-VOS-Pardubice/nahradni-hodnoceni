@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
+use Type;
 
 class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
 {
@@ -25,11 +26,11 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
     public static function getProperties(): array
     {
         return [
-            new ViewableProperty("id", "ID", gettype(0)),
-            new ViewableProperty("jmeno", "Jméno", gettype("")),
-            new ViewableProperty("prijmeni", "Příjmení", gettype("")),
-            new ViewableProperty("prefix", "Prefix", gettype("")),
-            new ViewableProperty("suffix", "Suffix", gettype(""))
+            new ViewableProperty("id", "ID", Type::integer),
+            new ViewableProperty("jmeno", "Jméno", Type::string),
+            new ViewableProperty("prijmeni", "Příjmení", Type::string),
+            new ViewableProperty("prefix", "Prefix", Type::string),
+            new ViewableProperty("suffix", "Suffix", Type::string)
         ];
     }
 

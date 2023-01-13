@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 use DateTime;
+use Type;
 
 class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
     protected int $id = 0;
@@ -24,13 +25,13 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id", "ID", gettype(0)),
-            new ViewableProperty("student_id", "Student", gettype([])),
-            new ViewableProperty("predmet_id", "Předmět", gettype([])),
-            new ViewableProperty("ucebna_id", "Učebna", gettype([])),
-            new ViewableProperty("puvodni_znamka", "Původní známka", gettype("")),
-            new ViewableProperty("vysledna_znamka", "Výsledná známka", gettype("")),
-            new ViewableProperty("termin_konani", "Termín konání", "datetime")
+            new ViewableProperty("id", "ID", Type::integer),
+            new ViewableProperty("student_id", "Student", Type::array),
+            new ViewableProperty("predmet_id", "Předmět", Type::array),
+            new ViewableProperty("ucebna_id", "Učebna", Type::array),
+            new ViewableProperty("puvodni_znamka", "Původní známka", Type::string),
+            new ViewableProperty("vysledna_znamka", "Výsledná známka", Type::string),
+            new ViewableProperty("termin_konani", "Termín konání", Type::datetime)
         ];
     }
 

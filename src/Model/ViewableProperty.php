@@ -3,14 +3,15 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
+use Type;
 
 class ViewableProperty {
     private string $propertyName;
     private string $name;
-    private string $type;
+    private Type $type;
     private bool $isList;
 
-    public function __construct(string $propertyName, string $name, string $type, bool $isList = false) {
+    public function __construct(string $propertyName, string $name, Type $type, bool $isList = false) {
         $this->propertyName = $propertyName;
         $this->name = $name;
         $this->type = $type;
@@ -35,7 +36,7 @@ class ViewableProperty {
 	 * @return string
 	 */
 	public function getType(): string {
-		return $this->type;
+		return $this->type->getType();
 	}
 	
 	/**

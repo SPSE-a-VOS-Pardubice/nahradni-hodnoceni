@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
+use Type;
 
 class Student extends DatabaseEntity implements ViewableDatabaseEntity {
     protected int $id = 0;
@@ -20,10 +21,10 @@ class Student extends DatabaseEntity implements ViewableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id", "ID", gettype(0)),
-            new ViewableProperty("jmeno", "Jméno", gettype("")),
-            new ViewableProperty("primeni", "Příjmení", gettype("")),
-            new ViewableProperty("trida_id", "ID Třídy", gettype(0))
+            new ViewableProperty("id", "ID", Type::integer),
+            new ViewableProperty("jmeno", "Jméno", Type::string),
+            new ViewableProperty("primeni", "Příjmení", Type::string),
+            new ViewableProperty("trida_id", "ID Třídy", Type::integer)
         ];
     }
 

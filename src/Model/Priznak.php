@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
+use Type;
 
 class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
     protected int $id = 0;
@@ -18,8 +19,8 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id", "ID", gettype(0)),
-            new ViewableProperty("nazev", "Název", gettype(""))
+            new ViewableProperty("id", "ID", Type::integer),
+            new ViewableProperty("nazev", "Název", Type::string)
         ];
     }
 

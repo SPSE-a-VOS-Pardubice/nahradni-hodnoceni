@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
+use Type;
 
 class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
     protected int $id = 0;
@@ -20,10 +21,10 @@ class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id", "ID", gettype(0)),
-            new ViewableProperty("rocnik", "Ročník", gettype(0)),
-            new ViewableProperty("oznaceni", "Označení", gettype("")),
-            new ViewableProperty("tridni_ucitel_id", "ID třídního učitele", gettype(0))
+            new ViewableProperty("id", "ID", Type::integer),
+            new ViewableProperty("rocnik", "Ročník", Type::integer),
+            new ViewableProperty("oznaceni", "Označení", Type::string),
+            new ViewableProperty("tridni_ucitel_id", "ID třídního učitele", Type::integer)
         ];
     }
 
