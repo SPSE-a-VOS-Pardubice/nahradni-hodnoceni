@@ -46,10 +46,24 @@ use Spse\NahradniHodnoceni\Model\Predmet;
                         <input name="<?= $vlastnost->getPropertyName() ?>"
                             value="<?= $args["data"]["item"] !== null ? ($vlastnost->getType() == "datetime" ? $args["data"]["item"]->{$vlastnost->getPropertyName()}->format("Y-m-d\TH:i") : $args["data"]["item"]->{$vlastnost->getPropertyName()}) : "" ?>"
                             type="<?php
-
+                                switch ($vlastnost->getType()) {
+                                    case "boolean":
+                                        echo "checkbox";
+                                        break;
+                                    case "double":
+                                    case "integer":
+                                        echo "number";
+                                        break;
+                                    case "string":
+                                        echo "text";
+                                        break;
+                                    case "datetime":
+                                        echo "datetime-local";
+                                        break;
+                                    }
                             ?>">
                     <?php endif; ?>
-
+                    
                     <br>
                 </div>
 
