@@ -3,6 +3,7 @@
 ## Vývoj
 Pro lokální instalaci je zapotřebí následujících rozšířeni PHP:
 - ext-json *
+- PHP MySQL driver
 
 ### Závislosti
 Projekt používá [Composer](https://getcomposer.org/) pro správu závislostí.

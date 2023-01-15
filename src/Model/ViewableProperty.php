@@ -3,46 +3,22 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
-use Type;
 
 class ViewableProperty {
-    private string $propertyName;
-    private string $name;
-    private Type $type;
-    private bool $isList;
+    public string $name;
+    public string $displayName;
+    public ViewablePropertyType $type;
 
-    public function __construct(string $propertyName, string $name, Type $type, bool $isList = false) {
-        $this->propertyName = $propertyName;
+    /**
+     * Značí, zda by se měl uživateli zobrazit `<select>` s možnostmi z metody `getSelectOptions`
+     * @var bool
+     */
+    public bool $isSelect;
+
+    public function __construct(string $name, string $displayName, ViewablePropertyType $type, bool $isSelect = false) {
         $this->name = $name;
+        $this->displayName = $displayName;
         $this->type = $type;
-        $this->isList = $isList;
+        $this->isSelect = $isSelect;
     }
-
-	/**
-	 * @return string
-	 */
-	public function getPropertyName(): string {
-		return $this->propertyName;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName(): string {
-		return $this->name;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getType(): string {
-		return $this->type->getType();
-	}
-	
-	/**
-	 * @return bool
-	 */
-	public function isList(): bool {
-		return $this->isList;
-	}
 }

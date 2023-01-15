@@ -36,13 +36,16 @@ class TableController extends AbstractController {
 
         $tableRoute = "/table/" . $args["name"] . "/";
 
+        $items = $model::getAll($database);
 
         // Vyrenderuj webovou stránku.
         return $view->renderResponse($request, $response, "/table.php", [
-            "items" => $model::getAll($database),
             "schema" => $model::getProperties(),
+            "items" => $items,
+            "intermediateData" => array_map(function ($item) { return $item->getIntermediateData(); }, $items),
             "path" => $tableRoute,
-            "list" => tables
+            "list" => tables,
+            "options" => $model::getSelectOptions($database),
         ]);
     }
 }

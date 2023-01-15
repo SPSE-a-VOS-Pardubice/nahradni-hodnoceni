@@ -3,9 +3,8 @@
     declare(strict_types=1);
 
     namespace Spse\NahradniHodnoceni\Model;
-    use Type;
-
-    class Ucebna extends DatabaseEntity implements EditableDatabaseEntity {
+    
+    class Ucebna extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
         protected int $id = 0;
         private string $oznaceni;
@@ -20,21 +19,33 @@
 
         public static function getProperties(): array {
             return [
-                new ViewableProperty("id", "ID", Type::integer),
-                new ViewableProperty("oznaceni", "Označení", Type::string),
-                new ViewableProperty("priznaky", "Priznak", Type::array, true)
+                new ViewableProperty("id",          "ID",       ViewablePropertyType::INTEGER),
+                new ViewableProperty("oznaceni",    "Označení", ViewablePropertyType::STRING),
+                new ViewableProperty("traits",      "Priznaky", ViewablePropertyType::INTERMEDIATE_DATA,    true)
             ];
         }
 
         public static function getSelectOptions(Database $database): array {
-            $priznaky = [];
-
-            foreach(Priznak::getAll($database) as $tempTrait) {
-                $priznaky[$tempTrait->id] = $tempTrait->nazev;
-            }
+            $traits = [];
             
+            foreach(Priznak::getAll($database) as $trait) {
+                $traits[$trait->id] = $trait->getFormatted();
+            }
+
             return [
-                "priznaky" => $priznaky
+                "traits" => $traits,
+            ];
+        }
+
+        public function getFormatted(): string {
+            return $this->oznaceni;
+        }
+
+        public function getIntermediateData(): array {
+        return [
+            "traits" => array_map(function ($classroomTrait) {
+                    return Priznak::get($this->database, $classroomTrait->trait_id);
+                }, ClassroomTrait::getForClassroom($this->database, $this->id)),
             ];
         }
 
@@ -58,7 +69,7 @@
 
             if($this->id === 0){
                 $this->database->execute("
-                INSERT INTO ucebny (
+                INSERT INTO Ucebny (
                     oznaceni
                 )
                 VALUES (
@@ -66,7 +77,7 @@
                 )", $parameters);
             }else{
                 $this->database->execute("
-                UPDATE ucebny
+                UPDATE Ucebny
                 SET
                 oznaceni = :oznaceni
                 WHERE
@@ -77,7 +88,7 @@
 
         public function remove(): void {
             $this->database->execute("
-                DELETE FROM ucebny
+                DELETE FROM Ucebny
                 WHERE
                     id = :id
                     LIMIT 1
@@ -90,7 +101,7 @@
             $row = $database->fetchSingle("
                 SELECT
                     *
-                FROM ucebny
+                FROM Ucebny
                 WHERE
                     id = :id
             ", [
@@ -105,7 +116,7 @@
             $rows = $database->fetchMultiple("
                 SELECT
                     *
-                FROM ucebny
+                FROM Ucebny
             ");
     
             return array_map(function (array $row) use($database) {

@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
-
+/*
+Version: 1.0
+Author: Tobiáš Smolný, Radim Semerák, Vojtěch Fošnár
+*/
 * {
   margin: 0;
   padding: 0;
@@ -21,32 +24,10 @@ body {
   background-color: #333;
 }
 
-.container{
+.container {
   max-width: 1200px;
   padding: 0 2rem;
 }
-
-/* body::before {
-  content: '';
-  position: absolute;
-  width: 750px;
-  height: 750px;
-  right: -375px;
-  bottom: -375px;
-  border-radius: 50%;
-  background-color: #376dff;
-}
-
-body::after {
-  content: '';
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  left: -250px;
-  top: -250px;
-  border-radius: 50%;
-  background-color: #376dff;
-} */
 
 a {
   outline: none;
@@ -124,8 +105,8 @@ ul li:hover ul {
 
 ul li ul li {
   clear: both;
-  width: max-content;
   border-bottom: 1px solid #999;
+  width: max-content;
 }
 
 main {
@@ -174,6 +155,7 @@ main {
   padding: 7.5px 1.5rem;
   background-color: #64b22d;
   transition: .35s;
+
 }
 
 .form_filter #submit:hover {
@@ -265,12 +247,10 @@ main.form_main {
 }
 
 .general_form {
-  width: 150%;
+  width: 175%;
 }
 
-.general_form #name_input,
-.general_form #mark_input,
-.general_form #select {
+.general_form .col > * {
   font-weight: 400;
   width: 100%;
   height: 45px;
@@ -299,6 +279,7 @@ main.form_main {
   color: #fff;
   background-color: #64b22d;
   transition: .35s;
+  margin: .5rem 0;
 }
 
 .general_form #submit:hover {
@@ -311,7 +292,7 @@ main.form_main {
   color: #999;
 }
 
-  
+
 
 
 .form-row {
@@ -324,30 +305,61 @@ label {
   margin-bottom: .4rem;
 }
 
+.form-active .col {
+  width: auto;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.col input {
+  margin: .5rem 0;
+
+}
+
+.form-mark {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
 @media (max-width: 655px) {
-  .container{
+  .container {
     padding: 0 4rem;
-  }  
+  }
+
   .form-row {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .form_filter {
     flex-direction: column;
   }
+
   .general_form-sec {
     margin: 0 6rem;
   }
-  .filter_table_form{
+
+  .filter_table_form {
     display: flex;
     flex-direction: column;
   }
+
   th {
     font-size: 0.9em;
     padding: 1em;
   }
+
   td {
     font-size: 0.9em;
     padding: 1em;
+  }
+
+  .form-mark {
+    flex-direction: column;
   }
 }

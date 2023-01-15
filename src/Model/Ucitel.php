@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
-use Type;
 
-class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
+class Ucitel extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity
 {
     protected int $id = 0;
     private string $jmeno;
@@ -26,12 +25,24 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
     public static function getProperties(): array
     {
         return [
-            new ViewableProperty("id", "ID", Type::integer),
-            new ViewableProperty("jmeno", "Jméno", Type::string),
-            new ViewableProperty("prijmeni", "Příjmení", Type::string),
-            new ViewableProperty("prefix", "Prefix", Type::string),
-            new ViewableProperty("suffix", "Suffix", Type::string)
+            new ViewableProperty("id",          "ID",       ViewablePropertyType::INTEGER),
+            new ViewableProperty("jmeno",       "Jméno",    ViewablePropertyType::STRING),
+            new ViewableProperty("prijmeni",    "Příjmení", ViewablePropertyType::STRING),
+            new ViewableProperty("prefix",      "Prefix",   ViewablePropertyType::STRING),
+            new ViewableProperty("suffix",      "Suffix",   ViewablePropertyType::STRING)
         ];
+    }
+
+    public static function getSelectOptions(Database $database): array {
+        return [];
+    }
+
+    public function getFormatted(): string {
+        return sprintf("%s %s %s %s",$this->prefix, $this->jmeno, $this->prijmeni, $this->suffix);
+    }
+
+    public function getIntermediateData(): array {
+        return [];
     }
 
     public static function fromDatabaseRow(Database $database, array $row)
@@ -43,11 +54,11 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
 
         // Vybuduj novou instanci a vrať ji.
         $ucitel = new Ucitel($database);
-        $ucitel->setProperty("id", intval($row[0]));
-        $ucitel->setProperty("jmeno", $row[1]);
-        $ucitel->setProperty("prijmeni", $row[2]);
-        $ucitel->setProperty("prefix", $row[3]);
-        $ucitel->setProperty("suffix", $row[4]);
+        $ucitel->setProperty("id",          intval($row[0]));
+        $ucitel->setProperty("jmeno",       $row[1]);
+        $ucitel->setProperty("prijmeni",    $row[2]);
+        $ucitel->setProperty("prefix",      $row[3]);
+        $ucitel->setProperty("suffix",      $row[4]);
         return $ucitel;
     }
 
@@ -55,16 +66,16 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
     {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id", $this->id),
-            new DatabaseParameter("jmeno", $this->jmeno),
-            new DatabaseParameter("prijmeni", $this->prijmeni),
-            new DatabaseParameter("prefix", $this->prefix),
-            new DatabaseParameter("suffix", $this->suffix)
+            new DatabaseParameter("id",         $this->id),
+            new DatabaseParameter("jmeno",      $this->jmeno),
+            new DatabaseParameter("prijmeni",   $this->prijmeni),
+            new DatabaseParameter("prefix",     $this->prefix),
+            new DatabaseParameter("suffix",     $this->suffix)
         ];
 
         if ($this->id === 0) {
             $this->database->execute("
-                INSERT INTO ucitele (
+                INSERT INTO Ucitele (
                     jmeno,
                     prijmeni,
                     prefix,
@@ -79,7 +90,7 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
             ", $parameters);
         } else {
             $this->database->execute("
-                UPDATE ucitele
+                UPDATE Ucitele
                 SET
                     jmeno = :jmeno,
                     prijmeni = :prijmeni,
@@ -94,7 +105,7 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
     public function remove(): void
     {
         $this->database->execute("
-            DELETE FROM ucitele
+            DELETE FROM Ucitele
             WHERE
                 id = :id
                 LIMIT 1
@@ -108,7 +119,7 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM ucitele
+            FROM Ucitele
             WHERE
                 id = :id
         ", [
@@ -119,12 +130,13 @@ class Ucitel extends DatabaseEntity implements ViewableDatabaseEntity
 
         return Ucitel::fromDatabaseRow($database, $row);
     }
+
     static public function getAll(Database $database): array
     {
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM ucitele
+            FROM Ucitele
         ");
 
         // TODO: Check empty result

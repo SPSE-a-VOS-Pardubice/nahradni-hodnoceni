@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
-use Type;
 
-class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
+class Trida extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
     protected int $id = 0;
+    private int $rok;
     private int $rocnik;
     private string $oznaceni;
     private int $tridni_ucitel_id;
@@ -21,45 +21,70 @@ class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id", "ID", Type::integer),
-            new ViewableProperty("rocnik", "Ročník", Type::integer),
-            new ViewableProperty("oznaceni", "Označení", Type::string),
-            new ViewableProperty("tridni_ucitel_id", "ID třídního učitele", Type::integer)
+            new ViewableProperty("id",                  "ID",               ViewablePropertyType::INTEGER),
+            new ViewableProperty("rok",                 "Rok",              ViewablePropertyType::INTEGER),
+            new ViewableProperty("rocnik",              "Ročník",           ViewablePropertyType::INTEGER),
+            new ViewableProperty("oznaceni",            "Označení",         ViewablePropertyType::STRING),
+            new ViewableProperty("tridni_ucitel_id",    "Třídní učitel",    ViewablePropertyType::INTEGER,  true)
         ];
+    }
+
+    public static function getSelectOptions(Database $database): array {
+        $class_teacher_id = [];
+
+        foreach(Ucitel::getAll($database) as $teacher) {
+            $class_teacher_id[$teacher->id] = $teacher->getFormatted();
+        }
+
+        return [
+            "tridni_ucitel_id" => $class_teacher_id,
+        ];
+    }
+
+    public function getFormatted(): string {
+        return sprintf("%s.%s", $this->rocnik, $this->oznaceni);
+    }
+
+    public function getIntermediateData(): array {
+        return [];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
-        if (count($row) !== 4) {
+        if (count($row) !== 5) {
             throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
         }
 
         // Vybuduj novou instanci a vrať ji.
         $trida = new trida($database);
-        $trida->setProperty("id",    intval($row[0]));
-        $trida->setProperty("rocnik", $row[1]);
-        $trida->setProperty("oznaceni", $row[2]);
-        $trida->setProperty("tridni_ucitel_id", $row[3]);
+        $trida->setProperty("id",               intval($row[0]));
+        $trida->setProperty("rok",              intval($row[1]));
+        $trida->setProperty("rocnik",           intval($row[2]));
+        $trida->setProperty("oznaceni",         $row[3]);
+        $trida->setProperty("tridni_ucitel_id", $row[4]);
         return $trida;
     }
 
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id",     $this->id),
-            new DatabaseParameter("rocnik",  $this->rocnik),
-            new DatabaseParameter("oznaceni",  $this->oznaceni),
-            new DatabaseParameter("tridni_ucitel_id",  $this->tridni_ucitel_id)
+            new DatabaseParameter("id",                 $this->id),
+            new DatabaseParameter("rok",                $this->rok),
+            new DatabaseParameter("rocnik",             $this->rocnik),
+            new DatabaseParameter("oznaceni",           $this->oznaceni),
+            new DatabaseParameter("tridni_ucitel_id",   $this->tridni_ucitel_id)
         ];
 
         if ($this->id === 0) {
             $this->database->execute("
-                INSERT INTO tridy (
+                INSERT INTO Tridy (
+                    rok,
                     rocnik,
                     oznaceni,
                     tridni_ucitel_id
                 )
                 VALUES (
+                    :rok,
                     :rocnik,
                     :oznaceni,
                     :tridni_ucitel_id
@@ -67,8 +92,9 @@ class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
             ", $parameters);
         } else {
             $this->database->execute("
-                UPDATE tridy
+                UPDATE Tridy
                 SET
+                    rok = :rok
                     rocnik = :rocnik
                     oznaceni = :oznaceni
                     tridni_ucitel_id = :tridni_ucitel_id 
@@ -80,7 +106,7 @@ class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM tridy
+            DELETE FROM Tridy
             WHERE
                 id = :id
             LIMIT 1
@@ -93,7 +119,7 @@ class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM tridy
+            FROM Tridy
             WHERE
                 id = :id
         ", [
@@ -109,7 +135,7 @@ class Trida extends DatabaseEntity implements ViewableDatabaseEntity {
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM tridy
+            FROM Tridy
         ");
 
         return array_map(function (array $row) use($database) {

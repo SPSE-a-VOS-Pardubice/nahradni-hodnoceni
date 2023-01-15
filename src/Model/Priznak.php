@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
-use Type;
 
-class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
+class Priznak extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
     protected int $id = 0;
     private string $nazev;
 
@@ -19,21 +18,21 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id", "ID", Type::integer),
-            new ViewableProperty("nazev", "Název", Type::string)
+            new ViewableProperty("id",      "ID",       ViewablePropertyType::INTEGER),
+            new ViewableProperty("nazev",   "Název",    ViewablePropertyType::STRING)
         ];
     }
 
     public static function getSelectOptions(Database $database): array{
-        $priznak = [];
+        return [];
+    }
 
-        foreach(Priznak::getAll($database) as $tempTrait) {
-            $priznak[$tempTrait->id] = $tempTrait->nazev;
-        }
+    public function getFormatted(): string {
+        return $this->nazev;
+    }
 
-        return [
-            "priznak" => $priznak
-        ];
+    public function getIntermediateData(): array {
+        return [];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {
@@ -58,7 +57,7 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
 
         if ($this->id === 0) {
             $this->database->execute("
-                INSERT INTO priznaky (
+                INSERT INTO Priznaky (
                     nazev
                 )
                 VALUES (
@@ -67,7 +66,7 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
             ", $parameters);
         } else {
             $this->database->execute("
-                UPDATE priznaky
+                UPDATE Priznaky
                 SET
                     nazev = :nazev
                 WHERE
@@ -78,7 +77,7 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM priznaky
+            DELETE FROM Priznaky
             WHERE
                 id = :id
         ", [
@@ -86,11 +85,11 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
         ]);
     }
 
-    static public function get(Database $database, string $id): Priznak {
+    static public function get(Database $database, int $id): Priznak {
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM priznaky
+            FROM Priznaky
             WHERE
                 id = :id
         ", [
@@ -106,7 +105,7 @@ class Priznak extends DatabaseEntity implements EditableDatabaseEntity {
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM priznaky
+            FROM Priznaky
         ");
 
         return array_map(function (array $row) use($database) {

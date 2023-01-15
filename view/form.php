@@ -1,68 +1,117 @@
+<?php
+
+declare(strict_types=1);
+
+use Spse\NahradniHodnoceni\Model\ViewableProperty;
+use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
+
+// je null pouze když uživatel přidává nový záznam
+define("item", $args["data"]["item"]);
+
+function getValue(ViewableProperty $property): mixed {
+    if ($property->type === ViewablePropertyType::DATETIME) {
+        return item->{$property->name}->format("Y-m-d\TH:i");
+    }
+
+    return item->{$property->name};
+}
+
+function getDefaultInputValue(ViewableProperty $property): string {
+    if (is_null(item))
+        return "";
+
+    return strval(getValue($property));
+}
+
+function getInputType(ViewablePropertyType $propType): string {
+    switch ($propType) {
+        case ViewablePropertyType::BOOLEAN:
+            return "checkbox";
+        case ViewablePropertyType::INTEGER:
+        case ViewablePropertyType::DOUBLE:
+            return "number";
+        case ViewablePropertyType::STRING:
+            return "text";
+        case ViewablePropertyType::DATETIME:
+            return "datetime-local";
+    }
+
+    throw new InvalidArgumentException();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="cs">
 
 <head>
-
+  <meta name="author" content="Tobiáš Smolný" />
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>General Form</title>
-  <link rel="shortcut icon" href="../public/assets/images/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="../public/assets/css/main.css">
+  <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/assets/css/main.css">
+
+
 </head>
 
 <body>
-
-  <header>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="table.html">Tabulky</a>
-        <ul class="dropdown">
-          <li><a href="">Tabulka 1 </a></li>
-          <li><a href="">Tabulka 2 </a></li>
-          <li><a href="">Tabulka 3</a></li>
-          <li><a href="">Tabulka 4</a></li>
-          <li><a href="">Tabulka 5</a></li>
-          <li><a href="">Tabulka 6</a></li>
-          <li><a href="">Tabulka 7</a></li>
-          <li><a href="">Tabulka 8</a></li>
-        </ul>
-      </li>
-        <li><a href="#">Import</a></li>
-      </ul>
-    </nav>
-  </header>
+  <?php include(VIEW_ROOT . "/component/header.php") ?>
 
   <main class="form_main">
     <section class="general_form-sec">
       <h2 class="general_head">Název</h2>
       <form action="" method="get" class="general_form">
 
-        <div class="form-name form-row">
-          <label for="name">Jméno</label>
-          <input type="text" id="name_input">
-        </div>
+        <!-- řádek s vlastností -->
+        <?php foreach ($args["data"]["schema"] as $property): ?>
+          <?php if ($property->name !== "id"): ?>
+            <!-- pokud je ve vlastnosti více hodnot, vyrenderuj všechny -->
+            <?php
+              $values = getValue($property);
+              if (!$property->isIntermediate) {
+                $values = [$values];
+              }
+            ?>
 
-        <div class="form-active form-row">
-          <label for="active" id="active_label">Aktivní</label>
-          <input type="checkbox" name="active" id="checkbox">
-        </div>
+            <div class="form-name form-row" data-isList="<?= $property->isIntermediate ? 1 : 0 ?>">
+              <label for="<?= $property->name ?>">
+                <?= $property->displayName ?>
+              </label>
 
-        <div class="form-subject form-row">
-          <label for="subject">Předmět</label>
-          <select name="subject" id="select">
-            <option value="0">Programování</option>
-            <option value="1">Webové aplikace</option>
-            <option value="2">Databáze</option>
-          </select>
-      
-        </div>
+              <div class="col">
+                <?php foreach ($values as $value): ?>
 
-        <div class="form-mark form-row">
-          <label for="mark">Známka</label>
-          <input type="number" id="mark_input" min="1" max="5">
-        </div>
+                  <!-- select -->
+                  <?php if ($property->isSelect): ?>
+                    <select name="<?= $property->name ?>">
+                      <?php foreach ($args["data"]["options"][$property->name] as $optionName => $optionDisplayName): ?>
+                        <option value="<?= $optionName ?>" <?= $optionName === $value ? "selected" : "" ?>>
+                          <?= $optionDisplayName ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+
+                  <!-- everything else -->
+                  <?php else: ?>
+                    <input name="<?= $property->name ?>"
+                      value="<?= getDefaultInputValue($property) ?>"
+                      type="<?= getInputType($property->type) ?>">
+                  <?php endif; ?>
+
+                <?php endforeach; ?>
+              </div>
+            </div>
+
+            <!-- <div class="form-active form-row">
+              <label for="active" id="active_label">Aktivní</label>
+              <div class="col">
+                <input type="checkbox" name="active" id="checkbox">
+              </div>
+            </div> -->
+
+          <?php endif; ?>
+        <?php endforeach; ?>
 
         <input type="submit" value="Aktualizovat" id="submit">
       </form>

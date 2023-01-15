@@ -3,9 +3,8 @@
 declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
-use Type;
 
-class Student extends DatabaseEntity implements ViewableDatabaseEntity {
+class Student extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
     protected int $id = 0;
     private string $jmeno;
     private string $prijmeni;
@@ -21,11 +20,31 @@ class Student extends DatabaseEntity implements ViewableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id", "ID", Type::integer),
-            new ViewableProperty("jmeno", "Jméno", Type::string),
-            new ViewableProperty("primeni", "Příjmení", Type::string),
-            new ViewableProperty("trida_id", "ID Třídy", Type::integer)
+            new ViewableProperty("id",          "ID",       ViewablePropertyType::INTEGER),
+            new ViewableProperty("jmeno",       "Jméno",    ViewablePropertyType::STRING),
+            new ViewableProperty("prijmeni",    "Příjmení", ViewablePropertyType::STRING),
+            new ViewableProperty("trida_id",    "Třída",    ViewablePropertyType::INTEGER,  true)
         ];
+    }
+
+    public static function getSelectOptions(Database $database): array {
+        $class_id = [];
+
+        foreach(Trida::getAll($database) as $trida) {
+            $class_id[$trida->id] = $trida->getFormatted();
+        }
+
+        return [
+            "trida_id" => $class_id,
+        ];
+    }
+
+    public function getFormatted(): string {
+        return sprintf("%s %s", $this->prijmeni, $this->jmeno);
+    }
+
+    public function getIntermediateData(): array {
+        return [];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {
@@ -54,7 +73,7 @@ class Student extends DatabaseEntity implements ViewableDatabaseEntity {
 
         if ($this->id === 0) {
             $this->database->execute("
-                INSERT INTO studenti (
+                INSERT INTO Studenti (
                     jmeno,
                     prijmeni,
                     trida_id
@@ -67,7 +86,7 @@ class Student extends DatabaseEntity implements ViewableDatabaseEntity {
             ", $parameters);
         } else {
             $this->database->execute("
-                UPDATE studenti
+                UPDATE Studenti
                 SET
                     jmeno = :jmeno,
                     prijmeni = :prijmeni,
@@ -80,7 +99,7 @@ class Student extends DatabaseEntity implements ViewableDatabaseEntity {
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM studenti
+            DELETE FROM Studenti
             WHERE
                 id = :id
             LIMIT 1
@@ -93,7 +112,7 @@ class Student extends DatabaseEntity implements ViewableDatabaseEntity {
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM studenti
+            FROM Studenti
             WHERE
                 id = :id
         ", [
@@ -109,7 +128,7 @@ class Student extends DatabaseEntity implements ViewableDatabaseEntity {
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM studenti
+            FROM Studenti
         ");
 
         return array_map(function (array $row) use($database) {

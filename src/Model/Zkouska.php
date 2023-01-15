@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 use DateTime;
-use Type;
 
-class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
+class Zkouska extends DatabaseEntity implements ViewableDatabaseEntity {
     protected int $id = 0;
     private int $student_id;
     private int $predmet_id;
@@ -25,38 +24,42 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id", "ID", Type::integer),
-            new ViewableProperty("student_id", "Student", Type::array),
-            new ViewableProperty("predmet_id", "Předmět", Type::array),
-            new ViewableProperty("ucebna_id", "Učebna", Type::array),
-            new ViewableProperty("puvodni_znamka", "Původní známka", Type::string),
-            new ViewableProperty("vysledna_znamka", "Výsledná známka", Type::string),
-            new ViewableProperty("termin_konani", "Termín konání", Type::datetime)
+            new ViewableProperty("id",              "ID",               ViewablePropertyType::INTEGER),
+            new ViewableProperty("student_id",      "Student",          ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("predmet_id",      "Předmět",          ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("ucebna_id",       "Učebna",           ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("puvodni_znamka",  "Původní známka",   ViewablePropertyType::STRING,   true),
+            new ViewableProperty("vysledna_znamka", "Výsledná známka",  ViewablePropertyType::STRING,   true),
+            new ViewableProperty("termin_konani",   "Termín konání",    ViewablePropertyType::DATETIME)
         ];
     }
 
     public static function getSelectOptions(Database $database): array {
+        $student_id = [];
+        $subject_id = [];
+        $classroom_id = [];
 
-        $predmet_ids = [];
-        $student_ids = [];
-        $ucebna_ids = [];
-
-        foreach (Predmet::getAll($database) as $tempPredmet) {
-            $predmet_ids[$tempPredmet->id] = $tempPredmet->nazev; 
+        foreach (Student::getAll($database) as $student) {
+            $student_id[$student->id] = $student->getFormatted(); 
         }
-        foreach (Student::getAll($database) as $tempStudent) {
-            $student_ids[$tempStudent->id] = sprintf("%s %s", $tempStudent->prijmeni, $tempStudent->jmeno); 
+        foreach (Predmet::getAll($database) as $subject) {
+            $subject_id[$subject->id] = $subject->getFormatted(); 
         }
-        foreach (Ucebna::getAll($database) as $tempUcebna) {
-            $ucebna_ids[$tempUcebna->id] = $tempUcebna->oznaceni; 
+        foreach (Ucebna::getAll($database) as $classroom) {
+            $classroom_id[$classroom->id] = $classroom->getFormatted();
         }
 
         return [
-            "predmet_id" => $predmet_ids,
+            "student_id" => $student_id,
+            "predmet_id" => $subject_id,
+            "ucebna_id" => $classroom_id,
+            "puvodni_znamka" => ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"],
             "vysledna_znamka" => ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"],
-            "student_id" => $student_ids,
-            "ucebna_id" => $ucebna_ids
         ];
+    }
+
+    public function getIntermediateData(): array {
+        return [];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {
@@ -91,7 +94,7 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
 
         if ($this->id === 0) {
             $this->database->execute("
-                INSERT INTO zkousky (
+                INSERT INTO Zkousky (
                     student_id,
                     predmet_id,
                     ucebna_id,
@@ -110,7 +113,7 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
             ", $parameters);
         } else {
             $this->database->execute("
-                UPDATE zkousky
+                UPDATE Zkousky
                 SET
                 student_id = :student_id
                 predmet_id = :predmet_id
@@ -126,7 +129,7 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM zkousky
+            DELETE FROM Zkousky
             WHERE
                 id = :id
             LIMIT 1
@@ -139,7 +142,7 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM zkousky
+            FROM Zkousky
             WHERE
                 id = :id
         ", [
@@ -155,7 +158,7 @@ class Zkouska extends DatabaseEntity implements EditableDatabaseEntity {
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM zkousky
+            FROM Zkousky
         ");
 
         return array_map(function (array $row) use($database) {
