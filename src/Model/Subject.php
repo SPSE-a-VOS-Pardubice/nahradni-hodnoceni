@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Predmet extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+class Subject extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
     protected int $id = 0;
-    private string $nazev;
-    private string $zkratka;
+    private string $name;
+    private string $abbreviation;
 
     protected function getProperty(string $key) {
         return $this->$key;
@@ -20,39 +20,33 @@ class Predmet extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id",          "ID",       ViewablePropertyType::INTEGER),
-            new ViewableProperty("nazev",       "Název",    ViewablePropertyType::STRING),
-            new ViewableProperty("zkratka",     "Zkratka",  ViewablePropertyType::STRING),
-            new ViewableProperty("traits",      "Příznaky", ViewablePropertyType::INTERMEDIATE_DATA,    true)
+            new ViewableProperty("id",              "ID",       ViewablePropertyType::INTEGER),
+            new ViewableProperty("name",            "Název",    ViewablePropertyType::STRING),
+            new ViewableProperty("abbreviation",    "Zkratka",  ViewablePropertyType::STRING),
+            new ViewableProperty("traits",          "Příznaky", ViewablePropertyType::INTERMEDIATE_DATA,    true),
         ];
     }
 
     public static function getSelectOptions(Database $database): array {
         $traits = [];
-        $teachers = [];
         
-        foreach(Priznak::getAll($database) as $trait) {
+        foreach(_Trait::getAll($database) as $trait) {
             $traits[$trait->id] = $trait->getFormatted();
         }
 
-        foreach(Ucitel::getAll($database) as $teacher){
-            $teachers[$teacher->id] = $teacher->getFormatted();
-        }
-
         return [
-            "priznaky" => $traits,
-            "ucitele" => $teachers
+            "traits" => $traits,
         ];
     }
 
     public function getFormatted(): string {
-        return $this->nazev;
+        return $this->name;
     }
 
     public function getIntermediateData(): array {
     return [
         "traits" => array_map(function ($classroomTrait) {
-                return Priznak::get($this->database, $classroomTrait->trait_id);
+                return _Trait::get($this->database, $classroomTrait->trait_id);
             }, ClassroomTrait::getForClassroom($this->database, $this->id)),
         ];
     }
@@ -64,66 +58,69 @@ class Predmet extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         }
 
         // Vybuduj novou instanci a vrať ji.
-        $predmet = new Predmet($database);
-        $predmet->setProperty("id",    intval($row[0]));
-        $predmet->setProperty("nazev", $row[1]);
-        $predmet->setProperty("zkratka", $row [2]);
-        return $predmet;
+        $object = new Subject($database);
+        $object->setProperty("id",              intval($row[0]));
+        $object->setProperty("name",            $row[1]);
+        $object->setProperty("abbreviation",    $row[2]);
+        return $object;
     }
     
 
     public function write(): void {
         $parameters = [
-            new DatabaseParameter("id",     $this->id),
-            new DatabaseParameter("nazev",  $this->nazev),
-            new DatabaseParameter("zkratka", $this->zkratka)
+            new DatabaseParameter("id",             $this->id),
+            new DatabaseParameter("name",           $this->name),
+            new DatabaseParameter("abbreviation",   $this->abbreviation),
         ];
 
-        if($this->id === 0){
+        if($this->id === 0) {
             $this->database->execute("
-            INSERT INTO Predmety (
-                nazev
-                zkratka
+            INSERT INTO Subjects (
+                name
+                abbreviation
             )
             VALUES (
-                :nazev
-                :zkratka
+                :name
+                :abbreviation
             )", $parameters);
         }else{
             $this->database->execute("
-            UPDATE Predmety
+            UPDATE Subjects
             SET
-            nazev = :nazev
-            zkratka = :zkraka
+            name    = :name
+            zkratka = :abbreviation
             WHERE
-            id = :id
+                id = :id
             ", $parameters);
         }
     }
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM Predmety
+            DELETE FROM Subjects
             WHERE
                 id = :id
-                LIMIT 1
+            LIMIT 1
         ", [
-            new DatabaseParameter("id", $this->id)
+            new DatabaseParameter("id", $this->id),
         ]);
     }
 
-    static public function get(Database $database, string $id): Predmet {
+    static public function get(Database $database, string $id): ?Subject {
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM Predmety
+            FROM Subjects
             WHERE
                 id = :id
         ", [
-            new DatabaseParameter("id", $id)
+            new DatabaseParameter("id", $id),
         ]);
 
-        return Predmet::fromDatabaseRow($database, $row);
+        if ($row === false) {
+            return null;
+        }
+        return Subject::fromDatabaseRow($database, $row);
         
     }
 
@@ -131,11 +128,11 @@ class Predmet extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM Predmety
+            FROM Subjects
         ");
 
         return array_map(function (array $row) use($database) {
-            return Predmet::fromDatabaseRow($database, $row);
+            return Subject::fromDatabaseRow($database, $row);
         }, $rows);
     }
 }

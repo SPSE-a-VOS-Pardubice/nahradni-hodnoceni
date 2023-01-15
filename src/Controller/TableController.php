@@ -9,16 +9,14 @@ use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as R
 const modelNamespace = "Spse\\NahradniHodnoceni\\Model\\";
 
 const tableMap = [
-    "predmety" => "Predmet",
-    "studenti" => "Student",
-    "tridy" => "Trida",
-    "zkousky" => "Zkouska",
-    "ucitele" => "Ucitel",
-    "priznaky" => "Priznak",
-    "ucebny" => "Ucebna"
+    "predmety"  => "Subject",
+    "studenti"  => "Student",
+    "tridy"     => "_Class",
+    "zkousky"   => "Exam",
+    "ucitele"   => "Teacher",
+    "priznaky"  => "_Trait",
+    "ucebny"    => "Classroom"
 ];
-
-const tables = ["predmety", "studenti", "tridy", "zkousky", "ucitele", "priznaky", "ucebny"];
 
 class TableController extends AbstractController {
     public function show(Request $request, Response $response, array $args): Response {
@@ -28,7 +26,7 @@ class TableController extends AbstractController {
 
         $name = $args["name"];
 
-        if(!array_key_exists($name, tableMap)){
+        if(!array_key_exists($name, tableMap)) {
             echo "Tabulka nenalezena";
             return $response;
         }
@@ -40,12 +38,11 @@ class TableController extends AbstractController {
 
         // Vyrenderuj webovou stránku.
         return $view->renderResponse($request, $response, "/table.php", [
-            "schema" => $model::getProperties(),
-            "items" => $items,
-            "intermediateData" => array_map(function ($item) { return $item->getIntermediateData(); }, $items),
-            "path" => $tableRoute,
-            "list" => tables,
-            "options" => $model::getSelectOptions($database),
+            "schema"                => $model::getProperties(),
+            "items"                 => $items,
+            "itemsIntermediateData" => array_map(function ($item) { return $item->getIntermediateData(); }, $items),
+            "path"                  => $tableRoute,
+            "options"               => $model::getSelectOptions($database),
         ]);
     }
 }

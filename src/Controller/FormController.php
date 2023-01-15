@@ -10,14 +10,15 @@ use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as R
 const modelNamespace = "Spse\\NahradniHodnoceni\\Model\\";
 const EditableDatabaseEntity = "Spse\NahradniHodnoceni\Model\EditableDatabaseEntity";
 
+// TODO tenhle kód je duplikát z `TableController.php`
 const tableMap = [
-    "predmety" => "Predmet",
-    "studenti" => "Student",
-    "tridy" => "Trida",
-    "zkousky" => "Zkouska",
-    "ucitele" => "Ucitel",
-    "priznaky" => "Priznak",
-    "ucebny" => "Ucebna"
+    "predmety"  => "Subject",
+    "studenti"  => "Student",
+    "tridy"     => "_Class",
+    "zkousky"   => "Exam",
+    "ucitele"   => "Teacher",
+    "priznaky"  => "_Trait",
+    "ucebny"    => "Classroom"
 ];
 
 class FormController extends AbstractController

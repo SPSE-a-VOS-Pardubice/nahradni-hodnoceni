@@ -4,10 +4,10 @@
 
     namespace Spse\NahradniHodnoceni\Model;
     
-    class Ucebna extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+    class Classroom extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
         protected int $id = 0;
-        private string $oznaceni;
+        private string $label;
 
         public function getProperty(string $key){
             return $this->$key;
@@ -19,16 +19,16 @@
 
         public static function getProperties(): array {
             return [
-                new ViewableProperty("id",          "ID",       ViewablePropertyType::INTEGER),
-                new ViewableProperty("oznaceni",    "Označení", ViewablePropertyType::STRING),
-                new ViewableProperty("traits",      "Priznaky", ViewablePropertyType::INTERMEDIATE_DATA,    true)
+                new ViewableProperty("id",      "ID",       ViewablePropertyType::INTEGER),
+                new ViewableProperty("label",   "Označení", ViewablePropertyType::STRING),
+                new ViewableProperty("traits",  "Priznaky", ViewablePropertyType::INTERMEDIATE_DATA,    true),
             ];
         }
 
         public static function getSelectOptions(Database $database): array {
             $traits = [];
             
-            foreach(Priznak::getAll($database) as $trait) {
+            foreach(_Trait::getAll($database) as $trait) {
                 $traits[$trait->id] = $trait->getFormatted();
             }
 
@@ -38,13 +38,13 @@
         }
 
         public function getFormatted(): string {
-            return $this->oznaceni;
+            return $this->label;
         }
 
         public function getIntermediateData(): array {
         return [
             "traits" => array_map(function ($classroomTrait) {
-                    return Priznak::get($this->database, $classroomTrait->trait_id);
+                    return _Trait::get($this->database, $classroomTrait->trait_id);
                 }, ClassroomTrait::getForClassroom($this->database, $this->id)),
             ];
         }
@@ -54,61 +54,64 @@
                 throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
             }
 
-            $ucebna = new Ucebna($database);
-            $ucebna->setProperty("id",    intval($row[0]));
-            $ucebna->setProperty("oznaceni", $row[1]);
-            return $ucebna;
+            $object = new Classroom($database);
+            $object->setProperty("id",      intval($row[0]));
+            $object->setProperty("label",   $row[1]);
+            return $object;
         }
         
 
         public function write(): void {
             $parameters = [
                 new DatabaseParameter("id",     $this->id),
-                new DatabaseParameter("oznaceni",  $this->oznaceni),
+                new DatabaseParameter("label",  $this->label),
             ];
 
             if($this->id === 0){
                 $this->database->execute("
-                INSERT INTO Ucebny (
-                    oznaceni
+                INSERT INTO Classrooms (
+                    label
                 )
                 VALUES (
-                    :oznaceni
+                    :label
                 )", $parameters);
             }else{
                 $this->database->execute("
-                UPDATE Ucebny
+                UPDATE Classrooms
                 SET
-                oznaceni = :oznaceni
+                    label = :label
                 WHERE
-                id = :id
+                    id = :id
                 ", $parameters);
             }
         }
 
         public function remove(): void {
             $this->database->execute("
-                DELETE FROM Ucebny
+                DELETE FROM Classrooms
                 WHERE
                     id = :id
-                    LIMIT 1
+                LIMIT 1
             ", [
-                new DatabaseParameter("id", $this->id)
+                new DatabaseParameter("id", $this->id),
             ]);
         }
 
-        static public function get(Database $database, string $id): Ucebna {
+        static public function get(Database $database, string $id): ?Classroom {
             $row = $database->fetchSingle("
                 SELECT
                     *
-                FROM Ucebny
+                FROM Classrooms
                 WHERE
                     id = :id
             ", [
-                new DatabaseParameter("id", $id)
+                new DatabaseParameter("id", $id),
             ]);
 
-            return Ucebna::fromDatabaseRow($database, $row);
+            if ($row === false) {
+                return null;
+            }
+            return Classroom::fromDatabaseRow($database, $row);
             
         }
 
@@ -116,11 +119,11 @@
             $rows = $database->fetchMultiple("
                 SELECT
                     *
-                FROM Ucebny
+                FROM Classrooms
             ");
     
             return array_map(function (array $row) use($database) {
-                return Ucebna::fromDatabaseRow($database, $row);
+                return Classroom::fromDatabaseRow($database, $row);
             }, $rows);
         }
     }

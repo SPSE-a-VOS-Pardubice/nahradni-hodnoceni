@@ -6,8 +6,8 @@ use Spse\NahradniHodnoceni\Model\DatabaseEntity;
 use Spse\NahradniHodnoceni\Model\ViewableProperty;
 use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 
-define("intermediateData",  $args["data"]["intermediateData"]);
-define("options",           $args["data"]["options"]);
+define("itemsIntermediateData", $args["data"]["itemsIntermediateData"]);
+define("options",               $args["data"]["options"]);
 
 /**
  * Sestav zobrazitelnout hodnotu pro políčko v tabulce
@@ -18,13 +18,12 @@ define("options",           $args["data"]["options"]);
  */
 function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $item): string {
   if ($property->type === ViewablePropertyType::INTERMEDIATE_DATA) {
-    $items = intermediateData[$index][$property->name];
+    $items = itemsIntermediateData[$index][$property->name];
     return join(
       ", ",
       array_map(function ($value) {
-        // var_dump($value);
         return $value->getFormatted();
-      }, $items)
+      }, $items),
     );
   }
 
@@ -48,12 +47,12 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>General Table</title>
   <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/table.css">
 
 </head>
 
 <body>
-<div class="container">
   <?php include(VIEW_ROOT . "/component/header.php") ?>
 
   <main>
@@ -125,7 +124,6 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
       </table>
     </section>
   </main>
-</div>
 </body>
 
 </html>

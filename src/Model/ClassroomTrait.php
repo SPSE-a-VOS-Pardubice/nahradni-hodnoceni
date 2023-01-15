@@ -37,10 +37,10 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
     public function write(): void {
         $parameters = [
             new DatabaseParameter("trait_id",       $this->trait_id),
-            new DatabaseParameter("classroom_id",   $this->classroom_id)
+            new DatabaseParameter("classroom_id",   $this->classroom_id),
         ];
 
-        if($this->id === 0){
+        if($this->id === 0) {
             $this->database->execute("
             INSERT INTO ClassroomsTraits (
                 trait_id
@@ -70,8 +70,8 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
                 classroom_id = :classroom_id
             LIMIT 1
         ", [
-            new DatabaseParameter("trait_id", $this->trait_id),
-            new DatabaseParameter("classroom_id", $this->classroom_id),
+            new DatabaseParameter("trait_id",       $this->trait_id),
+            new DatabaseParameter("classroom_id",   $this->classroom_id),
         ]);
     }
 

@@ -6,11 +6,11 @@ namespace Spse\NahradniHodnoceni\Model;
 
 class Student extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
     protected int $id = 0;
-    private string $jmeno;
-    private string $prijmeni;
-    private int $trida_id;
+    private string $name;
+    private string $surname;
+    private int $class_id;
 
-    public function getProperty(string $key){
+    public function getProperty(string $key) {
         return $this->$key;
     }
 
@@ -21,26 +21,26 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
     public static function getProperties(): array {
         return [
             new ViewableProperty("id",          "ID",       ViewablePropertyType::INTEGER),
-            new ViewableProperty("jmeno",       "Jméno",    ViewablePropertyType::STRING),
-            new ViewableProperty("prijmeni",    "Příjmení", ViewablePropertyType::STRING),
-            new ViewableProperty("trida_id",    "Třída",    ViewablePropertyType::INTEGER,  true)
+            new ViewableProperty("name",        "Jméno",    ViewablePropertyType::STRING),
+            new ViewableProperty("surname",     "Příjmení", ViewablePropertyType::STRING),
+            new ViewableProperty("class_id",    "Třída",    ViewablePropertyType::INTEGER,  true),
         ];
     }
 
     public static function getSelectOptions(Database $database): array {
         $class_id = [];
 
-        foreach(Trida::getAll($database) as $trida) {
+        foreach(_Class::getAll($database) as $trida) {
             $class_id[$trida->id] = $trida->getFormatted();
         }
 
         return [
-            "trida_id" => $class_id,
+            "class_id" => $class_id,
         ];
     }
 
     public function getFormatted(): string {
-        return sprintf("%s %s", $this->prijmeni, $this->jmeno);
+        return sprintf("%s %s", $this->surname, $this->name);
     }
 
     public function getIntermediateData(): array {
@@ -54,43 +54,43 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         }
 
         // Vybuduj novou instanci a vrať ji.
-        $student = new Student($database);
-        $student->setProperty("id",    intval($row[0]));
-        $student->setProperty("jmeno", $row[1]);
-        $student->setProperty("prijmeni", $row[2]);
-        $student->setProperty("trida_id", $row[3]);
-        return $student;
+        $object = new Student($database);
+        $object->setProperty("id",          intval($row[0]));
+        $object->setProperty("name",        $row[1]);
+        $object->setProperty("surname",     $row[2]);
+        $object->setProperty("class_id",    intval($row[3]));
+        return $object;
     }
 
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id",     $this->id),
-            new DatabaseParameter("jmeno",  $this->jmeno),
-            new DatabaseParameter("prijmeni",  $this->primeni),
-            new DatabaseParameter("trida_id",  $this->trida_id)
+            new DatabaseParameter("id",         $this->id),
+            new DatabaseParameter("name",       $this->name),
+            new DatabaseParameter("surname",    $this->primeni),
+            new DatabaseParameter("class_id",   $this->class_id),
         ];
 
         if ($this->id === 0) {
             $this->database->execute("
-                INSERT INTO Studenti (
-                    jmeno,
-                    prijmeni,
-                    trida_id
+                INSERT INTO Students (
+                    name,
+                    surname,
+                    class_id
                 )
                 VALUES (
-                    :jmeno,
-                    :prijmeni,
-                    :trida_id
+                    :name,
+                    :surname,
+                    :class_id
                 )
             ", $parameters);
         } else {
             $this->database->execute("
-                UPDATE Studenti
+                UPDATE Students
                 SET
-                    jmeno = :jmeno,
-                    prijmeni = :prijmeni,
-                    trida_id = :trida_id
+                    name        = :name,
+                    surname     = :surname,
+                    class_id    = :class_id
                 WHERE
                     id = :id
             ", $parameters);
@@ -99,28 +99,30 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM Studenti
+            DELETE FROM Students
             WHERE
                 id = :id
             LIMIT 1
         ", [
-            new DatabaseParameter("id", $this->id)
+            new DatabaseParameter("id", $this->id),
         ]);
     }
     
-    static public function get(Database $database, string $id): Student {
+    static public function get(Database $database, string $id): ?Student {
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM Studenti
+            FROM Students
             WHERE
                 id = :id
         ", [
-            new DatabaseParameter("id", $id)
+            new DatabaseParameter("id", $id),
         ]);
 
-        // TODO: Check empty result
-
+        
+        if ($row === false) {
+            return null;
+        }
         return Student::fromDatabaseRow($database, $row);
     }
 
@@ -128,7 +130,7 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM Studenti
+            FROM Students
         ");
 
         return array_map(function (array $row) use($database) {

@@ -23,7 +23,7 @@ abstract class DatabaseEntity {
         $this->setProperty($name, $value);
     }
 
-    public function __get(string $name){
+    public function __get(string $name) {
         return $this->getProperty($name);
     }
 

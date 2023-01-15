@@ -1,0 +1,46 @@
+/* 
+Tenhle soubor se momentálně na nic neaplikuje, musí se to v budoucnu roztřídit
+*/
+
+/* duvod existence? */
+/* .form-active .col {
+  width: auto;
+} */
+
+@media (max-width: 655px) {
+  .container {
+    padding: 0 4rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form_filter {
+    flex-direction: column;
+  }
+
+  .general_form-sec {
+    margin: 0 6rem;
+  }
+
+  .filter_table_form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  th {
+    font-size: 0.9em;
+    padding: 1em;
+  }
+
+  td {
+    font-size: 0.9em;
+    padding: 1em;
+  }
+
+  .form-property {
+    flex-direction: column;
+  }
+}

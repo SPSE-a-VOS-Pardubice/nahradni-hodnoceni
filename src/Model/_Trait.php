@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Priznak extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
     protected int $id = 0;
-    private string $nazev;
+    private string $name;
 
-    public function getProperty(string $key){
+    public function getProperty(string $key) {
         return $this->$key;
     }
 
@@ -19,7 +19,7 @@ class Priznak extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
     public static function getProperties(): array {
         return [
             new ViewableProperty("id",      "ID",       ViewablePropertyType::INTEGER),
-            new ViewableProperty("nazev",   "Název",    ViewablePropertyType::STRING)
+            new ViewableProperty("name",    "Název",    ViewablePropertyType::STRING),
         ];
     }
 
@@ -28,7 +28,7 @@ class Priznak extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
     }
 
     public function getFormatted(): string {
-        return $this->nazev;
+        return $this->name;
     }
 
     public function getIntermediateData(): array {
@@ -42,33 +42,33 @@ class Priznak extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         }
 
         // Vybuduj novou instanci a vrať ji.
-        $priznak = new Priznak($database);
-        $priznak->setProperty("id",    intval($row[0]));
-        $priznak->setProperty("nazev", $row[1]);
-        return $priznak;
+        $object = new _Trait($database);
+        $object->setProperty("id",      intval($row[0]));
+        $object->setProperty("name",    $row[1]);
+        return $object;
     }
 
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
             new DatabaseParameter("id",     $this->id),
-            new DatabaseParameter("nazev",  $this->nazev)
+            new DatabaseParameter("name",   $this->name),
         ];
 
         if ($this->id === 0) {
             $this->database->execute("
-                INSERT INTO Priznaky (
-                    nazev
+                INSERT INTO Traits (
+                    name
                 )
                 VALUES (
-                    :nazev
+                    :name
                 )
             ", $parameters);
         } else {
             $this->database->execute("
-                UPDATE Priznaky
+                UPDATE Traits
                 SET
-                    nazev = :nazev
+                    name = :name
                 WHERE
                     id = :id
             ", $parameters);
@@ -77,39 +77,40 @@ class Priznak extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM Priznaky
+            DELETE FROM Traits
             WHERE
                 id = :id
         ", [
-            new DatabaseParameter("id", $this->id)
+            new DatabaseParameter("id", $this->id),
         ]);
     }
 
-    static public function get(Database $database, int $id): Priznak {
+    static public function get(Database $database, int $id): ?_Trait {
         $row = $database->fetchSingle("
             SELECT
                 *
-            FROM Priznaky
+            FROM Traits
             WHERE
                 id = :id
         ", [
-            new DatabaseParameter("id", $id)
+            new DatabaseParameter("id", $id),
         ]);
 
-        // TODO: Check empty result
-
-        return Priznak::fromDatabaseRow($database, $row);
+        if ($row === false) {
+            return null;
+        }
+        return _Trait::fromDatabaseRow($database, $row);
     }
 
     static public function getAll(Database $database): array {
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM Priznaky
+            FROM Traits
         ");
 
         return array_map(function (array $row) use($database) {
-            return Priznak::fromDatabaseRow($database, $row);
+            return _Trait::fromDatabaseRow($database, $row);
         }, $rows);
     }
 }
