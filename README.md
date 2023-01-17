@@ -52,7 +52,7 @@ Pro spuštění `php` (např. na portu 8080) je pak nutno zadat do terminálu
 php -S 127.0.0.1:8080 -t public/
 ```
 ### Debugging
-K debuggování se zapotřebí si nainstalovat [Xdebug](https://xdebug.org/) a přidat do konfiguračního soubory PHP ``php.ini`` tyto dvě řádky:
+K debuggování je zapotřebí si nainstalovat [Xdebug](https://xdebug.org/) a přidat do konfiguračního soubory PHP ``php.ini`` tyto dvě řádky:
 ```
 xdebug.mode = debug
 xdebug.start_with_request = yes
