@@ -9,6 +9,15 @@ use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as R
 
 const modelNamespace = "Spse\\NahradniHodnoceni\\Model\\";
 
+const csvMapping = [
+    "trida"         => 0,
+    "jmeno"         => 1,
+    "prijmeni"      => 2,
+    "predmet"       => 3,
+    "znamka"        => 4,
+    "zkousejici"    => 5
+];
+
 class ImportController extends AbstractController
 {
     public function show(Request $request, Response $response, array $args): Response
@@ -28,32 +37,32 @@ class ImportController extends AbstractController
         switch ($file->getError()) {
             case (UPLOAD_ERR_INI_SIZE):
                 return $view->renderResponse($request, $response, "/error.php", 
-                    ["text" => "Velikost nahraného souboru převyšuje nastavení 'upload_max_filesize' v 'php.ini'", "link" => "/import/upload"]);
+                    ["message" => "Velikost nahraného souboru převyšuje nastavení 'upload_max_filesize' v 'php.ini'", "backLink" => "/import/upload"]);
             case (UPLOAD_ERR_FORM_SIZE):
                 return $view->renderResponse($request, $response, "/error.php", 
-                    ["text" => "Velikost nahraného souboru převyšuje nastavení 'MAX_FILE_SIZE' v HTML formuláři", "link" => "/import/upload"]);
+                    ["message" => "Velikost nahraného souboru převyšuje nastavení 'MAX_FILE_SIZE' v HTML formuláři", "backLink" => "/import/upload"]);
             case (UPLOAD_ERR_PARTIAL):
                 return $view->renderResponse($request, $response, "/error.php", 
-                    ["text" => "Soubor byl pouze částečně nahrán", "link" => "/import/upload"]);
+                    ["message" => "Soubor byl pouze částečně nahrán", "backLink" => "/import/upload"]);
             case (UPLOAD_ERR_NO_FILE):
                 return $view->renderResponse($request, $response, "/error.php", 
-                    ["text" => "Žádný soubor nebyl nahrán", "link" => "/import/upload"]);
+                    ["message" => "Žádný soubor nebyl nahrán", "backLink" => "/import/upload"]);
             case (UPLOAD_ERR_NO_TMP_DIR):
                 return $view->renderResponse($request, $response, "/error.php", 
-                    ["text" => "Chybí temporary folder", "link" => "/import/upload"]);
+                    ["message" => "Chybí temporary folder", "backLink" => "/import/upload"]);
             case (UPLOAD_ERR_CANT_WRITE):
                 return $view->renderResponse($request, $response, "/error.php", 
-                    ["text" => "Chyba při zapisování souboru na disk", "link" => "/import/upload"]);
+                    ["message" => "Chyba při zapisování souboru na disk", "backLink" => "/import/upload"]);
             case (UPLOAD_ERR_EXTENSION):
                 return $view->renderResponse($request, $response, "/error.php", 
-                    ["text" => "PHP extension zamezila v nahrání souboru", "link" => "/import/upload"]);
+                    ["message" => "PHP extension zamezila v nahrání souboru", "backLink" => "/import/upload"]);
 
         }
 
         $stream = $file->getStream();
         if($stream == null) {
             return $view->renderResponse($request, $response, "/error.php", 
-                    ["text" => "\$file->getStream() je null", "link" => "/import/upload"]);
+                    ["message" => "\$file->getStream() je null", "backLink" => "/import/upload"]);
         }
 
         $this->parse($file->getStream());
@@ -74,12 +83,19 @@ class ImportController extends AbstractController
         // TODO: Nahrát nová data do databáze
         return $response;
     }
-
+    
     public function parse($stream, string $separator = ";") {
         $result = [];
-        
-        for ($i = 0; $i < 4; $i++) {
-            $values = fgetcsv($stream, null, $separator);
+
+        $strings = explode("\n", $stream->__toString());
+        $lastIndex = count($strings) - 1;
+        if($strings[$lastIndex] == "") {
+            unset($strings[$lastIndex]);
+        }
+
+        for ($i = 0; $i < count($strings); $i++) {
+            $values = str_getcsv($strings[$i], $separator);
+            $predmet = $values[csvMapping["predmet"]];
         }
     }
 }
