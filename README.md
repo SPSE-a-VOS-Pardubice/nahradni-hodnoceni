@@ -51,7 +51,13 @@ Pro spuštění `php` (např. na portu 8080) je pak nutno zadat do terminálu
 ```bash
 php -S 127.0.0.1:8080 -t public/
 ```
-
+### Debugging
+K debuggování je zapotřebí si nainstalovat [Xdebug](https://xdebug.org/) a přidat do konfiguračního soubory PHP ``php.ini`` tyto dvě řádky:
+```
+xdebug.mode = debug
+xdebug.start_with_request = yes
+```
+Po spuštění PHP serveru obvyklým způsobem je zapotřebí zapnout debugger pomocí launch configuration Visual Studia s názvem ``Listen for Xdebug``.
 
 
 ## Deployment
