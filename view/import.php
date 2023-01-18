@@ -24,7 +24,7 @@ use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 <body>
     <?php include(VIEW_ROOT . "/component/header.php") ?>
     <main>
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             <button type="submit">Import</button>
             <input type="file" id="import" name="import" accept=".csv">
         </form>

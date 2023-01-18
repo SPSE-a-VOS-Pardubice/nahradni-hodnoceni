@@ -11,72 +11,75 @@ const modelNamespace = "Spse\\NahradniHodnoceni\\Model\\";
 
 class ImportController extends AbstractController
 {
-    public function show(Request $request, Response $response, array $args): Response {
+    public function show(Request $request, Response $response, array $args): Response
+    {
+        /** @var View  */
+        $view = $this->container->get("view");
+
+        return $view->renderResponse($request, $response, "/import.php");
+    }
+
+    public function upload(Request $request, Response $response, array $args): Response
+    {
         /** @var View  */
         $view = $this->container->get("view");
         
-        return $view->renderResponse($request, $response, "/import.php");
-    }
-    
-    public function upload(Request $request, Response $response, array $args): Response {
+        $file = $request->getUploadedFiles()["import"];
+        switch ($file->getError()) {
+            case (UPLOAD_ERR_INI_SIZE):
+                return $view->renderResponse($request, $response, "/error.php", 
+                    ["text" => "Velikost nahraného souboru převyšuje nastavení 'upload_max_filesize' v 'php.ini'", "link" => "/import/upload"]);
+            case (UPLOAD_ERR_FORM_SIZE):
+                return $view->renderResponse($request, $response, "/error.php", 
+                    ["text" => "Velikost nahraného souboru převyšuje nastavení 'MAX_FILE_SIZE' v HTML formuláři", "link" => "/import/upload"]);
+            case (UPLOAD_ERR_PARTIAL):
+                return $view->renderResponse($request, $response, "/error.php", 
+                    ["text" => "Soubor byl pouze částečně nahrán", "link" => "/import/upload"]);
+            case (UPLOAD_ERR_NO_FILE):
+                return $view->renderResponse($request, $response, "/error.php", 
+                    ["text" => "Žádný soubor nebyl nahrán", "link" => "/import/upload"]);
+            case (UPLOAD_ERR_NO_TMP_DIR):
+                return $view->renderResponse($request, $response, "/error.php", 
+                    ["text" => "Chybí temporary folder", "link" => "/import/upload"]);
+            case (UPLOAD_ERR_CANT_WRITE):
+                return $view->renderResponse($request, $response, "/error.php", 
+                    ["text" => "Chyba při zapisování souboru na disk", "link" => "/import/upload"]);
+            case (UPLOAD_ERR_EXTENSION):
+                return $view->renderResponse($request, $response, "/error.php", 
+                    ["text" => "PHP extension zamezila v nahrání souboru", "link" => "/import/upload"]);
+
+        }
+
+        $stream = $file->getStream();
+        if($stream == null) {
+            return $view->renderResponse($request, $response, "/error.php", 
+                    ["text" => "\$file->getStream() je null", "link" => "/import/upload"]);
+        }
+
+        $this->parse($file->getStream());
         return $this->redirect($response, "/import/preview");
     }
 
-    public function showPreview(Request $request, Response $response, array $args): Response {
+    public function showPreview(Request $request, Response $response, array $args): Response
+    {
         // TODO: Parse CSV soubor
         /** @var View  */
         $view = $this->container->get("view");
-        
+
         return $view->renderResponse($request, $response, "/importPreview.php");
     }
 
-    public function accept(Request $request, Response $response, array $args): Response {
+    public function accept(Request $request, Response $response, array $args): Response
+    {
         // TODO: Nahrát nová data do databáze
-
         return $response;
     }
 
-
-
-
-    
-    
-    /*public function show(Request $request, Response $response, array $args): Response {
-        $test = $request->getUploadedFiles();
-        $a = $test[0];
-    }
-
-    public function menu(Request $request, Response $response, array $args): Response {
-        /** @var View 
-        $view = $this->container->get("view");
-
-        echo (file_get_contents("../sql/import.csv"));
-        $file = fopen("../sql/import.csv", "r");
-        $this->parse($file);
-        fclose($file);
-        
-        // Vyrenderuj webovou stránku.
-        return $view->renderResponse($request, $response, "/import.php", [
-            "test" => "uwu"
-        ]);
-    }
-
-    private function parse($stream, string $separator = ";"): array {
-        /** @var array<Exam> 
+    public function parse($stream, string $separator = ";") {
         $result = [];
         
         for ($i = 0; $i < 4; $i++) {
             $values = fgetcsv($stream, null, $separator);
-            $object = new Exam(null);
-            $object->setProperty("id",              "");
-            $object->setProperty("student_id",      "Pavel");
-            $object->setProperty("subject_id",      "Křivka");
-            $object->setProperty("classroom_id",    "");
-            $object->setProperty("original_mark",   "");
-            $object->setProperty("final_mark",      "");
-            $object->setProperty("time",            "");
         }
-
-        return [];
-    }*/
+    }
 }
