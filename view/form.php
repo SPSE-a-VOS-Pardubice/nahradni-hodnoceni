@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Spse\NahradniHodnoceni\Model\DatabaseEntity;
 use Spse\NahradniHodnoceni\Model\ViewableProperty;
 use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 
@@ -9,29 +10,47 @@ use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 define("item", $args["data"]["item"]);
 
 function getDefaultInputValue(ViewableProperty $property): string {
-    if (is_null(item))
-        return "";
-    
-    if ($property->type === ViewablePropertyType::DATETIME)
-      return item->{$property->name}->format("Y-m-d\TH:i");
+  if (is_null(item))
+      return "";
+  
+  if ($property->type === ViewablePropertyType::DATETIME)
+    return item->{$property->name}->format("Y-m-d\TH:i");
 
-    return strval(item->{$property->name});
+  return strval(item->{$property->name});
 }
 
 function getInputType(ViewablePropertyType $propType): string {
-    switch ($propType) {
-        case ViewablePropertyType::BOOLEAN:
-            return "checkbox";
-        case ViewablePropertyType::INTEGER:
-        case ViewablePropertyType::DOUBLE:
-            return "number";
-        case ViewablePropertyType::STRING:
-            return "text";
-        case ViewablePropertyType::DATETIME:
-            return "datetime-local";
-    }
+  switch ($propType) {
+    case ViewablePropertyType::BOOLEAN:
+      return "checkbox";
+    case ViewablePropertyType::INTEGER:
+    case ViewablePropertyType::DOUBLE:
+      return "number";
+    case ViewablePropertyType::STRING:
+      return "text";
+    case ViewablePropertyType::DATETIME:
+      return "datetime-local";
+  }
 
-    throw new InvalidArgumentException();
+  throw new InvalidArgumentException();
+}
+
+/**
+ * @param array<DatabaseEntity> $objects
+ * @param array<string, string> $options
+ * @return string
+ */
+function encodeIntermediateDataForFrontend($objects, $options) {
+
+  $objectsMap = [];
+  foreach ($objects as $object) {
+    $objectsMap[$object->id] = $object->getFormatted();
+  }
+
+  return json_encode([
+    "objects" => $objectsMap,
+    "options" => $options,
+  ]);
 }
 
 ?>
@@ -46,9 +65,10 @@ function getInputType(ViewablePropertyType $propType): string {
   <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/assets/css/global.css">
   <link rel="stylesheet" href="/assets/css/form.css">
+  <script src="/assets/js/form.js"></script>
 </head>
 
-<body>
+<body onload="onload()">
   <?php include(VIEW_ROOT . "/component/header.php") ?>
 
   <main>
@@ -58,7 +78,7 @@ function getInputType(ViewablePropertyType $propType): string {
       <!-- řádek s vlastností -->
       <?php foreach ($args["data"]["schema"] as $property): ?>
         <?php if ($property->name !== "id"): ?>
-          <div class="form-row" data-isList="<?= $property->type === ViewablePropertyType::INTERMEDIATE_DATA ? 1 : 0 ?>">
+          <div class="form-row" <?= $property->type === ViewablePropertyType::INTERMEDIATE_DATA ? sprintf("data-intermediate=\"%s\"", htmlspecialchars(encodeIntermediateDataForFrontend($args["data"]["intermediateData"][$property->name], $args["data"]["options"][$property->name]))) : "" ?>>
             <label for="<?= $property->name ?>">
               <?= $property->displayName ?>
             </label>

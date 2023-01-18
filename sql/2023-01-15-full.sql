@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`Classes` (
   `label` VARCHAR(45) NOT NULL,
   `class_teacher_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Třídy_Učitelé2_idx` (`class_teacher_id` ASC) VISIBLE,
+  INDEX `fk_Třídy_Učitelé2_idx` (`class_teacher_id` ASC),
   CONSTRAINT `fk_Třídy_Učitelé2`
     FOREIGN KEY (`class_teacher_id`)
     REFERENCES `nahradni_hodnoceni`.`Teachers` (`id`)
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`Students` (
   `surname` VARCHAR(45) NOT NULL,
   `class_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Studenti_Třídy1_idx` (`class_id` ASC) VISIBLE,
+  INDEX `fk_Studenti_Třídy1_idx` (`class_id` ASC),
   CONSTRAINT `fk_Studenti_Třídy1`
     FOREIGN KEY (`class_id`)
     REFERENCES `nahradni_hodnoceni`.`Classes` (`id`)
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`Classrooms` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `label` VARCHAR(5) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `oznaceni_UNIQUE` (`label` ASC) VISIBLE)
+  UNIQUE INDEX `oznaceni_UNIQUE` (`label` ASC))
 ENGINE = InnoDB;
 
 
@@ -101,9 +101,9 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`Exams` (
   `final_mark` VARCHAR(45) NULL,
   `time` DATETIME NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Zkousky_Studenti1_idx` (`student_id` ASC) VISIBLE,
-  INDEX `fk_Zkousky_Ucebny1_idx` (`classroom_id` ASC) VISIBLE,
-  INDEX `fk_Zkousky_Predmety1_idx` (`subject_id` ASC) VISIBLE,
+  INDEX `fk_Zkousky_Studenti1_idx` (`student_id` ASC),
+  INDEX `fk_Zkousky_Ucebny1_idx` (`classroom_id` ASC),
+  INDEX `fk_Zkousky_Predmety1_idx` (`subject_id` ASC),
   CONSTRAINT `fk_Zkousky_Studenti1`
     FOREIGN KEY (`student_id`)
     REFERENCES `nahradni_hodnoceni`.`Students` (`id`)
@@ -130,8 +130,8 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`ExamsTeachers` (
   `teacher_id` INT NOT NULL,
   `Role` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`exam_id`, `teacher_id`),
-  INDEX `fk_Zkousky_has_Ucitele_Ucitele1_idx` (`teacher_id` ASC) VISIBLE,
-  INDEX `fk_Zkousky_has_Ucitele_Zkousky1_idx` (`exam_id` ASC) VISIBLE,
+  INDEX `fk_Zkousky_has_Ucitele_Ucitele1_idx` (`teacher_id` ASC),
+  INDEX `fk_Zkousky_has_Ucitele_Zkousky1_idx` (`exam_id` ASC),
   CONSTRAINT `fk_Zkousky_has_Ucitele_Zkousky1`
     FOREIGN KEY (`exam_id`)
     REFERENCES `nahradni_hodnoceni`.`Exams` (`id`)
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`Traits` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `nazev_UNIQUE` (`name` ASC) VISIBLE)
+  UNIQUE INDEX `nazev_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
 
 
@@ -163,8 +163,8 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`SubjectsTraits` (
   `trait_id` INT NOT NULL,
   `subject_id` INT NOT NULL,
   PRIMARY KEY (`trait_id`, `subject_id`),
-  INDEX `fk_Priznaky_has_Predmety_Predmety1_idx` (`subject_id` ASC) VISIBLE,
-  INDEX `fk_Priznaky_has_Predmety_Priznaky1_idx` (`trait_id` ASC) VISIBLE,
+  INDEX `fk_Priznaky_has_Predmety_Predmety1_idx` (`subject_id` ASC),
+  INDEX `fk_Priznaky_has_Predmety_Priznaky1_idx` (`trait_id` ASC),
   CONSTRAINT `fk_Priznaky_has_Predmety_Priznaky1`
     FOREIGN KEY (`trait_id`)
     REFERENCES `nahradni_hodnoceni`.`Traits` (`id`)
@@ -185,8 +185,8 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`ClassroomsTraits` (
   `trait_id` INT NOT NULL AUTO_INCREMENT,
   `classroom_id` INT NOT NULL,
   PRIMARY KEY (`trait_id`, `classroom_id`),
-  INDEX `fk_Priznaky_has_Ucebny_Ucebny1_idx` (`classroom_id` ASC) VISIBLE,
-  INDEX `fk_Priznaky_has_Ucebny_Priznaky1_idx` (`trait_id` ASC) VISIBLE,
+  INDEX `fk_Priznaky_has_Ucebny_Ucebny1_idx` (`classroom_id` ASC),
+  INDEX `fk_Priznaky_has_Ucebny_Priznaky1_idx` (`trait_id` ASC),
   CONSTRAINT `fk_Priznaky_has_Ucebny_Priznaky1`
     FOREIGN KEY (`trait_id`)
     REFERENCES `nahradni_hodnoceni`.`Traits` (`id`)
@@ -207,8 +207,8 @@ CREATE TABLE IF NOT EXISTS `nahradni_hodnoceni`.`TeachersSuitability` (
   `subject_id` INT NOT NULL,
   `teacher_id` INT NOT NULL,
   PRIMARY KEY (`subject_id`, `teacher_id`),
-  INDEX `fk_Predmety_has_Ucitele_Ucitele1_idx` (`teacher_id` ASC) VISIBLE,
-  INDEX `fk_Predmety_has_Ucitele_Predmety1_idx` (`subject_id` ASC) VISIBLE,
+  INDEX `fk_Predmety_has_Ucitele_Ucitele1_idx` (`teacher_id` ASC),
+  INDEX `fk_Predmety_has_Ucitele_Predmety1_idx` (`subject_id` ASC),
   CONSTRAINT `fk_Predmety_has_Ucitele_Predmety1`
     FOREIGN KEY (`subject_id`)
     REFERENCES `nahradni_hodnoceni`.`Subjects` (`id`)
