@@ -13,7 +13,7 @@ use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 <title>Error</title>
 </head>
 <body>
-<p><?php echo ($args["data"]["text"]); ?></p>
-<a href=" <?php echo ($args["data"]["link"]); ?> ">Go back</a>
+<p><?php echo ($args["data"]["message"]); ?></p>
+<a href=" <?php echo ($args["data"]["backLink"]); ?> ">Go back</a>
 </body>
 </hmtl>
