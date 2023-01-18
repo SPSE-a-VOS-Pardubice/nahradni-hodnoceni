@@ -58,8 +58,12 @@ $app->group("", function (RouteCollectorProxy $group) {
     $group->get("/table/{name}/{id}", [FormController::class, "show"]);
     $group->post("/table/{name}/{id}", [FormController::class, "post"]);
 
-    // Správa uživatele:
-    $group->get("/import/menu", [ImportController::class, "menu"]);
+    // Import funkcionalita
+    $group->get("/import/upload", [ImportController::class, "show"]);
+    $group->post("/import/upload", [ImportController::class, "upload"]);
+
+    $group->get("/import/preview", [ImportController::class, "showPreview"]);
+    $group->post("/import/preview", [ImportController::class, "accept"]);
 
 })->add($header);
 
