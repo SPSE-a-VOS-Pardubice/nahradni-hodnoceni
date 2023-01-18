@@ -1,0 +1,77 @@
+body > * {
+  max-width: 600px;
+  padding: 0 2rem;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 50vh;
+  gap: 2.5rem;
+}
+form > * {
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #64b22d;
+  transition: 0.35s;
+  font-size: 1.1rem;
+}
+form input {
+  background: none;
+  text-align: center;
+}
+table {
+  border-collapse: collapse;
+}
+
+th {
+  font-size: 1.1rem;
+  padding: 1rem 2.5rem;
+  color: #fff;
+  border: 1px solid #999;
+  background-color: #222;
+}
+
+td {
+  font-size: 1.1rem;
+  font-weight: 400;
+  text-align: center;
+  padding: 1rem 2.5rem;
+  border: 1px solid #999;
+  transition: 0.35s;
+}
+
+td:hover {
+  cursor: pointer;
+  background-color: rgba(100, 178, 45, 0.5);
+}
+
+td a {
+  color: #999;
+  transition: 0.35s;
+}
+.table_sec {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 50vh;
+  gap: 2.5rem;
+}
+.table_sec button {
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #64b22d;
+  transition: 0.35s;
+  font-size: 1.1rem;
+}
