@@ -53,7 +53,7 @@ function getInputType(ViewablePropertyType $propType): string {
 
   <main>
     <h2 class="general_head">Název</h2>
-    <form action="" method="get" class="general_form">
+    <form action="" method="post" class="general_form">
 
       <!-- řádek s vlastností -->
       <?php foreach ($args["data"]["schema"] as $property): ?>
