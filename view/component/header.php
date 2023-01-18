@@ -13,7 +13,7 @@
           <?php endforeach; ?>
         </ul>
       </li>
-      <li><a href="#">Import</a></li>
+      <li><a href="/import/upload">Import</a></li>
     </ul>
   </nav>
 </header>
