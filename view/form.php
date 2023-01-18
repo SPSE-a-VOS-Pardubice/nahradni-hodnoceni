@@ -53,6 +53,14 @@ function encodeIntermediateDataForFrontend($objects, $options) {
   ]);
 }
 
+function isSelected($optionName, $value): bool {
+
+  if (item == null)
+    return false;
+
+  return $optionName === item->$value;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -102,7 +110,7 @@ function encodeIntermediateDataForFrontend($objects, $options) {
                 <?php if ($property->isSelect): ?>
                   <select name="<?= $property->name ?>">
                     <?php foreach ($args["data"]["options"][$property->name] as $optionName => $optionDisplayName): ?>
-                      <option value="<?= $optionName ?>" <?= $optionName === $value ? "selected" : "" ?>>
+                      <option value="<?= $optionName ?>" <?= /**$optionName === $value */ isSelected($optionName, $property->name) ? "selected" : "" ?>>
                         <?= $optionDisplayName ?>
                       </option>
                     <?php endforeach; ?>
