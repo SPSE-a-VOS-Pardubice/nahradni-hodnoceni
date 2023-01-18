@@ -91,21 +91,7 @@ function isSelected($optionName, $value): bool {
               <?= $property->displayName ?>
             </label>
             <div class="col">
-              <?php if ($property->type === ViewablePropertyType::INTERMEDIATE_DATA): ?>
-                <?php foreach ($args["data"]["intermediateData"][$property->name] as $object): ?>
-
-                  <!-- render select for each object -->
-                  <select name="<?= $property->name ?>">
-                    <?php foreach ($args["data"]["options"][$property->name] as $optionName => $optionDisplayName): ?>
-                      <option value="<?= $optionName ?>" <?= $optionName === $object->id ? "selected" : "" ?>>
-                        <?= $optionDisplayName ?>
-                      </option>
-                    <?php endforeach; ?>
-                  </select>
-
-                <?php endforeach; ?>
-              <?php else: ?>
-
+              <?php if ($property->type !== ViewablePropertyType::INTERMEDIATE_DATA): ?>
                 <!-- select -->
                 <?php if ($property->isSelect): ?>
                   <select name="<?= $property->name ?>">
