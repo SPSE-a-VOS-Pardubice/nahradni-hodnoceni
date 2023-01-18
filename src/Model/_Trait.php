@@ -113,4 +113,28 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
             return _Trait::fromDatabaseRow($database, $row);
         }, $rows);
     }
+    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+
+        $trait = null;
+        if ($id > 0) {
+            $trait = _Trait::get($database, strval($id));
+
+            if ($trait == null) 
+                throw new Exception("Error Processing Request", 1);
+        } else {
+            $trait = new _Trait($database);
+        }
+
+        $trait->setProperty("name",    $data["name"]);
+
+
+        return [$trait];
+    }
+
+    public static function applyPostData(array $models): void {
+
+        $trait = $models[0];
+
+        $trait->write();
+    }
 }

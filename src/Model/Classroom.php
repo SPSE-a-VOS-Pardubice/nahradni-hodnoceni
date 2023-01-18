@@ -126,5 +126,62 @@
                 return Classroom::fromDatabaseRow($database, $row);
             }, $rows);
         }
+
+        public static function parsePostData(array $data, Database $database, int $id = 0): array {
+
+            $classroom = null;
+            if ($id > 0) {
+                $classroom = Classroom::get($database, strval($id));
+
+                if ($classroom == null) 
+                    throw new Exception("Error Processing Request", 1);
+            } else {
+                $classroom = new Classroom($database);
+            }
+
+            $classroom->setProperty("label",   $data["label"]);
+
+            return [$classroom, ClassroomTrait::parsePostData($data, $database)];
+        }
+
+        public static function applyPostData(array $models): void {
+
+            $classroom = $models[0];
+            $classroomsTrails = $models[1];
+            
+            // tenhle algorizmus by se možná dal imlementovat někde obecně ???
+
+            // vem si z priznakUcebna data kde idUcebna = id
+            $traitsInDB = ClassroomTrait::getForClassroom($classroom->database, $classroom->id);
+            // deklarace místa pro traity co jsou i v posu i v db
+            $willBeInDB = [];
+        
+            // projdi traity v postu 
+            foreach ($classroomsTrails as $trait) {
+                // pokud není trait ve výsledku z db přidej ho do db 
+                if ($traitsInDB[$trait->trait_id] == null) {
+                    // šla by volat i metoda write 
+                    // TODO: zamyslet se: asi vy modely pro mezi tabulky nemusei mýt metodu applyPostDat
+                    $trait->classroom_id = $classroom->id;
+                    ClassroomTrait::applyPostData([$trait]);
+                }
+
+                // dej do traity co jsou i v posu i v db
+                $willBeInDB[$trait->trait_id] = $trait;
+            }
+
+            // projdi data z mezitabulky
+            foreach ($traitsInDB as $traitInDB) {
+                // pokud není v   traity co jsou i v postu i v db
+                if ($willBeInDB[$traitInDB->trait_id] == null) {
+                   //odeber ho z db
+                   $traitInDB->remove();
+                }
+            }
+            
+
+            $classroom->write();
+        }
     }
+
 ?>

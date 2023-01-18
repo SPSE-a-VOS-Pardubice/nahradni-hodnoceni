@@ -143,4 +143,36 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
             return _Class::fromDatabaseRow($database, $row);
         }, $rows);
     }
+
+    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+
+        $class = null;
+        if ($id > 0) {
+            $class = _Class::get($database, strval($id));
+
+            if ($class == null) 
+                throw new Exception("Error Processing Request", 1);
+        } else {
+            $class = new _Class($database);
+        }
+
+        $class->setProperty("year",                intval($data["year"]));
+        $class->setProperty("grade",               intval($data["grade"]));
+        $class->setProperty("label",               $data["label"]);
+
+
+        return [$class, Teacher::get($database, $data["class_teacher_id"])];
+    }
+
+    public static function applyPostData(array $models): void {
+
+        $class = $models[0];
+        $teacher = $models[1];
+
+        if ($teacher != null) {
+            $class->setProperty("class_teacher_id",               $teacher->id);
+        }
+
+        $class->write();
+    }
 }

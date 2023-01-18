@@ -33,6 +33,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
             new ViewableProperty("original_mark",   "Původní známka",   ViewablePropertyType::STRING,   true),
             new ViewableProperty("final_mark",      "Výsledná známka",  ViewablePropertyType::STRING,   true),
             new ViewableProperty("time",            "Termín konání",    ViewablePropertyType::DATETIME),
+            new ViewableProperty("teachers", "Komise", ViewablePropertyType::INTERMEDIATE_DATA, true)
         ];
     }
 
@@ -40,6 +41,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         $student_id = [];
         $subject_id = [];
         $classroom_id = [];
+        $teachers = [];
 
         foreach (Student::getAll($database) as $student) {
             $student_id[$student->id] = $student->getFormatted(); 
@@ -50,6 +52,9 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         foreach (Classroom::getAll($database) as $classroom) {
             $classroom_id[$classroom->id] = $classroom->getFormatted();
         }
+        foreach (Teacher::getAll($database) as $teacher) {
+            $teachers[$teacher->id] = $teacher->getFormatted();
+        }
 
         return [
             "student_id"    => $student_id,
@@ -57,11 +62,16 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
             "classroom_id"  => $classroom_id,
             "original_mark" => MARK_OPTIONS,
             "final_mark"    => MARK_OPTIONS,
+            "teachers"      => $teachers
         ];
     }
 
     public function getIntermediateData(): array {
-        return [];
+        return [
+            "teachers" => array_map(function ($examTeacher) {
+                    return Teacher::get($this->database, $examTeacher->teacher_id);
+                }, ExamTeacher::getForExamp($this->database, $this->id)),
+            ];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {
@@ -167,5 +177,68 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         return array_map(function (array $row) use($database) {
             return Exam::fromDatabaseRow($database, $row);
         }, $rows);
+    }
+
+    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+
+        $exam = null;
+        if ($id > 0) {
+            $exam = Exam::get($database, strval($id));
+
+            if ($exam == null) 
+                throw new Exception("Error Processing Request", 1);
+        } else {
+            $exam = new Exam($database);
+        }
+
+        $exam->setProperty("original_mark",   $data["original_mark"]);
+        $exam->setProperty("final_mark",      $data["final_mark"]);
+        $exam->setProperty("time",            new DateTime($data["time"]));
+
+        return [
+            $exam, 
+            Student::get($database, $data["student_id"]), 
+            Subject::get($database, $data["subject_id"]),
+            Classroom::get($database, $data["classroom_id"]),
+            ExamTeacher::parsePostData($data, $database)
+        ];
+    }
+
+    public static function applyPostData(array $models): void {
+
+        $exam = $models[0];
+        $student = $models[1];
+        $subject = $models[2];
+        $classroom = $models[3];
+        $examTeachers = $models[4];
+
+
+        if ($student != null)
+            $exam->setProperty("student_id",  intval($student->id));
+        if ($subject != null)
+            $exam->setProperty("subject",  intval($subject->id));
+        if ($classroom != null)
+            $exam->setProperty("classroom",  intval($classroom->id));
+
+        $teachersInDB = ExamTeacher::getForExamp($exam->database, $exam->id);
+        $willBeInDB = [];
+
+        foreach ($examTeachers as $teacher) {
+            if ($teachersInDB[$teacher->teacher_id] == null) {
+                // TODO co když teprve vytvářím? id je 0
+                $teacher->exam_id = $exam->id;
+                ExamTeacher::applyPostData([$teacher]);
+            }
+
+            $willBeInDB[$teacher->teacher_id] = $teacher;
+        }
+
+        foreach ($willBeInDB as $teacherInDB) {
+            if ($willBeInDB[$teacherInDB->teacher_id] == null) {
+                $teacherInDB->remove();
+            }
+        }
+
+        $exam->write();
     }
 }

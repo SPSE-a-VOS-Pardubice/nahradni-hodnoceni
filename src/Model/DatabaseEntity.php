@@ -48,4 +48,14 @@ abstract class DatabaseEntity {
      * Remove the object from the database. Works only with non-default `id` values.
      */
     abstract public function remove(): void;
+
+    /**
+     * metoda vrátí pole modelů, které naformátuje z furmuláře
+     */
+    abstract public static function parsePostData(array $data, Database $database, int $id = 0): array;
+
+    /**
+     * vyřeší vztady mezi tabulkami (daty, které je představují a provede zápisy)
+     */
+    abstract public static function applyPostData(array $models): void;
 }

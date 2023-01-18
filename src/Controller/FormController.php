@@ -63,9 +63,29 @@ class FormController extends AbstractController
 
     public function post(Request $request, Response $response, array $args): Response
     {
-        // TODO: 
         $parsedBody = $request->getParsedBody();
         var_dump($parsedBody);
+
+        
+        $view = $this->container->get("view");
+        $database = $this->container->get("database");
+
+        $name = $args["name"];
+
+        if (!array_key_exists($name, tableMap)) {
+            echo "Tabulka nenalezena";
+            return $response;
+        }
+        $model = modelNamespace . tableMap[$name];
+
+        // vytváří nový nebo edituje starý
+        $id = $args["id"];
+        if ($id === "new") {
+            // vytváří nový 
+
+            // z dat naparsuj model 
+        }
+            // edituje starý 
 
         return $response;
     }

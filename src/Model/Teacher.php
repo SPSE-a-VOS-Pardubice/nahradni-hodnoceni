@@ -142,4 +142,51 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             return Teacher::fromDatabaseRow($database, $row);
         }, $rows);
     }
+    
+    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+
+        $teacher = null;
+        if ($id > 0) {
+            $teacher = Teacher::get($database, strval($id));
+
+            if ($teacher == null) 
+                throw new Exception("Error Processing Request", 1);
+        } else {
+            $teacher = new Teacher($database);
+        }
+
+        $teacher->setProperty("name",    $data["name"]);
+        $teacher->setProperty("surname", $data["surname"]);
+        $teacher->setProperty("prefix",  $data["prefix"]);
+        $teacher->setProperty("suffix",  $data["suffix"]);
+
+        return [$teacher, TeacherSuitability::parsePostData($data, $database)];
+    }
+
+    public static function applyPostData(array $models): void {
+
+        $teacher = $models[0];
+        $teacherSuitability = $models[1];
+
+        $suitabilityInDB = TeacherSuitability::getForTeacher($teacher->database, $teacher->id);
+        $willBeInDB = [];
+
+        foreach ($teacherSuitability as $suitability) {
+            if ($suitabilityInDB[$suitability->subject_id] == null) {
+                // TODO co když teprve vytvářím? id je 0
+                $suitability->teacher_id = $teacher->id;
+                TeacherSuitability::applyPostData([$suitability]);
+            }
+
+            $willBeInDB[$teacher->teacher_id] = $teacher;
+        }
+
+        foreach ($willBeInDB as $suitabilityInDB) {
+            if ($willBeInDB[$suitabilityInDB->subject_id] == null) {
+                $suitabilityInDB->remove();
+            }
+        }
+
+        $teacher->write();
+    }
 }

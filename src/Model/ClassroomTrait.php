@@ -51,6 +51,7 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
                 :classroom_id
             )", $parameters);
         }else{
+            // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
             $this->database->execute("
             UPDATE ClassroomsTraits
             SET
@@ -86,8 +87,31 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
             new DatabaseParameter("classroom_id", $classroom_id),
         ]);
 
-        return array_map(function (array $row) use($database) {
-            return ClassroomTrait::fromDatabaseRow($database, $row);
+        return array_map(function (array $row) use ($database) {
+            $classroomTrait = ClassroomTrait::fromDatabaseRow($database, $row);
+
+            return [$classroomTrait->trait_id => $classroomTrait];
         }, $rows);
+    }
+    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+
+        $classroomTraits = [];
+
+        foreach ($data as $key => $value) {
+            if (preg_match("^trait-[0-9]*$", $key)) {
+                $classroomTrait = new ClassroomTrait($database);
+                $classroomTrait->setProperty("trait_id",        intval($value));
+                $classroomTraits[] = $classroomTrait;
+            }
+        }
+
+        return $classroomTraits;
+    }
+
+    public static function applyPostData(array $models): void {
+
+        $trait = $models[0];
+
+        $trait->write();
     }
 }

@@ -137,4 +137,33 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             return Student::fromDatabaseRow($database, $row);
         }, $rows);
     }
+    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+
+        $student = null;
+        if ($id > 0) {
+            $student = Student::get($database, strval($id));
+
+            if ($student == null) 
+                throw new Exception("Error Processing Request", 1);
+        } else {
+            $student = new Student($database);
+        }
+
+        $student->setProperty("name",        $data["name"]);
+        $student->setProperty("surname",     $data["surname"]);
+
+        return [$student, _Class::get($database, $data["class_id"])];
+    }
+
+    public static function applyPostData(array $models): void {
+
+        $student = $models[0];
+        $class = $models[1];
+
+        if ($class != null) {
+            $student->setProperty("class_id", $class->id);
+        }
+
+        $student->write();
+    }
 }

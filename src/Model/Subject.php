@@ -135,4 +135,60 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             return Subject::fromDatabaseRow($database, $row);
         }, $rows);
     }
+    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+
+        $subject = null;
+        if ($id > 0) {
+            $subject = Subject::get($database, strval($id));
+
+            if ($subject == null) 
+                throw new Exception("Error Processing Request", 1);
+        } else {
+            $subject = new Subject($database);
+        }
+
+        $subject->setProperty("name",            $data["name"]);
+        $subject->setProperty("abbreviation",    $data["abbreviation"]);
+
+        return [$subject, SubjectTrait::parsePostData($data, $database)];
+    }
+
+    public static function applyPostData(array $models): void {
+
+        $subject = $models[0];
+        $subjectsTrails = $models[1];
+        
+        // tenhle algorizmus by se možná dal imlementovat někde obecně ???
+
+        // vem si z priznakUcebna data kde idUcebna = id
+        $traitsInDB = SubjectTrait::getForSubject($subject->database, $subject->id);
+        // deklarace místa pro traity co jsou i v posu i v db
+        $willBeInDB = [];
+    
+        // projdi traity v postu 
+        foreach ($subjectsTrails as $trait) {
+            // pokud není trait ve výsledku z db přidej ho do db 
+            if ($traitsInDB[$trait->trait_id] == null) {
+                // šla by volat i metoda write 
+                // TODO: zamyslet se: asi vy modely pro mezi tabulky nemusei mýt metodu applyPostDat
+                $trait->subject_id = $subject->id;
+                SubjectTrait::applyPostData([$trait]);
+            }
+
+            // dej do traity co jsou i v posu i v db
+            $willBeInDB[$trait->trait_id] = $trait;
+        }
+
+        // projdi data z mezitabulky
+        foreach ($traitsInDB as $traitInDB) {
+            // pokud není v   traity co jsou i v postu i v db
+            if ($willBeInDB[$traitInDB->trait_id] == null) {
+               //odeber ho z db
+               $traitInDB->remove();
+            }
+        }
+        
+
+        $subject->write();
+    }
 }
