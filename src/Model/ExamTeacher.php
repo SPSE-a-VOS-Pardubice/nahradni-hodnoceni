@@ -104,7 +104,7 @@ class ExamTeacher extends DatabaseEntity implements FormattableDatabaseEntity {
         $examTeachers = [];
 
         foreach ($data as $key => $value) {
-            if (preg_match("^teacher-[0-9]*$", $key)) {
+            if (preg_match("/^teacher-[0-9]*$/", $key)) {
                 $examTeacher = new ClassroomTrait($database);
                 $examTeacher->setProperty("trait_id",   intval($value));
                 $examTeacher->setProperty("Role",       $data[preg_replace("teacher", "role", $key)]);

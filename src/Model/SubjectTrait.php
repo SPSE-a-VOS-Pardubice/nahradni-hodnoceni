@@ -98,7 +98,7 @@ class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
         $classroomTraits = [];
 
         foreach ($data as $key => $value) {
-            if (preg_match("^trait-[0-9]*$", $key)) {
+            if (preg_match("/^trait-[0-9]*$/", $key)) {
                 $classroomTrait = new ClassroomTrait($database);
                 $classroomTrait->setProperty("trait_id",        intval($value));
                 $classroomTraits[] = $classroomTrait;
