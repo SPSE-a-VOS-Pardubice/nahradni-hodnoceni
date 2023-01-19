@@ -82,10 +82,16 @@ class FormController extends AbstractController
         $id = $args["id"];
         if ($id === "new") {
             // vytváří nový 
+            $model::applyPostData($model::parsePostData($parsedBody, $database));
 
-            // z dat naparsuj model 
-        }
+        } else {
             // edituje starý 
+            try {
+                $model::applyPostData($model::parsePostData($parsedBody, $database, intval($id)));
+            } catch (\Throwable $th) {
+                // TODO: not found
+            }
+        }
 
         return $response;
     }

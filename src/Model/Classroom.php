@@ -162,6 +162,7 @@
                 if ($traitsInDB[$trait->trait_id] == null) {
                     // šla by volat i metoda write 
                     // TODO: zamyslet se: asi vy modely pro mezi tabulky nemusei mýt metodu applyPostDat
+                    // TODO co když teprve vytvářím? id je 0
                     $trait->classroom_id = $classroom->id;
                     ClassroomTrait::applyPostData([$trait]);
                 }

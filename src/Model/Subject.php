@@ -45,9 +45,9 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
 
     public function getIntermediateData(): array {
     return [
-        "traits" => array_map(function ($classroomTrait) {
-                return _Trait::get($this->database, $classroomTrait->trait_id);
-            }, ClassroomTrait::getForClassroom($this->database, $this->id)),
+        "traits" => array_map(function ($subjectTrait) {
+                return _Trait::get($this->database, $subjectTrait->trait_id);
+            }, SubjectTrait::getForSubject($this->database, $this->id)),
         ];
     }
 

@@ -29,11 +29,20 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             new ViewableProperty("surname", "Příjmení", ViewablePropertyType::STRING),
             new ViewableProperty("prefix",  "Prefix",   ViewablePropertyType::STRING),
             new ViewableProperty("suffix",  "Suffix",   ViewablePropertyType::STRING),
+            new ViewableProperty("subjects", "Vyučované předměty", ViewablePropertyType::INTERMEDIATE_DATA, true)
         ];
     }
 
     public static function getSelectOptions(Database $database): array {
-        return [];
+        $subjects = [];
+
+        foreach (Subject::getAll($database) as $subject) {
+            $subjects[$subject->id] = $subject->getFormatted();
+        }
+
+        return [
+            "subjects" => $subjects,
+        ];
     }
 
     public function getFormatted(): string {
@@ -41,7 +50,11 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
     }
 
     public function getIntermediateData(): array {
-        return [];
+        return [
+            "subjects" => array_map(function ($teacherSuitability) {
+                    return Subject::get($this->database, $teacherSuitability->subject_id);
+                }, TeacherSuitability::getForTeacher($this->database, $this->id)),
+            ];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {
