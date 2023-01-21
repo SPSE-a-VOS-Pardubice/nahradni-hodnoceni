@@ -166,4 +166,37 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
 
         $student->write();
     }
+
+    public static function getIdFromNameSurnameClass(Database $database, string $name, string $surname, string $class): Student {
+        $explodedClass = explode(".", $class);
+        //TODO: Zkontrolovat validitu textového řetězce třídy
+        if(false) {
+            throw new \RuntimeException("Jméno třídy " . $class . " je ve špatném formátu");
+        }
+        
+        $grade = intval($explodedClass[0]);
+        $label = $explodedClass[1];
+        
+        $row = $database->fetchSingle("
+            SELECT 
+                students.id, students.name, students.surname, students.class_id
+            FROM students, classes 
+            WHERE 
+                students.class_id = classes.id AND 
+                students.name = :name AND 
+                students.surname = :surname AND 
+                classes.grade = :grade AND 
+                classes.label = :label
+        ", [
+            new DatabaseParameter("name", $name),
+            new DatabaseParameter("surname", $surname),
+            new DatabaseParameter("grade", $grade),
+            new DatabaseParameter("label", $label)
+        ]);
+
+        if ($row === false) {
+            throw new \RuntimeException("Student se jménem " . $name . " " . $surname . " ve třídě " . $class . " nebyl v databázi nalezen");
+        }
+        return Student::fromDatabaseRow($database, $row);
+    }
 }

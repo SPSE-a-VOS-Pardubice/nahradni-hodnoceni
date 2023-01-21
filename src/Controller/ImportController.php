@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Controller;
 
 use Spse\NahradniHodnoceni\View;
+use Spse\NahradniHodnoceni\Model\Exam;
+use Spse\NahradniHodnoceni\Model\Student;
+use Spse\NahradniHodnoceni\Model\_Class;
 use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as Request};
 
 const modelNamespace = "Spse\\NahradniHodnoceni\\Model\\";
@@ -32,8 +35,15 @@ class ImportController extends AbstractController
     {
         /** @var View  */
         $view = $this->container->get("view");
+
+        $database = $this->container->get("database");
         
         $file = $request->getUploadedFiles()["import"];
+        if(!$file) {
+            return $view->renderResponse($request, $response, "/error.php", 
+                    ["message" => "Nahrání souboru selhalo", "backLink" => "/import/upload"]);
+        }
+
         switch ($file->getError()) {
             case (UPLOAD_ERR_INI_SIZE):
                 return $view->renderResponse($request, $response, "/error.php", 
@@ -65,8 +75,17 @@ class ImportController extends AbstractController
                     ["message" => "\$file->getStream() je null", "backLink" => "/import/upload"]);
         }
 
-        $this->parse($file->getStream());
-        return $this->redirect($response, "/import/preview");
+        $items = $this->parse($file->getStream());
+        
+        return $view->renderResponse($request, $response, "/table.php", [
+            "schema"                => Exam::getProperties(),
+            "items"                 => $items,
+            "itemsIntermediateData" => array_map(function ($item) { return $item->getIntermediateData(); }, $items),
+            "path"                  => "",
+            "options"               => Exam::getSelectOptions($database),
+        ]);
+        
+        //return $this->redirect($response, "/import/preview");
     }
 
     public function showPreview(Request $request, Response $response, array $args): Response
@@ -84,18 +103,35 @@ class ImportController extends AbstractController
         return $response;
     }
     
-    public function parse($stream, string $separator = ";") {
-        $result = [];
-
+    public function parse($stream, string $separator = ",") {
+        $database = $this->container->get("database");
+        
         $strings = explode("\n", $stream->__toString());
         $lastIndex = count($strings) - 1;
         if($strings[$lastIndex] == "") {
             unset($strings[$lastIndex]);
         }
 
-        for ($i = 0; $i < count($strings); $i++) {
+        for ($i = 1; $i < count($strings); $i++) {
             $values = str_getcsv($strings[$i], $separator);
-            $predmet = $values[csvMapping["predmet"]];
+
+            $object = new Exam($database);
+            $object->__set("id", 0);
+            
+            // Získávání student ID
+            try {
+                $student = Student::getIdFromNameSurnameClass($database, $values[csvMapping["jmeno"]], $values[csvMapping["prijmeni"]], $values[csvMapping["trida"]]);
+                $object->__set("student_id", $student->getProperty("id"));
+            } catch(\RuntimeException $e) {
+                $this->addToImportErrorLog($e->getMessage());
+                continue;
+            }
         }
+
+        return [];
+    }
+
+    public function addToImportErrorLog(string $string) {
+        
     }
 }
