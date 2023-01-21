@@ -191,4 +191,21 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
 
         $subject->write();
     }
+
+    public static function getFromAbbreviation(Database $database, string $abbreviation): Subject {
+        $row = $database->fetchSingle("
+            SELECT 
+                * 
+            FROM subjects 
+            WHERE 
+                abbreviation = :abbreviation
+        ", [
+            new DatabaseParameter("abbreviation", $abbreviation)
+        ]);
+
+        if ($row === false) {
+            throw new \RuntimeException("Předmět se zkratkou " . $abbreviation . " nebyl v databázi nalezen");
+        }
+        return Subject::fromDatabaseRow($database, $row);
+    }
 }

@@ -202,4 +202,21 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
 
         $teacher->write();
     }
+
+    public static function getFromSurname(Database $database, string $surname): Teacher {
+        $row = $database->fetchSingle("
+            SELECT 
+                * 
+            FROM teachers 
+            WHERE 
+                surname = :surname
+        ", [
+            new DatabaseParameter("surname", $surname)
+        ]);
+
+        if ($row === false) {
+            throw new \RuntimeException("Učitel s příjmení " . $surname . " nebyl v databázi nalezen");
+        }
+        return Teacher::fromDatabaseRow($database, $row);
+    }
 }

@@ -167,7 +167,7 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         $student->write();
     }
 
-    public static function getIdFromNameSurnameClass(Database $database, string $name, string $surname, string $class): Student {
+    public static function getFromNameSurnameClass(Database $database, string $name, string $surname, string $class): Student {
         $explodedClass = explode(".", $class);
         //TODO: Zkontrolovat validitu textového řetězce třídy
         if(false) {
