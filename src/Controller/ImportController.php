@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Controller;
 
+use Spse\NahradniHodnoceni\Model\_Class;
 use Spse\NahradniHodnoceni\View;
 use Spse\NahradniHodnoceni\Model\Exam;
 use Spse\NahradniHodnoceni\Model\Student;
@@ -24,6 +25,29 @@ const csvMapping = [
     "zkousejici"    => 5
 ];
 
+// TODO: https://github.com/SPSE-a-VOS-Pardubice/nahradni-hodnoceni/issues/1#issuecomment-1399263118
+class PreviewTableEntry {
+    private $class = "";
+    private string $name;
+    private string $surname;
+    private string $subject;
+    private string $mark;
+    private string $teacher;
+    
+    public function __construct(string $class, string $name, string $surname, string $subject, string $mark, string $teacher) {
+        $this->class = $class;
+        $this->name = $name;
+        $this->surname = $surname;
+        $this->subject = $subject;
+        $this->mark = $mark;
+        $this->teacher = $teacher;
+    }
+
+    public function getArray(): array {
+        return array($this->class, $this->name, $this->surname, $this->subject, $this->mark, $this->teacher);
+    }
+}
+
 class ImportController extends AbstractController
 {
     private $importedExams = array();
@@ -33,7 +57,11 @@ class ImportController extends AbstractController
     {
         /** @var View  */
         $view = $this->container->get("view");
-
+        
+        // TODO: Zjistit jestli se ještě nenahraná data nemůžou vymazat
+        $this->importedExams = array();
+        $this->importedExamsTeachers = array();
+        
         return $view->renderResponse($request, $response, "/import.php");
     }
 
@@ -82,18 +110,14 @@ class ImportController extends AbstractController
         }
 
         $items = $this->parse($file->getStream());
-        $importedExams = $items[0];
-        $importedExamsTeachers = $items[1];
+        $this->importedExams = $items[0];
+        $this->importedExamsTeachers = $items[1];
+
+        $previewEntries = $this->consturctPreviewTableEntries($this->importedExams, $this->importedExamsTeachers);
         
-        return $view->renderResponse($request, $response, "/table.php", [
-            "schema"                => Exam::getProperties(),
-            "items"                 => $importedExams,
-            "itemsIntermediateData" => array_map(function ($importedExams) { return $importedExams->getIntermediateData(); }, $importedExams),
-            "path"                  => "",
-            "options"               => Exam::getSelectOptions($database),
+        return $view->renderResponse($request, $response, "/importPreview.php", [
+            "entries" => $previewEntries
         ]);
-        
-        //return $this->redirect($response, "/import/preview");
     }
 
     public function showPreview(Request $request, Response $response, array $args): Response
@@ -180,6 +204,29 @@ class ImportController extends AbstractController
     }
 
     public function addToImportErrorLog(string $string) {
+        
+    }
 
+    public function consturctPreviewTableEntries($exams, $examTeachers): array {
+        $database = $this->container->get("database");
+        
+        $res = array();
+        for($i = 0; $i < count($exams); $i++) {
+            $student = Student::get($database, strval($exams[$i]->getProperty("student_id")));
+            $class = _Class::get($database, strval($student->getProperty("class_id")));
+            $subject = Subject::get($database, strval($exams[$i]->getProperty("subject_id")));
+            $teacher = Teacher::get($database, strval($examTeachers[$i]->__get("teacher_id")));
+            
+            $res[] = new PreviewTableEntry(
+                $class->getFormatted(),
+                $student->getProperty("name"),
+                $student->getProperty("surname"),
+                $subject->getFormatted(),
+                $exams[$i]->getProperty("original_mark"),
+                $teacher->getFormatted()
+            );
+        }
+
+        return $res;
     }
 }

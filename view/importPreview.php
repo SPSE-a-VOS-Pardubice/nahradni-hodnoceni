@@ -6,6 +6,8 @@ use Spse\NahradniHodnoceni\Model\DatabaseEntity;
 use Spse\NahradniHodnoceni\Model\ViewableProperty;
 use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 
+use Spse\NahradniHodnoceni\Controller\PreviewTableEntry;
+
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -24,46 +26,27 @@ use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
     <?php include(VIEW_ROOT . "/component/header.php") ?>
 
     <main>
-        <section class="table_sec">
-
-
+        <section class="table_sec" style="justify-content:normal;">
             <table>
                 <thead>
                     <tr class="tr-inputs">
+                        <th>Třída</th>    
                         <th>Jméno</th>
                         <th>Příjmení</th>
+                        <th>Předmět</th>
                         <th>Známka</th>
+                        <th>Zkoušející</th>
                     </tr>
                 </thead>
                 <tbody>
+                <?php foreach ($args["data"]["entries"] as $entry): ?>
                     <tr>
-                        <td>
-                            <a href="#">
-                                <div style="width: 100%;height: 100%;">Vojtěch</div>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="#">
-                                <div style="width: 100%;height: 100%;">Fošnár</div>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="#">
-                                <div style="width: 100%;height: 100%;">5</div>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Libor</a></td>
-                        <td><a href="#">Bajer</a></td>
-                        <td><a href="#">1</a></td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">Petr</a></td>
-                        <td><a href="#">Fišar</a></td>
-                        <td><a href="#">3</a></td>
+                    <?php foreach ($entry->getArray() as $value): ?>
+                        <td><a href="#"><?= $value ?></a></td>
+                    <?php endforeach; ?>
                     </tr>
                 </tbody>
+                <?php endforeach; ?>
             </table>
             <form action="" method="post">
                 <button type="submit">Akceptovat</button>
