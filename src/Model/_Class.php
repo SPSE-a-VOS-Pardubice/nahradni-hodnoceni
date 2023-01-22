@@ -90,6 +90,8 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
                     :class_teacher_id
                 )
             ", $parameters);
+
+            $this->id = PDO::lastInsertId("id");
         } else {
             $this->database->execute("
                 UPDATE Classes

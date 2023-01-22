@@ -84,6 +84,8 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
                     :class_id
                 )
             ", $parameters);
+
+            $this->id = PDO::lastInsertId("id");
         } else {
             $this->database->execute("
                 UPDATE Students

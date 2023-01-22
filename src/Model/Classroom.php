@@ -75,6 +75,8 @@
                 VALUES (
                     :label
                 )", $parameters);
+
+                $this->id = PDO::lastInsertId("id");
             }else{
                 $this->database->execute("
                 UPDATE Classrooms

@@ -89,10 +89,10 @@ class FormController extends AbstractController
             try {
                 $model::applyPostData($model::parsePostData($parsedBody, $database, intval($id)));
             } catch (\Throwable $th) {
-                // TODO: not found
+                return $view->renderResponse($request, $response, "/error.php", []);
             }
         }
 
-        return $response;
+        return redirect($response, "/table/$name");
     }
 }

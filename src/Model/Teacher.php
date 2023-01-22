@@ -99,6 +99,8 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
                     :suffix
                 )
             ", $parameters);
+
+            $this->id = PDO::lastInsertId("id");
         } else {
             $this->database->execute("
                 UPDATE Teachers

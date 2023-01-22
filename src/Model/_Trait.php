@@ -64,6 +64,8 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
                     :name
                 )
             ", $parameters);
+
+            $this->id = PDO::lastInsertId("id");
         } else {
             $this->database->execute("
                 UPDATE Traits

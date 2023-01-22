@@ -123,6 +123,8 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
                     :time
                 )
             ", $parameters);
+
+            $this->id = PDO::lastInsertId("id");
         } else {
             $this->database->execute("
                 UPDATE Exams

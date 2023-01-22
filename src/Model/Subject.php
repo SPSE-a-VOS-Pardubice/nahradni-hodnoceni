@@ -83,6 +83,8 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
                 :name
                 :abbreviation
             )", $parameters);
+
+            $this->id = PDO::lastInsertId("id");
         }else{
             $this->database->execute("
             UPDATE Subjects
