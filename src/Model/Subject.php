@@ -70,7 +70,7 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         $parameters = [
             new DatabaseParameter("id",             $this->id),
             new DatabaseParameter("name",           $this->name),
-            new DatabaseParameter("abbreviation",   $this->abbreviation),
+            new DatabaseParameter("abbreviation",   $this->abbreviation)
         ];
 
         if($this->id === 0) {
@@ -82,9 +82,12 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             VALUES (
                 :name
                 :abbreviation
-            )", $parameters);
+            )", [
+                new DatabaseParameter("name",           $this->name),
+                new DatabaseParameter("abbreviation",   $this->abbreviation)
+            ]);
 
-            $this->id = PDO::lastInsertId("id");
+            $this->id = intval($this->database->lastInsertId("id"));
         }else{
             $this->database->execute("
             UPDATE Subjects
@@ -144,7 +147,7 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             $subject = Subject::get($database, strval($id));
 
             if ($subject == null) 
-                throw new Exception("Error Processing Request", 1);
+                throw new \RuntimeException("Error Processing Request", 1);
         } else {
             $subject = new Subject($database);
         }
@@ -172,7 +175,6 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             // pokud není trait ve výsledku z db přidej ho do db 
             if ($traitsInDB[$trait->trait_id] == null) {
                 // šla by volat i metoda write 
-                // TODO: zamyslet se: asi vy modely pro mezi tabulky nemusei mýt metodu applyPostDat
                 $trait->subject_id = $subject->id;
                 SubjectTrait::applyPostData([$trait]);
             }

@@ -89,9 +89,13 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
                     :label,
                     :class_teacher_id
                 )
-            ", $parameters);
+            ",[ new DatabaseParameter("year",               $this->year),
+                new DatabaseParameter("grade",              $this->grade),
+                new DatabaseParameter("label",              $this->label),
+                new DatabaseParameter("class_teacher_id",   $this->class_teacher_id),
+            ]);
 
-            $this->id = PDO::lastInsertId("id");
+            $this->id = intval($this->database->lastInsertId("id"));
         } else {
             $this->database->execute("
                 UPDATE Classes
@@ -153,7 +157,7 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
             $class = _Class::get($database, strval($id));
 
             if ($class == null) 
-                throw new Exception("Error Processing Request", 1);
+                throw new \RuntimeException("Error Processing Request", 1);
         } else {
             $class = new _Class($database);
         }

@@ -63,9 +63,11 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
                 VALUES (
                     :name
                 )
-            ", $parameters);
+            ", [
+                new DatabaseParameter("name",   $this->name)
+            ]);
 
-            $this->id = PDO::lastInsertId("id");
+            $this->id = intval($this->database->lastInsertId("id"));
         } else {
             $this->database->execute("
                 UPDATE Traits
@@ -87,7 +89,7 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         ]);
     }
 
-    static public function get(Database $database, int $id): ?_Trait {
+    static public function get(Database $database, string $id): ?_Trait {
         $row = $database->fetchSingle("
             SELECT
                 *
@@ -122,7 +124,7 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
             $trait = _Trait::get($database, strval($id));
 
             if ($trait == null) 
-                throw new Exception("Error Processing Request", 1);
+                throw new \RuntimeException("Error Processing Request", 1);
         } else {
             $trait = new _Trait($database);
         }

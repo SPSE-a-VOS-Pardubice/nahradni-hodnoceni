@@ -81,7 +81,7 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             new DatabaseParameter("name",       $this->name),
             new DatabaseParameter("surname",    $this->surname),
             new DatabaseParameter("prefix",     $this->prefix),
-            new DatabaseParameter("suffix",     $this->suffix),
+            new DatabaseParameter("suffix",     $this->suffix)
         ];
 
         if ($this->id === 0) {
@@ -98,9 +98,14 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
                     :prefix,
                     :suffix
                 )
-            ", $parameters);
+            ", [
+                new DatabaseParameter("name",       $this->name),
+                new DatabaseParameter("surname",    $this->surname),
+                new DatabaseParameter("prefix",     $this->prefix),
+                new DatabaseParameter("suffix",     $this->suffix)
+            ]);
 
-            $this->id = PDO::lastInsertId("id");
+            $this->id = intval($this->database->lastInsertId("id"));
         } else {
             $this->database->execute("
                 UPDATE Teachers
@@ -165,7 +170,7 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             $teacher = Teacher::get($database, strval($id));
 
             if ($teacher == null) 
-                throw new Exception("Error Processing Request", 1);
+                throw new \RuntimeException("Error Processing Request", 1);
         } else {
             $teacher = new Teacher($database);
         }

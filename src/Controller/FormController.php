@@ -93,6 +93,6 @@ class FormController extends AbstractController
             }
         }
 
-        return redirect($response, "/table/$name");
+        return $this->redirect($response, "/table/$name");
     }
 }

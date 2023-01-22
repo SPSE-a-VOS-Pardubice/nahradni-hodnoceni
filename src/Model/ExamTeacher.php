@@ -51,7 +51,7 @@ class ExamTeacher extends DatabaseEntity implements FormattableDatabaseEntity {
             new DatabaseParameter("Role",   $this->Role),
         ];
 
-        if(true) { // co ten clovek prede mnou bere za drogy lmao
+        if (true) { // co ten clovek prede mnou bere za drogy lmao
             $this->database->execute("
             INSERT INTO ExamsTeachers (
                 exam_id,
@@ -63,18 +63,19 @@ class ExamTeacher extends DatabaseEntity implements FormattableDatabaseEntity {
                 :teacher_id,
                 :Role
             )", $parameters);
-        }else{
-            // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
-            $this->database->execute("
-            UPDATE ExamsTeachers
-            SET
-                exam_id = :exam_id
-                teacher_id = :teacher_id
-                Role = :Role
-            WHERE
-                id = :id
-            ", $parameters);
         }
+        // }else{
+        //     // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
+        //     $this->database->execute("
+        //     UPDATE ExamsTeachers
+        //     SET
+        //         exam_id = :exam_id
+        //         teacher_id = :teacher_id
+        //         Role = :Role
+        //     WHERE
+        //         id = :id
+        //     ", $parameters);
+        // }
     }
     public function remove(): void {
         $this->database->execute("
@@ -115,7 +116,7 @@ class ExamTeacher extends DatabaseEntity implements FormattableDatabaseEntity {
             if (preg_match("/^teacher-[0-9]*$/", $key)) {
                 $examTeacher = new ClassroomTrait($database);
                 $examTeacher->setProperty("trait_id",   intval($value));
-                $examTeacher->setProperty("Role",       $data[preg_replace("teacher", "role", $key)]);
+                $examTeacher->setProperty("Role",       $data[preg_replace("/teacher/", "role", $key)]);
                 $examTeachers[] = $examTeacher;
             }
         }

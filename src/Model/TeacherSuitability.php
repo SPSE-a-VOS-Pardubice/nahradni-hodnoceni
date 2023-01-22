@@ -40,7 +40,7 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
             new DatabaseParameter("teacher_id",   $this->teacher_id),
         ];
 
-        if($this->id === 0) {
+        if ($this->id === 0) {
             $this->database->execute("
             INSERT INTO TeachesSuitability (
                 subject_id
@@ -50,17 +50,18 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
                 :subject_id
                 :teacher_id
             )", $parameters);
-        }else{
-            // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
-            $this->database->execute("
-            UPDATE TeachesSuitability
-            SET
-                subject_id = :subject_id
-                teacher_id = :teacher_id
-            WHERE
-                id = :id
-            ", $parameters);
         }
+        // }else{
+        //     // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
+        //     $this->database->execute("
+        //     UPDATE TeachesSuitability
+        //     SET
+        //         subject_id = :subject_id
+        //         teacher_id = :teacher_id
+        //     WHERE
+        //         id = :id
+        //     ", $parameters);
+        // }
     }
 
     public function remove(): void {
@@ -99,7 +100,7 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
         $teachersSuitability = [];
 
         foreach ($data as $key => $value) {
-            if (preg_match("^subject-[0-9]*$", $key)) {
+            if (preg_match("/^subject-[0-9]*$/", $key)) {
                 $teacherSuitability = new TeacherSuitability($database);
                 $teacherSuitability->setProperty("subject_id",        intval($value));
                 $teachersSuitability[] = $teacherSuitability;

@@ -40,7 +40,7 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
             new DatabaseParameter("classroom_id",   $this->classroom_id),
         ];
 
-        if($this->id === 0) {
+        if ($this->id === 0) {
             $this->database->execute("
             INSERT INTO ClassroomsTraits (
                 trait_id
@@ -50,17 +50,18 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
                 :trait_id
                 :classroom_id
             )", $parameters);
-        }else{
-            // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
-            $this->database->execute("
-            UPDATE ClassroomsTraits
-            SET
-                trait_id = :trait_id
-                classroom_id = :classroom_id
-            WHERE
-                id = :id
-            ", $parameters);
         }
+        // }else{
+        //     // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
+        //     $this->database->execute("
+        //     UPDATE ClassroomsTraits
+        //     SET
+        //         trait_id = :trait_id
+        //         classroom_id = :classroom_id
+        //     WHERE
+        //         id = :id
+        //     ", $parameters);
+        // }
     }
 
     public function remove(): void {

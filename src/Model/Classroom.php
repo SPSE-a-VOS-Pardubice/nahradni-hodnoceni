@@ -74,9 +74,11 @@
                 )
                 VALUES (
                     :label
-                )", $parameters);
+                )", [
+                    new DatabaseParameter("label",  $this->label)
+                ]);
 
-                $this->id = PDO::lastInsertId("id");
+                $this->id = intval($this->database->lastInsertId("id"));
             }else{
                 $this->database->execute("
                 UPDATE Classrooms
@@ -136,7 +138,7 @@
                 $classroom = Classroom::get($database, strval($id));
 
                 if ($classroom == null) 
-                    throw new Exception("Error Processing Request", 1);
+                    throw new \RuntimeException("Error Processing Request", 1);
             } else {
                 $classroom = new Classroom($database);
             }

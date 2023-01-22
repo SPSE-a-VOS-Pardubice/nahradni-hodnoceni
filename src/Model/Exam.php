@@ -95,7 +95,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
-            //new DatabaseParameter("id",             $this->id),
+            new DatabaseParameter("id",             $this->id),
             new DatabaseParameter("student_id",     $this->student_id),
             new DatabaseParameter("subject_id",     $this->subject_id),
             new DatabaseParameter("classroom_id",   $this->classroom_id),
@@ -122,9 +122,16 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
                     :final_mark,
                     :time
                 )
-            ", $parameters);
+            ", [
+                new DatabaseParameter("student_id",     $this->student_id),
+                new DatabaseParameter("subject_id",     $this->subject_id),
+                new DatabaseParameter("classroom_id",   $this->classroom_id),
+                new DatabaseParameter("original_mark",  $this->original_mark),
+                new DatabaseParameter("final_mark",     $this->final_mark),
+                new DatabaseParameter("time",           $this->time, 436437546),
+            ]);
 
-            $this->id = PDO::lastInsertId("id");
+            $this->id = intval($this->database->lastInsertId("id"));
         } else {
             $this->database->execute("
                 UPDATE Exams
@@ -188,7 +195,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
             $exam = Exam::get($database, strval($id));
 
             if ($exam == null) 
-                throw new Exception("Error Processing Request", 1);
+                throw new \RuntimeException("Error Processing Request", 1);
         } else {
             $exam = new Exam($database);
         }
@@ -227,7 +234,6 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
 
         foreach ($examTeachers as $teacher) {
             if ($teachersInDB[$teacher->teacher_id] == null) {
-                // TODO co když teprve vytvářím? id je 0
                 $teacher->exam_id = $exam->id;
                 ExamTeacher::applyPostData([$teacher]);
             }

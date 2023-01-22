@@ -83,9 +83,13 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
                     :surname,
                     :class_id
                 )
-            ", $parameters);
+            ", [
+                new DatabaseParameter("name",       $this->name),
+                new DatabaseParameter("surname",    $this->primeni),
+                new DatabaseParameter("class_id",   $this->class_id),
+            ]);
 
-            $this->id = PDO::lastInsertId("id");
+            $this->id = intval($this->database->lastInsertId("id"));
         } else {
             $this->database->execute("
                 UPDATE Students
@@ -146,7 +150,7 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             $student = Student::get($database, strval($id));
 
             if ($student == null) 
-                throw new Exception("Error Processing Request", 1);
+                throw new \RuntimeException("Error Processing Request", 1);
         } else {
             $student = new Student($database);
         }

@@ -40,7 +40,7 @@ class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
             new DatabaseParameter("subject_id",   $this->subject_id),
         ];
 
-        if($this->id === 0) {
+        if ($this->id === 0) {
             $this->database->execute("
             INSERT INTO SubjectsTraits (
                 trait_id
@@ -50,17 +50,18 @@ class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
                 :trait_id
                 :subject_id
             )", $parameters);
-        }else{
-            // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
-            $this->database->execute("
-            UPDATE SubjectsTraits
-            SET
-                trait_id = :trait_id
-                subject_id = :subject_id
-            WHERE
-                id = :id
-            ", $parameters);
         }
+        // }else{
+        //     // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
+        //     $this->database->execute("
+        //     UPDATE SubjectsTraits
+        //     SET
+        //         trait_id = :trait_id
+        //         subject_id = :subject_id
+        //     WHERE
+        //         id = :id
+        //     ", $parameters);
+        // }
     }
 
     public function remove(): void {

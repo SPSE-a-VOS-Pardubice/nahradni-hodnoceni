@@ -33,6 +33,10 @@ class Database {
 
     }
 
+    public function lastInsertId(?string $name = null): string|false {
+        return $this->connection->lastInsertId($name);
+    }
+
     public function execute(string $query, array $params = []): void {
         $handle = $this->connection->prepare($query);
         foreach ($params as $param) {
