@@ -58,10 +58,6 @@ class ImportController extends AbstractController
         /** @var View  */
         $view = $this->container->get("view");
         
-        // TODO: Zjistit jestli se ještě nenahraná data nemůžou vymazat
-        $this->importedExams = array();
-        $this->importedExamsTeachers = array();
-        
         return $view->renderResponse($request, $response, "/import.php");
     }
 
@@ -69,8 +65,6 @@ class ImportController extends AbstractController
     {
         /** @var View  */
         $view = $this->container->get("view");
-
-        $database = $this->container->get("database");
         
         $file = $request->getUploadedFiles()["import"];
         if(!$file) {
@@ -110,10 +104,16 @@ class ImportController extends AbstractController
         }
 
         $items = $this->parse($file->getStream());
-        $this->importedExams = $items[0];
-        $this->importedExamsTeachers = $items[1];
+        $importedExams = $items[0];
+        $importedExamsTeachers = $items[1];
 
-        $previewEntries = $this->consturctPreviewTableEntries($this->importedExams, $this->importedExamsTeachers);
+        session_start();
+        for ($i = 0; $i < count($importedExams); $i++) {
+            $_SESSION["importedExams"][$i] = $importedExams[$i]->getPropertyValues();
+            $_SESSION["importedExamsTeachers"][$i] = $importedExamsTeachers[$i]->getPropertyValues();
+        }
+
+        $previewEntries = $this->consturctPreviewTableEntries($importedExams, $importedExamsTeachers);
         
         return $view->renderResponse($request, $response, "/importPreview.php", [
             "entries" => $previewEntries
@@ -131,8 +131,41 @@ class ImportController extends AbstractController
 
     public function accept(Request $request, Response $response, array $args): Response
     {
-        // TODO: Nahrát nová data do databáze
-        return $response;
+        /** @var View  */
+        $view = $this->container->get("view");
+        
+        session_start();
+        
+        if(!isset($_SESSION["importedExams"]) || !isset($_SESSION["importedExamsTeachers"])) {
+            session_destroy();
+            return $view->renderResponse($request, $response, "/error.php", 
+                    ["message" => "Chyba s PHP session", "backLink" => "/import/upload"]);
+        }
+
+        $database = $this->container->get("database");
+        $importedExams = [];
+        $importedExamsTeachers = [];
+        for ($i = 0; $i < count($_SESSION["importedExams"]); $i++) {
+            $importedExams[$i] = new Exam($database);
+            $importedExams[$i]->setPropertyValues($_SESSION["importedExams"][$i]);
+
+            $importedExamsTeachers[$i] = new ExamTeacher($database);
+            $importedExamsTeachers[$i]->setPropertyValues($_SESSION["importedExamsTeachers"][$i]);
+        }
+        
+        $database = $this->container->get("database");
+        for ($i = 0; $i < count($_SESSION["importedExams"]); $i++) {
+            $importedExams[$i]->write();
+            $allExams = Exam::getAll($database);
+            $importedExamsTeachers[$i]->__set("exam_id", $allExams[count($allExams) - 1]->getProperty("id")); // TODO: pls dont kill me fosny :(
+            $importedExamsTeachers[$i]->write();
+        }
+
+        $_SESSION["importedExams"] = [];
+        $_SESSION["importedExamsTeachers"] = [];
+        session_destroy();
+        
+        return $this->redirect($response, "/table/priznaky");
     }
     
     public function parse($stream, string $separator = ",") {
@@ -192,7 +225,7 @@ class ImportController extends AbstractController
                 continue;
             }
 
-            $examTeacher->__set("Role", "Zkoučející");
+            $examTeacher->__set("Role", "Zkoušející");
 
             $importedExamsTeachers[] = $examTeacher;
         }
@@ -204,7 +237,7 @@ class ImportController extends AbstractController
     }
 
     public function addToImportErrorLog(string $string) {
-        
+
     }
 
     public function consturctPreviewTableEntries($exams, $examTeachers): array {

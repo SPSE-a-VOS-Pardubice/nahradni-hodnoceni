@@ -48,7 +48,7 @@ use Spse\NahradniHodnoceni\Controller\PreviewTableEntry;
                 </tbody>
                 <?php endforeach; ?>
             </table>
-            <form action="" method="post">
+            <form action="/import/preview" method="post">
                 <button type="submit">Akceptovat</button>
             </form>
         </section>

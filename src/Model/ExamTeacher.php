@@ -17,6 +17,14 @@ class ExamTeacher extends DatabaseEntity implements FormattableDatabaseEntity {
         $this->$key = $value;
     }
 
+    public static function getProperties(): array {
+        return [
+            new ViewableProperty("exam_id", "exam_id", ViewablePropertyType::INTEGER),
+            new ViewableProperty("teacher_id", "teacher_id", ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("Role", "Role", ViewablePropertyType::STRING,  true)
+        ];
+    }
+
     public function getFormatted(): string {
         // TODO: asi role učitel se hádám získá jinak
         return $this->Role;
@@ -43,16 +51,16 @@ class ExamTeacher extends DatabaseEntity implements FormattableDatabaseEntity {
             new DatabaseParameter("Role",   $this->Role),
         ];
 
-        if($this->id === 0) {
+        if(true) { // co ten clovek prede mnou bere za drogy lmao
             $this->database->execute("
             INSERT INTO ExamsTeachers (
-                exam_id
-                teacher_id
+                exam_id,
+                teacher_id,
                 Role
             )
             VALUES (
-                :exam_id
-                :teacher_id
+                :exam_id,
+                :teacher_id,
                 :Role
             )", $parameters);
         }else{
@@ -120,5 +128,20 @@ class ExamTeacher extends DatabaseEntity implements FormattableDatabaseEntity {
         $trait = $models[0];
 
         $trait->write();
+    }
+
+    public function getPropertyValues(): array {
+        $res = [];
+        for($i = 0; $i < count($this->getProperties()); $i++) {
+            $res[] = $this->getProperty($this->getProperties()[$i]->name); 
+        }
+
+        return $res;
+    }
+    
+    public function setPropertyValues($properties): void {
+        for($i = 0; $i < count($properties); $i++) {
+            $this->setProperty($this->getProperties()[$i]->name, $properties[$i]);   
+        }
     }
 }

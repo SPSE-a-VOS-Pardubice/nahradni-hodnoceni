@@ -95,13 +95,13 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id",             $this->id),
+            //new DatabaseParameter("id",             $this->id),
             new DatabaseParameter("student_id",     $this->student_id),
             new DatabaseParameter("subject_id",     $this->subject_id),
             new DatabaseParameter("classroom_id",   $this->classroom_id),
             new DatabaseParameter("original_mark",  $this->original_mark),
             new DatabaseParameter("final_mark",     $this->final_mark),
-            new DatabaseParameter("time",           $this->time),
+            new DatabaseParameter("time",           $this->time, 436437546),
         ];
 
         if ($this->id === 0) {
@@ -240,5 +240,20 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         }
 
         $exam->write();
+    }
+
+    public function getPropertyValues(): array {
+        $res = [];
+        for($i = 0; $i < count($this->getProperties()); $i++) {
+            $res[] = $this->getProperty($this->getProperties()[$i]->name); 
+        }
+
+        return $res;
+    }
+    
+    public function setPropertyValues($properties): void {
+        for($i = 0; $i < count($properties); $i++) {
+            $this->setProperty($this->getProperties()[$i]->name, $properties[$i]);   
+        }
     }
 }
