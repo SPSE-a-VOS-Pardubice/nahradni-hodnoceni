@@ -68,7 +68,6 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
 
     public function write(): void {
         $parameters = [
-            new DatabaseParameter("id",             $this->id),
             new DatabaseParameter("name",           $this->name),
             new DatabaseParameter("abbreviation",   $this->abbreviation)
         ];
@@ -82,13 +81,11 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             VALUES (
                 :name
                 :abbreviation
-            )", [
-                new DatabaseParameter("name",           $this->name),
-                new DatabaseParameter("abbreviation",   $this->abbreviation)
-            ]);
+            )", $parameters);
 
             $this->id = intval($this->database->lastInsertId("id"));
         }else{
+            array_push($parameters, new DatabaseParameter("id", $this->id));
             $this->database->execute("
             UPDATE Subjects
             SET

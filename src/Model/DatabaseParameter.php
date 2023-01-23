@@ -37,17 +37,7 @@ class DatabaseParameter {
         }
 
         $this->name = $name;
-        
-        if($type == 436437546) { // Uhhhhhh....
-            $this->value = $value->format("Y-m-d H:i:s");
-            $this->type = \PDO::PARAM_STR;
-        }
-        else if($type == \PDO::PARAM_INT && $value == -1) {
-            $this->value = null;
-            $this->type = \PDO::PARAM_NULL;
-        } else {
-            $this->value = $value;
-            $this->type = $type;
-        }
+        $this->value = $value;
+        $this->type = $type;
     }
 }

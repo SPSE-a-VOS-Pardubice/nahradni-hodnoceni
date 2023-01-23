@@ -40,8 +40,7 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
             new DatabaseParameter("classroom_id",   $this->classroom_id),
         ];
 
-        if ($this->id === 0) {
-            $this->database->execute("
+        $this->database->execute("
             INSERT INTO ClassroomsTraits (
                 trait_id
                 classroom_id
@@ -49,19 +48,7 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
             VALUES (
                 :trait_id
                 :classroom_id
-            )", $parameters);
-        }
-        // }else{
-        //     // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
-        //     $this->database->execute("
-        //     UPDATE ClassroomsTraits
-        //     SET
-        //         trait_id = :trait_id
-        //         classroom_id = :classroom_id
-        //     WHERE
-        //         id = :id
-        //     ", $parameters);
-        // }
+        )", $parameters);
     }
 
     public function remove(): void {
@@ -101,7 +88,7 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
         foreach ($data as $key => $value) {
             if (preg_match("/^trait-[0-9]*$/", $key)) {
                 $classroomTrait = new ClassroomTrait($database);
-                $classroomTrait->setProperty("trait_id",        intval($value));
+                $classroomTrait->setProperty("trait_id", intval($value));
                 $classroomTraits[] = $classroomTrait;
             }
         }

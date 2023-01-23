@@ -36,12 +36,11 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
     
     public function write(): void {
         $parameters = [
-            new DatabaseParameter("subject_id",       $this->subject_id),
-            new DatabaseParameter("teacher_id",   $this->teacher_id),
+            new DatabaseParameter("subject_id", $this->subject_id),
+            new DatabaseParameter("teacher_id", $this->teacher_id),
         ];
 
-        if ($this->id === 0) {
-            $this->database->execute("
+        $this->database->execute("
             INSERT INTO TeachesSuitability (
                 subject_id
                 teacher_id
@@ -49,19 +48,7 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
             VALUES (
                 :subject_id
                 :teacher_id
-            )", $parameters);
-        }
-        // }else{
-        //     // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
-        //     $this->database->execute("
-        //     UPDATE TeachesSuitability
-        //     SET
-        //         subject_id = :subject_id
-        //         teacher_id = :teacher_id
-        //     WHERE
-        //         id = :id
-        //     ", $parameters);
-        // }
+        )", $parameters);
     }
 
     public function remove(): void {
@@ -72,8 +59,8 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
                 teacher_id = :teacher_id
             LIMIT 1
         ", [
-            new DatabaseParameter("subject_id",       $this->subject_id),
-            new DatabaseParameter("teacher_id",   $this->teacher_id),
+            new DatabaseParameter("subject_id", $this->subject_id),
+            new DatabaseParameter("teacher_id", $this->teacher_id),
         ]);
     }
 

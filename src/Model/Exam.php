@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 use DateTime;
+use Spse\NahradniHodnoceni\Helpers\DateTimeHelper;
 
 const MARK_OPTIONS = ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"];
 
@@ -11,10 +12,13 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
     protected int $id = 0;
     private int $student_id;
     private int $subject_id;
-    private int $classroom_id;
+    private ?int $classroom_id;
     private string $original_mark;
-    private string $final_mark;
-    private DateTime $time;
+    private ?string $final_mark;
+    private ?DateTime $time;
+    private ?int $chairman_id;
+    private ?int $class_teacher_id;
+    private ?int $examiner_id;
 
     public function getProperty(string $key) {
         return $this->$key;
@@ -26,14 +30,16 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id",              "ID",               ViewablePropertyType::INTEGER),
-            new ViewableProperty("student_id",      "Student",          ViewablePropertyType::INTEGER,  true),
-            new ViewableProperty("subject_id",      "Předmět",          ViewablePropertyType::INTEGER,  true),
-            new ViewableProperty("classroom_id",    "Učebna",           ViewablePropertyType::INTEGER,  true),
-            new ViewableProperty("original_mark",   "Původní známka",   ViewablePropertyType::STRING,   true),
-            new ViewableProperty("final_mark",      "Výsledná známka",  ViewablePropertyType::STRING,   true),
-            new ViewableProperty("time",            "Termín konání",    ViewablePropertyType::DATETIME),
-            new ViewableProperty("teachers", "Komise", ViewablePropertyType::INTERMEDIATE_DATA, true)
+            new ViewableProperty("id",                  "ID",               ViewablePropertyType::INTEGER),
+            new ViewableProperty("student_id",          "Student",          ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("subject_id",          "Předmět",          ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("classroom_id",        "Učebna",           ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("original_mark",       "Původní známka",   ViewablePropertyType::STRING,   true),
+            new ViewableProperty("final_mark",          "Výsledná známka",  ViewablePropertyType::STRING,   true),
+            new ViewableProperty("time",                "Termín konání",    ViewablePropertyType::DATETIME),
+            new ViewableProperty("chairman_id",         "Předseda",         ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("class_teacher_id",    "Třídní učitel",    ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("examiner_id",         "Zkoušející",       ViewablePropertyType::INTEGER,  true),
         ];
     }
 
@@ -57,51 +63,54 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         }
 
         return [
-            "student_id"    => $student_id,
-            "subject_id"    => $subject_id,
-            "classroom_id"  => $classroom_id,
-            "original_mark" => MARK_OPTIONS,
-            "final_mark"    => MARK_OPTIONS,
-            "teachers"      => $teachers
+            "student_id"        => $student_id,
+            "subject_id"        => $subject_id,
+            "classroom_id"      => $classroom_id,
+            "original_mark"     => MARK_OPTIONS,
+            "final_mark"        => MARK_OPTIONS,
+            "chairman_id"       => $teachers,
+            "class_teacher_id"  => $teachers,
+            "examiner_id"       => $teachers,
         ];
     }
 
     public function getIntermediateData(): array {
-        return [
-            "teachers" => array_map(function ($examTeacher) {
-                    return Teacher::get($this->database, $examTeacher->teacher_id);
-                }, ExamTeacher::getForExamp($this->database, $this->id)),
-            ];
+        return [];
     }
 
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
-        if (count($row) !== 7) {
+        if (count($row) !== 10) {
             throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
         }
 
         // Vybuduj novou instanci a vrať ji.
         $object = new Exam($database);
-        $object->setProperty("id",              intval($row[0]));
-        $object->setProperty("student_id",      intval($row[1]));
-        $object->setProperty("subject_id",      intval($row[2]));
-        $object->setProperty("classroom_id",    intval($row[3]));
-        $object->setProperty("original_mark",   $row[4]);
-        $object->setProperty("final_mark",      $row[5]);
-        $object->setProperty("time",            new DateTime($row[6]));
+        $object->setProperty("id",                  intval($row[0]));
+        $object->setProperty("student_id",          intval($row[1]));
+        $object->setProperty("subject_id",          intval($row[2]));
+        $object->setProperty("classroom_id",        intval($row[3]));
+        $object->setProperty("original_mark",       $row[4]);
+        $object->setProperty("final_mark",          $row[5]);
+        $object->setProperty("time",                new DateTime($row[6]));
+        $object->setProperty("chairman_id",         intval($row[3]));
+        $object->setProperty("class_teacher_id",    intval($row[3]));
+        $object->setProperty("examiner_id",         intval($row[3]));
         return $object;
     }
 
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id",             $this->id),
-            new DatabaseParameter("student_id",     $this->student_id),
-            new DatabaseParameter("subject_id",     $this->subject_id),
-            new DatabaseParameter("classroom_id",   $this->classroom_id),
-            new DatabaseParameter("original_mark",  $this->original_mark),
-            new DatabaseParameter("final_mark",     $this->final_mark),
-            new DatabaseParameter("time",           $this->time, 436437546),
+            new DatabaseParameter("student_id",         $this->student_id),
+            new DatabaseParameter("subject_id",         $this->subject_id),
+            new DatabaseParameter("classroom_id",       $this->classroom_id),
+            new DatabaseParameter("original_mark",      $this->original_mark),
+            new DatabaseParameter("final_mark",         $this->final_mark),
+            new DatabaseParameter("time",               $this->time === null ? null : DateTimeHelper::serialize($this->time)),
+            new DatabaseParameter("chairman_id",        $this->chairman_id),
+            new DatabaseParameter("class_teacher_id",   $this->class_teacher_id),
+            new DatabaseParameter("examiner_id",        $this->examiner_id),
         ];
 
         if ($this->id === 0) {
@@ -112,7 +121,10 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
                     classroom_id,
                     original_mark,
                     final_mark,
-                    time
+                    time,
+                    chairman_id,
+                    class_teacher_id,
+                    examiner_id
                 )
                 VALUES (
                     :student_id,
@@ -120,28 +132,28 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
                     :classroom_id,
                     :original_mark,
                     :final_mark,
-                    :time
+                    :time,
+                    :chairman_id,
+                    :class_teacher_id,
+                    :examiner_id
                 )
-            ", [
-                new DatabaseParameter("student_id",     $this->student_id),
-                new DatabaseParameter("subject_id",     $this->subject_id),
-                new DatabaseParameter("classroom_id",   $this->classroom_id),
-                new DatabaseParameter("original_mark",  $this->original_mark),
-                new DatabaseParameter("final_mark",     $this->final_mark),
-                new DatabaseParameter("time",           $this->time, 436437546),
-            ]);
+            ", $parameters);
 
             $this->id = intval($this->database->lastInsertId("id"));
         } else {
+            array_push($parameters, new DatabaseParameter("id", $this->id));
             $this->database->execute("
                 UPDATE Exams
                 SET
-                    student_id      = :student_id
-                    subject_id      = :subject_id
-                    classroom_id    = :classroom_id
-                    original_mark   = :original_mark
-                    final_mark      = :final_mark
-                    time            = :time
+                    student_id          = :student_id
+                    subject_id          = :subject_id
+                    classroom_id        = :classroom_id
+                    original_mark       = :original_mark
+                    final_mark          = :final_mark
+                    time                = :time
+                    chairman_id         = :chairman_id
+                    class_teacher_id    = :class_teacher_id
+                    examiner_id         = :examiner_id
                 WHERE
                     id = :id
             ", $parameters);
@@ -188,6 +200,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         }, $rows);
     }
 
+    // TODO tahle funkce je fucked up, měla by vracet jen model...
     public static function parsePostData(array $data, Database $database, int $id = 0): array {
 
         $exam = null;
@@ -204,15 +217,19 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         $exam->setProperty("final_mark",      $data["final_mark"]);
         $exam->setProperty("time",            new DateTime($data["time"]));
 
+        // TODO nemělo by se kontrolovat, zda není v $data[...] zapsán prázdný string ("")?
         return [
-            $exam, 
-            Student::get($database, $data["student_id"]), 
-            Subject::get($database, $data["subject_id"]),
-            Classroom::get($database, $data["classroom_id"]),
-            ExamTeacher::parsePostData($data, $database)
+            $exam,
+            Student::get($database,     $data["student_id"]), 
+            Subject::get($database,     $data["subject_id"]),
+            Classroom::get($database,   $data["classroom_id"]),
+            Teacher::get($database,     $data["chairman_id"]),
+            Teacher::get($database,     $data["class_teacher_id"]),
+            Teacher::get($database,     $data["examiner_id"]),
         ];
     }
 
+    // TODO upravit tuto funkci aby pracovala s `chairman_id`, `class_teacher_id`, `examiner_id` ,spíše než s `teachers`
     public static function applyPostData(array $models): void {
 
         $exam = $models[0];

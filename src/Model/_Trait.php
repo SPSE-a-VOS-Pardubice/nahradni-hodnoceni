@@ -51,8 +51,7 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id",     $this->id),
-            new DatabaseParameter("name",   $this->name),
+            new DatabaseParameter("name", $this->name),
         ];
 
         if ($this->id === 0) {
@@ -63,12 +62,11 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
                 VALUES (
                     :name
                 )
-            ", [
-                new DatabaseParameter("name",   $this->name)
-            ]);
+            ", $parameters);
 
             $this->id = intval($this->database->lastInsertId("id"));
         } else {
+            array_push($parameters, new DatabaseParameter("id", $this->id));
             $this->database->execute("
                 UPDATE Traits
                 SET

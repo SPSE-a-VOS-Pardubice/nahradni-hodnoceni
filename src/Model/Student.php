@@ -65,9 +65,8 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id",         $this->id),
             new DatabaseParameter("name",       $this->name),
-            new DatabaseParameter("surname",    $this->primeni),
+            new DatabaseParameter("surname",    $this->surname),
             new DatabaseParameter("class_id",   $this->class_id),
         ];
 
@@ -83,14 +82,11 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
                     :surname,
                     :class_id
                 )
-            ", [
-                new DatabaseParameter("name",       $this->name),
-                new DatabaseParameter("surname",    $this->primeni),
-                new DatabaseParameter("class_id",   $this->class_id),
-            ]);
+            ", $parameters);
 
             $this->id = intval($this->database->lastInsertId("id"));
         } else {
+            array_push($parameters, new DatabaseParameter("id", $this->id));
             $this->database->execute("
                 UPDATE Students
                 SET

@@ -63,23 +63,21 @@
 
         public function write(): void {
             $parameters = [
-                new DatabaseParameter("id",     $this->id),
-                new DatabaseParameter("label",  $this->label),
+                new DatabaseParameter("label", $this->label),
             ];
 
-            if($this->id === 0){
+            if ($this->id === 0) {
                 $this->database->execute("
                 INSERT INTO Classrooms (
                     label
                 )
                 VALUES (
                     :label
-                )", [
-                    new DatabaseParameter("label",  $this->label)
-                ]);
+                )", $parameters);
 
                 $this->id = intval($this->database->lastInsertId("id"));
-            }else{
+            } else {
+                array_push($parameters, new DatabaseParameter("id", $this->id));
                 $this->database->execute("
                 UPDATE Classrooms
                 SET

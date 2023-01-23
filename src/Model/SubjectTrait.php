@@ -28,20 +28,19 @@ class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
 
         // Vybuduj novou instanci a vrať ji.
         $object = new ClassroomTrait($database);
-        $object->setProperty("trait_id",        intval($row[0]));
-        $object->setProperty("subject_id",    intval($row[1]));
+        $object->setProperty("trait_id",    intval($row[0]));
+        $object->setProperty("subject_id",  intval($row[1]));
         return $object;
     }
     
 
     public function write(): void {
         $parameters = [
-            new DatabaseParameter("trait_id",       $this->trait_id),
-            new DatabaseParameter("subject_id",   $this->subject_id),
+            new DatabaseParameter("trait_id",   $this->trait_id),
+            new DatabaseParameter("subject_id", $this->subject_id),
         ];
 
-        if ($this->id === 0) {
-            $this->database->execute("
+        $this->database->execute("
             INSERT INTO SubjectsTraits (
                 trait_id
                 subject_id
@@ -49,31 +48,19 @@ class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
             VALUES (
                 :trait_id
                 :subject_id
-            )", $parameters);
-        }
-        // }else{
-        //     // TODO: TOTO JE BLBOST ALE SYTUACE BY NEMĚLA NASTAT
-        //     $this->database->execute("
-        //     UPDATE SubjectsTraits
-        //     SET
-        //         trait_id = :trait_id
-        //         subject_id = :subject_id
-        //     WHERE
-        //         id = :id
-        //     ", $parameters);
-        // }
+        )", $parameters);
     }
 
     public function remove(): void {
         $this->database->execute("
             DELETE FROM SubjectsTraits
             WHERE
-                trait_id = :trait_id,
-                subject_id = :subject_id
+                trait_id    = :trait_id,
+                subject_id  = :subject_id
             LIMIT 1
         ", [
-            new DatabaseParameter("trait_id",       $this->trait_id),
-            new DatabaseParameter("subject_id",   $this->subject_id),
+            new DatabaseParameter("trait_id",   $this->trait_id),
+            new DatabaseParameter("subject_id", $this->subject_id),
         ]);
     }
 

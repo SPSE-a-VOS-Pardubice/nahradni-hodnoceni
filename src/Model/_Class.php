@@ -68,7 +68,6 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
-            new DatabaseParameter("id",                 $this->id),
             new DatabaseParameter("year",               $this->year),
             new DatabaseParameter("grade",              $this->grade),
             new DatabaseParameter("label",              $this->label),
@@ -89,14 +88,11 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
                     :label,
                     :class_teacher_id
                 )
-            ",[ new DatabaseParameter("year",               $this->year),
-                new DatabaseParameter("grade",              $this->grade),
-                new DatabaseParameter("label",              $this->label),
-                new DatabaseParameter("class_teacher_id",   $this->class_teacher_id),
-            ]);
+            ", $parameters);
 
             $this->id = intval($this->database->lastInsertId("id"));
         } else {
+            array_push($parameters, new DatabaseParameter("id", $this->id));
             $this->database->execute("
                 UPDATE Classes
                 SET

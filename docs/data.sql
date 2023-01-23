@@ -49,6 +49,6 @@ INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (1, 1);
 INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (1, 2);
 INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (2, 3);
 -- zkoušky
-INSERT INTO `Exams` (`student_id`, `subject_id`, `classroom_id`, `original_mark`, `final_mark`, `time`) VALUES (1, 2, 3, 'N', '4', '2023-08-25 09:00:00');
--- učitelé u zkoušek
-INSERT INTO `ExamsTeachers` (`exam_id`, `teacher_id`, `Role`) VALUES (1, '3','Zkoučející');
+INSERT INTO `Exams` (`student_id`, `subject_id`, `classroom_id`, `original_mark`, `final_mark`, `time`, `chairman_id`) VALUES (1, 2, 3, 'N', '4', '2023-08-25 09:00:00', 1);
+INSERT INTO `Exams` (`student_id`, `subject_id`, `classroom_id`, `original_mark`, `final_mark`, `time`) VALUES (2, 1, 4, 'N', NULL, '2023-08-25 15:25:00');
+INSERT INTO `Exams` (`student_id`, `subject_id`, `classroom_id`, `original_mark`, `final_mark`, `time`, `chairman_id`, `class_teacher_id`, `examiner_id`) VALUES (3, 2, 1, '5', NULL, '2023-08-27 10:00:00', 1, 2, 3);
