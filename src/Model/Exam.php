@@ -93,9 +93,9 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         $object->setProperty("original_mark",       $row[4]);
         $object->setProperty("final_mark",          $row[5]);
         $object->setProperty("time",                new DateTime($row[6]));
-        $object->setProperty("chairman_id",         intval($row[3]));
-        $object->setProperty("class_teacher_id",    intval($row[3]));
-        $object->setProperty("examiner_id",         intval($row[3]));
+        $object->setProperty("chairman_id",         intval($row[7]));
+        $object->setProperty("class_teacher_id",    intval($row[8]));
+        $object->setProperty("examiner_id",         intval($row[9]));
         return $object;
     }
 
@@ -171,7 +171,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         ]);
     }
     
-    static public function get(Database $database, string $id): ?Exam {
+    static public function get(Database $database, int $id): ?Exam {
         $row = $database->fetchSingle("
             SELECT
                 *
@@ -200,71 +200,27 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         }, $rows);
     }
 
-    // TODO tahle funkce je fucked up, měla by vracet jen model...
-    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
+        $model = $id === 0 ? new Exam($database) : Exam::get($database, $id);
+        if ($model === null) 
+            throw new \RuntimeException("Error Processing Request", 1);
 
-        $exam = null;
-        if ($id > 0) {
-            $exam = Exam::get($database, strval($id));
+        $model->setProperty("student_id",       intval($data["student_id"]));
+        $model->setProperty("subject_id",       intval($data["subject_id"]));
+        $model->setProperty("classroom_id",     intval($data["classroom_id"]));
+        $model->setProperty("original_mark",    $data["original_mark"]);
+        $model->setProperty("final_mark",       $data["final_mark"]);
+        $model->setProperty("time",             new DateTime($data["time"]));
+        $model->setProperty("chairman_id",      intval($data["chairman_id"]));
+        $model->setProperty("class_teacher_id", intval($data["class_teacher_id"]));
+        $model->setProperty("examiner_id",      intval($data["examiner_id"]));
 
-            if ($exam == null) 
-                throw new \RuntimeException("Error Processing Request", 1);
-        } else {
-            $exam = new Exam($database);
-        }
-
-        $exam->setProperty("original_mark",   $data["original_mark"]);
-        $exam->setProperty("final_mark",      $data["final_mark"]);
-        $exam->setProperty("time",            new DateTime($data["time"]));
-
-        // TODO nemělo by se kontrolovat, zda není v $data[...] zapsán prázdný string ("")?
-        return [
-            $exam,
-            Student::get($database,     $data["student_id"]), 
-            Subject::get($database,     $data["subject_id"]),
-            Classroom::get($database,   $data["classroom_id"]),
-            Teacher::get($database,     $data["chairman_id"]),
-            Teacher::get($database,     $data["class_teacher_id"]),
-            Teacher::get($database,     $data["examiner_id"]),
-        ];
+        return new ParsedPostData($model, []); // TODO
     }
 
-    // TODO upravit tuto funkci aby pracovala s `chairman_id`, `class_teacher_id`, `examiner_id` ,spíše než s `teachers`
-    public static function applyPostData(array $models): void {
-
-        $exam = $models[0];
-        $student = $models[1];
-        $subject = $models[2];
-        $classroom = $models[3];
-        $examTeachers = $models[4];
-
-
-        if ($student != null)
-            $exam->setProperty("student_id",  intval($student->id));
-        if ($subject != null)
-            $exam->setProperty("subject",  intval($subject->id));
-        if ($classroom != null)
-            $exam->setProperty("classroom",  intval($classroom->id));
-
-        $teachersInDB = ExamTeacher::getForExamp($exam->database, $exam->id);
-        $willBeInDB = [];
-
-        foreach ($examTeachers as $teacher) {
-            if ($teachersInDB[$teacher->teacher_id] == null) {
-                $teacher->exam_id = $exam->id;
-                ExamTeacher::applyPostData([$teacher]);
-            }
-
-            $willBeInDB[$teacher->teacher_id] = $teacher;
-        }
-
-        foreach ($willBeInDB as $teacherInDB) {
-            if ($willBeInDB[$teacherInDB->teacher_id] == null) {
-                $teacherInDB->remove();
-            }
-        }
-
-        $exam->write();
+    public static function applyPostData(ParsedPostData $parsedData): void {
+        $model = $parsedData->model;
+        $model->write();
     }
 
     public function getPropertyValues(): array {

@@ -87,7 +87,7 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         ]);
     }
 
-    static public function get(Database $database, string $id): ?_Trait {
+    static public function get(Database $database, int $id): ?_Trait {
         $row = $database->fetchSingle("
             SELECT
                 *
@@ -115,28 +115,19 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
             return _Trait::fromDatabaseRow($database, $row);
         }, $rows);
     }
-    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+    
+    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
+        $model = $id === 0 ? new _Trait($database) : _Trait::get($database, $id);
+        if ($model === null) 
+            throw new \RuntimeException("Error Processing Request", 1);
 
-        $trait = null;
-        if ($id > 0) {
-            $trait = _Trait::get($database, strval($id));
+        $model->setProperty("name", $data["name"]);
 
-            if ($trait == null) 
-                throw new \RuntimeException("Error Processing Request", 1);
-        } else {
-            $trait = new _Trait($database);
-        }
-
-        $trait->setProperty("name",    $data["name"]);
-
-
-        return [$trait];
+        return new ParsedPostData($model, []); // TODO
     }
 
-    public static function applyPostData(array $models): void {
-
-        $trait = $models[0];
-
-        $trait->write();
+    public static function applyPostData(ParsedPostData $parsedData): void {
+        $model = $parsedData->model;
+        $model->write();
     }
 }

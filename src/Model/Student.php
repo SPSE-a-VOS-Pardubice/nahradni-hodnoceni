@@ -110,7 +110,7 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         ]);
     }
     
-    static public function get(Database $database, string $id): ?Student {
+    static public function get(Database $database, int $id): ?Student {
         $row = $database->fetchSingle("
             SELECT
                 *
@@ -139,34 +139,21 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             return Student::fromDatabaseRow($database, $row);
         }, $rows);
     }
-    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
+        $model = $id === 0 ? new Student($database) : Student::get($database, $id);
+        if ($model === null) 
+            throw new \RuntimeException("Error Processing Request", 1);
+        
 
-        $student = null;
-        if ($id > 0) {
-            $student = Student::get($database, strval($id));
+        $model->setProperty("name",        $data["name"]);
+        $model->setProperty("surname",     $data["surname"]);
 
-            if ($student == null) 
-                throw new \RuntimeException("Error Processing Request", 1);
-        } else {
-            $student = new Student($database);
-        }
-
-        $student->setProperty("name",        $data["name"]);
-        $student->setProperty("surname",     $data["surname"]);
-
-        return [$student, _Class::get($database, $data["class_id"])];
+        return new ParsedPostData($model, []); // TODO
     }
 
-    public static function applyPostData(array $models): void {
-
-        $student = $models[0];
-        $class = $models[1];
-
-        if ($class != null) {
-            $student->setProperty("class_id", $class->id);
-        }
-
-        $student->write();
+    public static function applyPostData(ParsedPostData $parsedData): void {
+        $model = $parsedData->model;
+        $model->write();
     }
 
     public static function getFromNameSurnameClass(Database $database, string $name, string $surname, string $class): Student {

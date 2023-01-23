@@ -27,7 +27,7 @@ class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
         }
 
         // Vybuduj novou instanci a vrať ji.
-        $object = new ClassroomTrait($database);
+        $object = new SubjectTrait($database);
         $object->setProperty("trait_id",    intval($row[0]));
         $object->setProperty("subject_id",  intval($row[1]));
         return $object;
@@ -76,30 +76,7 @@ class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
         ]);
 
         return array_map(function (array $row) use ($database) {
-            $classroomTrait = ClassroomTrait::fromDatabaseRow($database, $row);
-
-            return [$classroomTrait->trait_id => $classroomTrait];
+            return SubjectTrait::fromDatabaseRow($database, $row);
         }, $rows);
-    }
-    public static function parsePostData(array $data, Database $database, int $id = 0): array {
-
-        $classroomTraits = [];
-
-        foreach ($data as $key => $value) {
-            if (preg_match("/^trait-[0-9]*$/", $key)) {
-                $classroomTrait = new ClassroomTrait($database);
-                $classroomTrait->setProperty("trait_id",        intval($value));
-                $classroomTraits[] = $classroomTrait;
-            }
-        }
-
-        return $classroomTraits;
-    }
-
-    public static function applyPostData(array $models): void {
-
-        $trait = $models[0];
-
-        $trait->write();
     }
 }

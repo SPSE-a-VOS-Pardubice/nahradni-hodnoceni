@@ -41,7 +41,7 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
         ];
 
         $this->database->execute("
-            INSERT INTO TeachesSuitability (
+            INSERT INTO TeachersSuitability (
                 subject_id
                 teacher_id
             )
@@ -53,7 +53,7 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
 
     public function remove(): void {
         $this->database->execute("
-            DELETE FROM TeachesSuitability
+            DELETE FROM TeachersSuitability
             WHERE
                 subject_id = :subject_id,
                 teacher_id = :teacher_id
@@ -68,7 +68,7 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
         $rows = $database->fetchMultiple("
             SELECT
                 *
-            FROM TeachesSuitability
+            FROM TeachersSuitability
             WHERE
                 teacher_id = :teacher_id
         ", [
@@ -76,31 +76,7 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
         ]);
 
         return array_map(function (array $row) use ($database) {
-            $teacherSuitability = TeacherSuitability::fromDatabaseRow($database, $row);
-
-            return [$teacherSuitability->subject_id => $teacherSuitability];
+            return TeacherSuitability::fromDatabaseRow($database, $row);
         }, $rows);
-    }
-    
-    public static function parsePostData(array $data, Database $database, int $id = 0): array {
-
-        $teachersSuitability = [];
-
-        foreach ($data as $key => $value) {
-            if (preg_match("/^subject-[0-9]*$/", $key)) {
-                $teacherSuitability = new TeacherSuitability($database);
-                $teacherSuitability->setProperty("subject_id",        intval($value));
-                $teachersSuitability[] = $teacherSuitability;
-            }
-        }
-
-        return $teachersSuitability;
-    }
-
-    public static function applyPostData(array $models): void {
-
-        $teacher = $models[0];
-
-        $teacher->write();
     }
 }

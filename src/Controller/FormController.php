@@ -44,7 +44,7 @@ class FormController extends AbstractController
             $item = null;
         } else if (preg_match("/^\d+$/", $id)) {
             $path = "/table/" . $args["name"] . "/" . $id; 
-            $item = $model::get($database, $id);
+            $item = $model::get($database, intval($id));
             if (is_null($item))
                 return $view->renderResponse($request, $response, "/error.php", []);
         } else {
@@ -64,7 +64,6 @@ class FormController extends AbstractController
     public function post(Request $request, Response $response, array $args): Response
     {
         $parsedBody = $request->getParsedBody();
-        var_dump($parsedBody);
 
         
         $view = $this->container->get("view");
@@ -82,14 +81,16 @@ class FormController extends AbstractController
         $id = $args["id"];
         if ($id === "new") {
             // vytváří nový 
-            $model::applyPostData($model::parsePostData($parsedBody, $database));
+            $model::applyPostData($model::parsePostData($database, $parsedBody));
 
         } else {
             // edituje starý 
             try {
-                $model::applyPostData($model::parsePostData($parsedBody, $database, intval($id)));
+                $model::applyPostData($model::parsePostData($database, $parsedBody, intval($id)));
             } catch (\Throwable $th) {
-                return $view->renderResponse($request, $response, "/error.php", []);
+                return $view->renderResponse($request, $response, "/error.php", [
+                    "message" => $th->getMessage()
+                ]);
             }
         }
 

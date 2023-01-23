@@ -127,7 +127,7 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         ]);
     }
 
-    static public function get(Database $database, string $id): ?Teacher
+    static public function get(Database $database, int $id): ?Teacher
     {
         $row = $database->fetchSingle("
             SELECT
@@ -158,51 +158,23 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         }, $rows);
     }
     
-    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
+        $model = $id === 0 ? new Teacher($database) : Teacher::get($database, $id);
+        if ($model === null) 
+            throw new \RuntimeException("Error Processing Request", 1);
 
-        $teacher = null;
-        if ($id > 0) {
-            $teacher = Teacher::get($database, strval($id));
+        $model->setProperty("name",    $data["name"]);
+        $model->setProperty("surname", $data["surname"]);
+        $model->setProperty("prefix",  $data["prefix"]);
+        $model->setProperty("suffix",  $data["suffix"]);
 
-            if ($teacher == null) 
-                throw new \RuntimeException("Error Processing Request", 1);
-        } else {
-            $teacher = new Teacher($database);
-        }
-
-        $teacher->setProperty("name",    $data["name"]);
-        $teacher->setProperty("surname", $data["surname"]);
-        $teacher->setProperty("prefix",  $data["prefix"]);
-        $teacher->setProperty("suffix",  $data["suffix"]);
-
-        return [$teacher, TeacherSuitability::parsePostData($data, $database)];
+        return new ParsedPostData($model, []); // TODO
     }
 
-    public static function applyPostData(array $models): void {
-
-        $teacher = $models[0];
-        $teacherSuitability = $models[1];
-
-        $suitabilityInDB = TeacherSuitability::getForTeacher($teacher->database, $teacher->id);
-        $willBeInDB = [];
-
-        foreach ($teacherSuitability as $suitability) {
-            if ($suitabilityInDB[$suitability->subject_id] == null) {
-                // TODO co když teprve vytvářím? id je 0
-                $suitability->teacher_id = $teacher->id;
-                TeacherSuitability::applyPostData([$suitability]);
-            }
-
-            $willBeInDB[$teacher->teacher_id] = $teacher;
-        }
-
-        foreach ($willBeInDB as $suitabilityInDB) {
-            if ($willBeInDB[$suitabilityInDB->subject_id] == null) {
-                $suitabilityInDB->remove();
-            }
-        }
-
-        $teacher->write();
+    public static function applyPostData(ParsedPostData $parsedData): void {
+        $model = $parsedData->model;
+        $model->write();
+        // TODO
     }
 
     public static function getFromSurname(Database $database, string $surname): Teacher {

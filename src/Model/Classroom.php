@@ -59,7 +59,6 @@
             $object->setProperty("label",   $row[1]);
             return $object;
         }
-        
 
         public function write(): void {
             $parameters = [
@@ -99,7 +98,7 @@
             ]);
         }
 
-        static public function get(Database $database, string $id): ?Classroom {
+        static public function get(Database $database, int $id): ?Classroom {
             $row = $database->fetchSingle("
                 SELECT
                     *
@@ -129,61 +128,21 @@
             }, $rows);
         }
 
-        public static function parsePostData(array $data, Database $database, int $id = 0): array {
+        public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
+            $model = $id === 0 ? new Classroom($database) : Classroom::get($database, $id);
+            if ($model === null) 
+                throw new \RuntimeException("Error Processing Request", 1);
 
-            $classroom = null;
-            if ($id > 0) {
-                $classroom = Classroom::get($database, strval($id));
+            $model->setProperty("label", $data["label"]);
 
-                if ($classroom == null) 
-                    throw new \RuntimeException("Error Processing Request", 1);
-            } else {
-                $classroom = new Classroom($database);
-            }
-
-            $classroom->setProperty("label",   $data["label"]);
-
-            return [$classroom, ClassroomTrait::parsePostData($data, $database)];
+            return new ParsedPostData($model, []); // TODO
         }
 
-        public static function applyPostData(array $models): void {
+        public static function applyPostData(ParsedPostData $parsedData): void {
+            $model = $parsedData->model;
+            $model->write();
 
-            $classroom = $models[0];
-            $classroomsTrails = $models[1];
-            
-            // tenhle algorizmus by se možná dal imlementovat někde obecně ???
-
-            // vem si z priznakUcebna data kde idUcebna = id
-            $traitsInDB = ClassroomTrait::getForClassroom($classroom->database, $classroom->id);
-            // deklarace místa pro traity co jsou i v posu i v db
-            $willBeInDB = [];
-        
-            // projdi traity v postu 
-            foreach ($classroomsTrails as $trait) {
-                // pokud není trait ve výsledku z db přidej ho do db 
-                if ($traitsInDB[$trait->trait_id] == null) {
-                    // šla by volat i metoda write 
-                    // TODO: zamyslet se: asi vy modely pro mezi tabulky nemusei mýt metodu applyPostDat
-                    // TODO co když teprve vytvářím? id je 0
-                    $trait->classroom_id = $classroom->id;
-                    ClassroomTrait::applyPostData([$trait]);
-                }
-
-                // dej do traity co jsou i v posu i v db
-                $willBeInDB[$trait->trait_id] = $trait;
-            }
-
-            // projdi data z mezitabulky
-            foreach ($traitsInDB as $traitInDB) {
-                // pokud není v   traity co jsou i v postu i v db
-                if ($willBeInDB[$traitInDB->trait_id] == null) {
-                   //odeber ho z db
-                   $traitInDB->remove();
-                }
-            }
-            
-
-            $classroom->write();
+            // TODO
         }
     }
 

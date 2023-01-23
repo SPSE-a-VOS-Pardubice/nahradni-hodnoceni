@@ -117,7 +117,7 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         ]);
     }
     
-    static public function get(Database $database, string $id): ?_Class {
+    static public function get(Database $database, int $id): ?_Class {
         $row = $database->fetchSingle("
             SELECT
                 *
@@ -146,35 +146,20 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         }, $rows);
     }
 
-    public static function parsePostData(array $data, Database $database, int $id = 0): array {
+    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
+        $model = $id === 0 ? new _Class($database) : _Class::get($database, $id);
+        if ($model === null) 
+            throw new \RuntimeException("Error Processing Request", 1);
 
-        $class = null;
-        if ($id > 0) {
-            $class = _Class::get($database, strval($id));
+        $model->setProperty("year",     intval($data["year"]));
+        $model->setProperty("grade",    intval($data["grade"]));
+        $model->setProperty("label",    $data["label"]);
 
-            if ($class == null) 
-                throw new \RuntimeException("Error Processing Request", 1);
-        } else {
-            $class = new _Class($database);
-        }
-
-        $class->setProperty("year",                intval($data["year"]));
-        $class->setProperty("grade",               intval($data["grade"]));
-        $class->setProperty("label",               $data["label"]);
-
-
-        return [$class, Teacher::get($database, $data["class_teacher_id"])];
+        return new ParsedPostData($model, []); // TODO
     }
 
-    public static function applyPostData(array $models): void {
-
-        $class = $models[0];
-        $teacher = $models[1];
-
-        if ($teacher != null) {
-            $class->setProperty("class_teacher_id",               $teacher->id);
-        }
-
-        $class->write();
+    public static function applyPostData(ParsedPostData $parsedData): void {
+        $model = $parsedData->model;
+        $model->write();
     }
 }
