@@ -9,7 +9,6 @@ use Spse\NahradniHodnoceni\View;
 use Spse\NahradniHodnoceni\Model\Exam;
 use Spse\NahradniHodnoceni\Model\Student;
 use Spse\NahradniHodnoceni\Model\Subject;
-use Spse\NahradniHodnoceni\Model\ExamTeacher;
 use Spse\NahradniHodnoceni\Model\Teacher;
 use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as Request};
 use DateTime;
@@ -103,17 +102,14 @@ class ImportController extends AbstractController
                     ["message" => "\$file->getStream() je null", "backLink" => "/import/upload"]);
         }
 
-        $items = $this->parse($file->getStream());
-        $importedExams = $items[0];
-        $importedExamsTeachers = $items[1];
+        $importedExams = $this->parse($file->getStream());
 
         session_start();
         for ($i = 0; $i < count($importedExams); $i++) {
             $_SESSION["importedExams"][$i] = $importedExams[$i]->getPropertyValues();
-            $_SESSION["importedExamsTeachers"][$i] = $importedExamsTeachers[$i]->getPropertyValues();
         }
 
-        $previewEntries = $this->consturctPreviewTableEntries($importedExams, $importedExamsTeachers);
+        $previewEntries = $this->consturctPreviewTableEntries($importedExams);
         
         return $view->renderResponse($request, $response, "/importPreview.php", [
             "entries" => $previewEntries
@@ -136,7 +132,7 @@ class ImportController extends AbstractController
         
         session_start();
         
-        if(!isset($_SESSION["importedExams"]) || !isset($_SESSION["importedExamsTeachers"])) {
+        if(!isset($_SESSION["importedExams"])) {
             session_destroy();
             return $view->renderResponse($request, $response, "/error.php", 
                     ["message" => "Chyba s PHP session", "backLink" => "/import/upload"]);
@@ -144,36 +140,27 @@ class ImportController extends AbstractController
 
         $database = $this->container->get("database");
         $importedExams = [];
-        $importedExamsTeachers = [];
         for ($i = 0; $i < count($_SESSION["importedExams"]); $i++) {
             $importedExams[$i] = new Exam($database);
             $importedExams[$i]->setPropertyValues($_SESSION["importedExams"][$i]);
-
-            $importedExamsTeachers[$i] = new ExamTeacher($database);
-            $importedExamsTeachers[$i]->setPropertyValues($_SESSION["importedExamsTeachers"][$i]);
         }
         
         $database = $this->container->get("database");
         for ($i = 0; $i < count($_SESSION["importedExams"]); $i++) {
             $importedExams[$i]->write();
-            $allExams = Exam::getAll($database);
-            $importedExamsTeachers[$i]->__set("exam_id", $allExams[count($allExams) - 1]->getProperty("id")); // TODO: pls dont kill me fosny :(
-            $importedExamsTeachers[$i]->write();
         }
 
         $_SESSION["importedExams"] = [];
-        $_SESSION["importedExamsTeachers"] = [];
         session_destroy();
         
         return $this->redirect($response, "/table/priznaky");
     }
     
-    public function parse($stream, string $separator = ",") {
+    public function parse($stream, string $separator = ";") {
         $database = $this->container->get("database");
 
         $returnValue = [];
         $importedExams = array();
-        $importedExamsTeachers = array();
         
         $strings = explode("\n", $stream->__toString());
         $lastIndex = count($strings) - 1;
@@ -208,47 +195,41 @@ class ImportController extends AbstractController
             $exam->__set("original_mark", $values[csvMapping["znamka"]]);
             
             // TODO: Zjistit jaké výchozí hodnoty použít
-            $exam->__set("classroom_id", -1);
+            $exam->__set("classroom_id", null);
             $exam->__set("final_mark", "");
             $exam->__set("time", new DateTime("1970-01-01"));
 
-            $importedExams[] = $exam;
-
-            $examTeacher = new ExamTeacher($database);
-            $examTeacher->__set("exam_id", 0);
-
+            // Získávání ID zkoušejícího učitele
             try {
                 $teacher = Teacher::getFromSurname($database, $values[csvMapping["zkousejici"]]);
-                $examTeacher->__set("teacher_id", $teacher->__get("id"));
+                $exam->__set("examiner_id", $teacher->__get("id"));
             } catch(\RuntimeException $e) {
                 $this->addToImportErrorLog($e->getMessage());
                 continue;
             }
 
-            $examTeacher->__set("Role", "Zkoušející");
+            $exam->__set("class_teacher_id", null);
+            $exam->__set("chairman_id", null);
 
-            $importedExamsTeachers[] = $examTeacher;
+            $importedExams[] = $exam;
         }
 
-        $returnValue[0] = $importedExams;
-        $returnValue[1] = $importedExamsTeachers;
-
-        return $returnValue;
+        return $importedExams;
     }
 
     public function addToImportErrorLog(string $string) {
 
     }
 
-    public function consturctPreviewTableEntries($exams, $examTeachers): array {
+    public function consturctPreviewTableEntries($exams): array {
         $database = $this->container->get("database");
         
         $res = array();
         for($i = 0; $i < count($exams); $i++) {
-            $student = Student::get($database, strval($exams[$i]->getProperty("student_id")));
-            $class = _Class::get($database, strval($student->getProperty("class_id")));
-            $subject = Subject::get($database, strval($exams[$i]->getProperty("subject_id")));
-            $teacher = Teacher::get($database, strval($examTeachers[$i]->__get("teacher_id")));
+            $student = Student::get($database, intval($exams[$i]->getProperty("student_id")));
+            $class = _Class::get($database, intval($student->getProperty("class_id")));
+            $subject = Subject::get($database, intval($exams[$i]->getProperty("subject_id")));
+            $teacher = Teacher::get($database, intval($exams[$i]->__get("examiner_id")));
             
             $res[] = new PreviewTableEntry(
                 $class->getFormatted(),

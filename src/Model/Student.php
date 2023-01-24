@@ -166,6 +166,7 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         $grade = intval($explodedClass[0]);
         $label = $explodedClass[1];
         
+        // TODO: Crashne když nenalezne žádného studenta
         $row = $database->fetchSingle("
             SELECT 
                 students.id, students.name, students.surname, students.class_id
