@@ -42,6 +42,10 @@ function getInputType(ViewablePropertyType $propType): string {
  */
 function encodeIntermediateDataForFrontend($objects, $options) {
 
+  if ($objects == null) {
+    $objects = [];
+  }
+
   $objectsMap = [];
   foreach ($objects as $object) {
     $objectsMap[$object->id] = $object->getFormatted();
@@ -86,7 +90,8 @@ function isSelected($optionName, $value): bool {
       <!-- řádek s vlastností -->
       <?php foreach ($args["data"]["schema"] as $property): ?>
         <?php if ($property->name !== "id"): ?>
-          <div class="form-row" <?= $property->type === ViewablePropertyType::INTERMEDIATE_DATA ? sprintf("data-intermediate=\"%s\"", htmlspecialchars(encodeIntermediateDataForFrontend($args["data"]["intermediateData"][$property->name], $args["data"]["options"][$property->name]))) : "" ?>>
+          <!--$args["data"]["intermediateData"][$property->name] neexistuje -->
+          <div class="form-row" <?= $property->type === ViewablePropertyType::INTERMEDIATE_DATA ? sprintf("data-intermediate=\"%s\"", htmlspecialchars(encodeIntermediateDataForFrontend($args["data"]["intermediateData"] === [] ? [] : $args["data"]["intermediateData"][$property->name], $args["data"]["options"][$property->name]))) : "" ?>>
             <label for="<?= $property->name ?>">
               <?= $property->displayName ?>
             </label>

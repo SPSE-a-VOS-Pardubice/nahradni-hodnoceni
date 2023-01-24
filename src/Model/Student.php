@@ -148,6 +148,11 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         $model->setProperty("name",        $data["name"]);
         $model->setProperty("surname",     $data["surname"]);
 
+        // Otestuje zda je třída se zadaným id v db
+        if (_Class::get($database, intVal($data["class_id"])) != null)
+            $model->setProperty("class_id",    intVal($data["class_id"]));
+
+
         return new ParsedPostData($model, []); // TODO
     }
 

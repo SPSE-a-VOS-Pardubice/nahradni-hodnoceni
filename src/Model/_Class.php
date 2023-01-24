@@ -46,6 +46,7 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
     }
 
     public function getIntermediateData(): array {
+        // mělo by vracet učitele
         return [];
     }
 

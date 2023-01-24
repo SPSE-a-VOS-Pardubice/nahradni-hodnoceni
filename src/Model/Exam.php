@@ -145,14 +145,14 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
             $this->database->execute("
                 UPDATE Exams
                 SET
-                    student_id          = :student_id
-                    subject_id          = :subject_id
-                    classroom_id        = :classroom_id
-                    original_mark       = :original_mark
-                    final_mark          = :final_mark
-                    time                = :time
-                    chairman_id         = :chairman_id
-                    class_teacher_id    = :class_teacher_id
+                    student_id          = :student_id,
+                    subject_id          = :subject_id,
+                    classroom_id        = :classroom_id,
+                    original_mark       = :original_mark,
+                    final_mark          = :final_mark,
+                    time                = :time,
+                    chairman_id         = :chairman_id,
+                    class_teacher_id    = :class_teacher_id,
                     examiner_id         = :examiner_id
                 WHERE
                     id = :id

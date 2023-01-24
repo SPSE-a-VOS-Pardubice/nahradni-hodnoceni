@@ -65,6 +65,8 @@ class FormController extends AbstractController
     {
         $parsedBody = $request->getParsedBody();
 
+        // var_dump($parsedBody);
+        // return $parsedBody;
         
         $view = $this->container->get("view");
         $database = $this->container->get("database");
@@ -80,8 +82,15 @@ class FormController extends AbstractController
         // vytváří nový nebo edituje starý
         $id = $args["id"];
         if ($id === "new") {
+        
             // vytváří nový 
-            $model::applyPostData($model::parsePostData($database, $parsedBody));
+            try {
+                $model::applyPostData($model::parsePostData($database, $parsedBody));
+            } catch (\Throwable $th) {
+                return $view->renderResponse($request, $response, "/error.php", [
+                    "message" => $th->getMessage()
+                ]);
+            }
 
         } else {
             // edituje starý 
