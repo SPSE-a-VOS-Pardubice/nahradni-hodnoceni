@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
 /*
 Version: 1.0
 Author: Tobiáš Smolný, Radim Semerák, Vojtěch Fošnár
@@ -9,9 +9,8 @@ Author: Tobiáš Smolný, Radim Semerák, Vojtěch Fošnár
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 500;
-
 }
 
 a {
@@ -57,7 +56,6 @@ nav {
   padding: 2rem 0;
 }
 
-
 nav > ul {
   display: flex;
   flex-direction: row;
@@ -79,20 +77,20 @@ ul.dropdown > li {
 nav > ul > li > a,
 ul.dropdown > li > a {
   font-size: 1.25rem;
-  padding: .75rem 0;
+  padding: 0.75rem 0;
   color: #fff;
 }
 
 nav > ul > li > a::after,
 ul.dropdown > li > a::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 3px;
   left: 50%;
   bottom: 0;
   background-color: #64b22d;
-  transition: .35s;
+  transition: 0.35s;
 }
 
 nav > ul > li > a:hover::after,
@@ -131,7 +129,7 @@ ul.dropdown > li {
   cursor: pointer;
   font-size: 1.05rem;
   width: 100%;
-  height: 50px;
+  height: 45px;
   font-weight: 600;
   padding: 7.5px 1.5rem;
   border: none;
@@ -139,8 +137,7 @@ ul.dropdown > li {
   border-radius: 5px;
   color: #fff;
   background-color: #64b22d;
-  transition: .35s;
-  margin: .5rem 0;
+  transition: 0.35s;
 }
 
 #submit:hover {

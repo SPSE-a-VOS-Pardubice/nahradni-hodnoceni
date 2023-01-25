@@ -60,15 +60,15 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
       <h2 class="filter_head">Filtr</h2>
       <form action="" method="get" class="form_filter">
         <div class="form-row form-first_name">
-          <!-- <label for="first_name">Jméno</label> -->
+          
           <input type="text" placeholder="Jméno" name="first_name" id="first_name">
         </div>
         <div class="form-row form-last_name">
-          <!-- <label for="last_name">Příjmení</label> -->
+          
           <input type="text" placeholder="Příjmení" name="last_name" id="last_name">
         </div>
         <div class="form-row form-marks">
-          <!-- <label for="marks">Známka</label> -->
+        
           <input type="number" placeholder="Známka" name="marks" id="marks" min="1" max="5">
         </div>
         <div class="form-submit">
@@ -86,7 +86,7 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
           <button id="export">Export</button>
         </div>
       </div>
-
+<div style="overflow-x: auto;">
       <table>
         <thead>
           <tr class="tr-inputs">
@@ -122,6 +122,7 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
           <?php endforeach; ?>
         </tbody>
       </table>
+      </div>
     </section>
   </main>
 </body>

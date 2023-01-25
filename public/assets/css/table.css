@@ -1,9 +1,9 @@
-
 body > * {
   max-width: 1200px;
+}
+body {
   padding: 0 2rem;
 }
-
 .filter_head {
   font-size: 2rem;
   margin-bottom: 1rem;
@@ -29,7 +29,7 @@ body > * {
   border: none;
   border-radius: 5px;
   color: #fff;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .form_filter .form-submit {
@@ -42,8 +42,7 @@ body > * {
   font-weight: 600;
   padding: 7.5px 1.5rem;
   background-color: #64b22d;
-  transition: .35s;
-
+  transition: 0.35s;
 }
 
 .form_filter #submit:hover {
@@ -76,7 +75,7 @@ body > * {
   border-radius: 5px;
   color: #fff;
   background-color: #64b22d;
-  transition: .35s;
+  transition: 0.35s;
 }
 
 .table_buttons button:hover {
@@ -102,7 +101,7 @@ td {
   text-align: center;
   padding: 1rem 2.5rem;
   border: 1px solid #999;
-  transition: .35s;
+  transition: 0.35s;
 }
 
 td:hover {
@@ -112,5 +111,29 @@ td:hover {
 
 td a {
   color: #999;
-  transition: .35s;
+  transition: 0.35s;
+}
+
+@media (max-width: 655px) {
+  .form_filter {
+    flex-direction: column;
+  }
+  .filter_table_form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  th {
+    font-size: 0.9em;
+    padding: 1em;
+  }
+
+  td {
+    font-size: 0.9em;
+    padding: 1em;
+  }
+
+  .form-property {
+    flex-direction: column;
+  }
 }
