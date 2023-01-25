@@ -114,6 +114,14 @@ td a {
   transition: 0.35s;
 }
 
+div.table-wrapper {
+  overflow-x: auto;
+  display: flex;
+}
+div.table-wrapper table {
+  flex: 1;
+}
+
 @media (max-width: 655px) {
   .form_filter {
     flex-direction: column;

@@ -38,7 +38,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
             new ViewableProperty("final_mark",          "Výsledná známka",  ViewablePropertyType::STRING,   true),
             new ViewableProperty("time",                "Termín konání",    ViewablePropertyType::DATETIME),
             new ViewableProperty("chairman_id",         "Předseda",         ViewablePropertyType::INTEGER,  true),
-            new ViewableProperty("class_teacher_id",    "Třídní učitel",    ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("class_teacher_id",    "Přísedící",        ViewablePropertyType::INTEGER,  true), // TODO přejmenovat
             new ViewableProperty("examiner_id",         "Zkoušející",       ViewablePropertyType::INTEGER,  true),
         ];
     }

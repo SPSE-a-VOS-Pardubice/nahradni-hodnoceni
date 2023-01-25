@@ -51,7 +51,7 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
   <link rel="stylesheet" href="/assets/css/table.css">
 
 </head>
-
+`
 <body>
   <?php include(VIEW_ROOT . "/component/header.php") ?>
 
@@ -86,7 +86,7 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
           <button id="export">Export</button>
         </div>
       </div>
-<div style="overflow-x: auto;">
+    <div class="table-wrapper">
       <table>
         <thead>
           <tr class="tr-inputs">
