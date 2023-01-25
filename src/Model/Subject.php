@@ -89,7 +89,7 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             $this->database->execute("
             UPDATE Subjects
             SET
-                name    = :name
+                name    = :name,
                 zkratka = :abbreviation
             WHERE
                 id = :id

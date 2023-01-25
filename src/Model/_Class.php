@@ -97,9 +97,9 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
             $this->database->execute("
                 UPDATE Classes
                 SET
-                    year                = :year
-                    grade               = :grade
-                    label               = :label
+                    year                = :year,
+                    grade               = :grade,
+                    label               = :label,
                     class_teacher_id    = :class_teacher_id 
                 WHERE
                     id = :id

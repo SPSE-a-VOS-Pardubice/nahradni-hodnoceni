@@ -42,11 +42,11 @@ class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEn
 
         $this->database->execute("
             INSERT INTO TeachersSuitability (
-                subject_id
+                subject_id,
                 teacher_id
             )
             VALUES (
-                :subject_id
+                :subject_id,
                 :teacher_id
         )", $parameters);
     }

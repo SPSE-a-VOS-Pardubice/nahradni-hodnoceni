@@ -42,11 +42,11 @@ class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
 
         $this->database->execute("
             INSERT INTO SubjectsTraits (
-                trait_id
+                trait_id,
                 subject_id
             )
             VALUES (
-                :trait_id
+                :trait_id,
                 :subject_id
         )", $parameters);
     }
