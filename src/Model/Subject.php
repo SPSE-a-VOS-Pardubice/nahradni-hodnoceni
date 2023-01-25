@@ -90,7 +90,7 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             UPDATE Subjects
             SET
                 name    = :name,
-                zkratka = :abbreviation
+                abbreviation = :abbreviation
             WHERE
                 id = :id
             ", $parameters);
