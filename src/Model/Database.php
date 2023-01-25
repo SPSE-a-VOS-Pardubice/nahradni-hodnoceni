@@ -33,7 +33,7 @@ class Database {
 
     }
 
-    public function lastInsertId(?string $name = null): string|false {
+    public function lastInsertId(?string $name = null): mixed {
         return $this->connection->lastInsertId($name);
     }
 
