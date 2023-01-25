@@ -42,11 +42,11 @@ class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity
 
         $this->database->execute("
             INSERT INTO ClassroomsTraits (
-                trait_id
+                trait_id,
                 classroom_id
             )
             VALUES (
-                :trait_id
+                :trait_id,
                 :classroom_id
         )", $parameters);
     }

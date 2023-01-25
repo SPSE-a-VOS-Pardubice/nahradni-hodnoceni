@@ -75,11 +75,11 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         if($this->id === 0) {
             $this->database->execute("
             INSERT INTO Subjects (
-                name
+                name,
                 abbreviation
             )
             VALUES (
-                :name
+                :name,
                 :abbreviation
             )", $parameters);
 
@@ -89,8 +89,8 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             $this->database->execute("
             UPDATE Subjects
             SET
-            name    = :name
-            zkratka = :abbreviation
+                name    = :name,
+                abbreviation = :abbreviation
             WHERE
                 id = :id
             ", $parameters);
