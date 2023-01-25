@@ -152,9 +152,10 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         if ($model === null) 
             throw new \RuntimeException("Error Processing Request", 1);
 
-        $model->setProperty("year",     intval($data["year"]));
-        $model->setProperty("grade",    intval($data["grade"]));
-        $model->setProperty("label",    $data["label"]);
+        $model->setProperty("year",             intval($data["year"]));
+        $model->setProperty("grade",            intval($data["grade"]));
+        $model->setProperty("label",            $data["label"]);
+        $model->setProperty("class_teacher_id", intval($data["class_teacher_id"]));
 
         return new ParsedPostData($model, []); // TODO
     }
