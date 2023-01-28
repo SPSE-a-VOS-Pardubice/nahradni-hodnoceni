@@ -8,7 +8,10 @@ use Psr\Container\ContainerInterface as Container;
 use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as Request};
 
 abstract class AbstractController {
-    protected Container $container;
+    /**
+     * @var Container
+     */
+    protected $container;
 
     public function __construct(Container $container) {
         $this->container = $container;

@@ -5,10 +5,20 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 class Subject extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+    /**
+     * @var int
+     */
+    protected $id = 0;
 
-    protected int $id = 0;
-    private string $name;
-    private string $abbreviation;
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $abbreviation;
 
     protected function getProperty(string $key) {
         return $this->$key;

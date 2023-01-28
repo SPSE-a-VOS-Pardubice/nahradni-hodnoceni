@@ -4,13 +4,31 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity
-{
-    protected int $id = 0;
-    private string $name;
-    private string $surname;
-    private string $prefix;
-    private string $suffix;
+class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+    /**
+     * @var int
+     */
+    protected $id = 0;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $surname;
+
+    /**
+     * @var string
+     */
+    private $prefix;
+
+    /**
+     * @var string
+     */
+    private $suffix;
 
     public function getProperty(string $key) {
         return $this->$key;

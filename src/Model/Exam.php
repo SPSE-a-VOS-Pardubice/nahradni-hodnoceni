@@ -9,16 +9,55 @@ use Spse\NahradniHodnoceni\Helpers\DateTimeHelper;
 const MARK_OPTIONS = ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"];
 
 class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
-    protected int $id = 0;
-    private int $student_id;
-    private int $subject_id;
-    private ?int $classroom_id;
-    private string $original_mark;
-    private ?string $final_mark;
-    private ?DateTime $time;
-    private ?int $chairman_id;
-    private ?int $class_teacher_id;
-    private ?int $examiner_id;
+    /**
+     * @var int
+     */
+    protected $id = 0;
+    
+    /**
+     * @var int
+     */
+    private $student_id;
+
+    /**
+     * @var int
+     */
+    private $subject_id;
+
+    /**
+     * @var ?int
+     */
+    private $classroom_id;
+
+    /**
+     * @var string
+     */
+    private $original_mark;
+
+    /**
+     * @var ?string
+     */
+    private $final_mark;
+
+    /**
+     * @var ?DateTime
+     */
+    private $time;
+
+    /**
+     * @var ?int
+     */
+    private $chairman_id;
+
+    /**
+     * @var ?int
+     */
+    private $class_teacher_id;
+
+    /**
+     * @var ?int
+     */
+    private $examiner_id;
 
     public function getProperty(string $key) {
         return $this->$key;

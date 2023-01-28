@@ -5,8 +5,15 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
-    protected int $id = 0;
-    private string $name;
+    /**
+     * @var int
+     */
+    protected $id = 0;
+
+    /**
+     * @var string
+     */
+    private $name;
 
     public function getProperty(string $key) {
         return $this->$key;

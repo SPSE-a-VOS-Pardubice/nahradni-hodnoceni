@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 abstract class DatabaseEntity {
-    protected Database $database;
+    /**
+     * @var Database
+     */
+    protected $database;
 
     /**
      * ID is the only required parameter for a database entity.
+     * @var int
      */
-    protected int $id;
+    protected $id;
 
     public function __construct(Database $database) {
         $this->database = $database;

@@ -6,8 +6,8 @@ use Spse\NahradniHodnoceni\Model\DatabaseEntity;
 use Spse\NahradniHodnoceni\Model\ViewableProperty;
 use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 
-define("itemsIntermediateData", $args["data"]["itemsIntermediateData"]);
-define("options",               $args["data"]["options"]);
+$itemsIntermediateData = $args["data"]["itemsIntermediateData"];
+$options = $args["data"]["options"];
 
 /**
  * Sestav zobrazitelnout hodnotu pro políčko v tabulce
@@ -17,8 +17,11 @@ define("options",               $args["data"]["options"]);
  * @return string
  */
 function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $item): string {
+  global $itemsIntermediateData;
+  global $options;
+
   if ($property->type === ViewablePropertyType::INTERMEDIATE_DATA) {
-    $items = itemsIntermediateData[$index][$property->name];
+    $items = $itemsIntermediateData[$index][$property->name];
     return join(
       ", ",
       array_map(function ($value) {
@@ -29,7 +32,7 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
 
   $value = $item->{$property->name};
   if ($property->isSelect)
-    $value = options[$property->name][$value];
+    $value = $options[$property->name][$value];
 
   if ($property->type === ViewablePropertyType::DATETIME)
     return $value->format("j. n. Y");

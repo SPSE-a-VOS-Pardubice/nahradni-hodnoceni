@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 class TeacherSuitability extends DatabaseEntity implements FormattableDatabaseEntity {
-    private int $subject_id;
-    private int $teacher_id;
+    /**
+     * @var int
+     */
+    private $subject_id;
 
+    /**
+     * @var int
+     */
+    private $teacher_id;
     
     protected function getProperty(string $key) {
         return $this->$key;

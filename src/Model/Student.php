@@ -5,10 +5,25 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 class Student extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
-    protected int $id = 0;
-    private string $name;
-    private string $surname;
-    private int $class_id;
+    /**
+     * @var int
+     */
+    protected $id = 0;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $surname;
+
+    /**
+     * @var int
+     */
+    private $class_id;
 
     public function getProperty(string $key) {
         return $this->$key;

@@ -5,8 +5,15 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity {
-    private int $trait_id;
-    private int $classroom_id;
+    /**
+     * @var int
+     */
+    private $trait_id;
+
+    /**
+     * @var int
+     */
+    private $classroom_id;
 
     protected function getProperty(string $key) {
         return $this->$key;

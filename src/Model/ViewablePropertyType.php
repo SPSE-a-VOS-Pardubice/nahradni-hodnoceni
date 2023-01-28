@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-enum ViewablePropertyType {
-    case BOOLEAN;
-    case INTEGER;
-    case DOUBLE;
-    case STRING;
-    case DATETIME;
-    case INTERMEDIATE_DATA;
+abstract class ViewablePropertyType {
+    const BOOLEAN = 1;
+    const INTEGER = 2;
+    const DOUBLE = 3;
+    const STRING = 4;
+    const DATETIME = 5;
+    const INTERMEDIATE_DATA = 6;
 }

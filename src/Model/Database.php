@@ -9,6 +9,9 @@ class Database {
     protected const SIZE_VARCHAR_LONG = 255;
     protected const SIZE_HASH = 32;
 
+    /**
+     * @var \PDO
+     */
     protected $connection;
 
     public function __construct(string $db_type, string $db_host, string $db_name, string $db_user, string $db_pass) {

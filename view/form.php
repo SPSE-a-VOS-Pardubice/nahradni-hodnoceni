@@ -7,19 +7,21 @@ use Spse\NahradniHodnoceni\Model\ViewableProperty;
 use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 
 // je null pouze když uživatel přidává nový záznam
-define("item", $args["data"]["item"]);
+$item = $args["data"]["item"];
 
 function getDefaultInputValue(ViewableProperty $property): string {
-  if (is_null(item))
+  global $item;
+
+  if (is_null($item))
       return "";
   
   if ($property->type === ViewablePropertyType::DATETIME)
-    return item->{$property->name}->format("Y-m-d\TH:i");
+    return $item->{$property->name}->format("Y-m-d\TH:i");
 
-  return strval(item->{$property->name});
+  return strval($item->{$property->name});
 }
 
-function getInputType(ViewablePropertyType $propType): string {
+function getInputType(int $propType): string {
   switch ($propType) {
     case ViewablePropertyType::BOOLEAN:
       return "checkbox";
@@ -58,11 +60,12 @@ function encodeIntermediateDataForFrontend($objects, $options) {
 }
 
 function isSelected($optionName, $value): bool {
+  global $item;
 
-  if (item == null)
+  if ($item == null)
     return false;
 
-  return $optionName === item->$value;
+  return $optionName === $item->$value;
 }
 
 ?>

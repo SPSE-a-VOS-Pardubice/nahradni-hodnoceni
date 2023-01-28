@@ -5,9 +5,15 @@
     namespace Spse\NahradniHodnoceni\Model;
     
     class Classroom extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+        /**
+         * @var int
+         */
+        protected $id = 0;
 
-        protected int $id = 0;
-        private string $label;
+        /**
+         * @var string
+         */
+        private $label;
 
         public function getProperty(string $key){
             return $this->$key;
