@@ -27,11 +27,31 @@ const csvMapping = [
 // TODO: https://github.com/SPSE-a-VOS-Pardubice/nahradni-hodnoceni/issues/1#issuecomment-1399263118
 class PreviewTableEntry {
     private $class = "";
-    private string $name;
-    private string $surname;
-    private string $subject;
-    private string $mark;
-    private string $teacher;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $surname;
+
+    /**
+     * @var string
+     */
+    private $subject;
+
+    /**
+     * @var string
+     */
+    private $mark;
+    
+    /**
+     * @var string
+     */
+    private $teacher;
     
     public function __construct(string $class, string $name, string $surname, string $subject, string $mark, string $teacher) {
         $this->class = $class;
@@ -47,8 +67,7 @@ class PreviewTableEntry {
     }
 }
 
-class ImportController extends AbstractController
-{
+class ImportController extends AbstractController {
     private $importedExams = array();
     private $importedExamsTeachers = array();
     
@@ -159,7 +178,6 @@ class ImportController extends AbstractController
     public function parse($stream, string $separator = ";") {
         $database = $this->container->get("database");
 
-        $returnValue = [];
         $importedExams = array();
         
         $strings = explode("\n", $stream->__toString());
@@ -196,8 +214,8 @@ class ImportController extends AbstractController
             
             // TODO: Zjistit jaké výchozí hodnoty použít
             $exam->__set("classroom_id", null);
-            $exam->__set("final_mark", "");
-            $exam->__set("time", new DateTime("1970-01-01"));
+            $exam->__set("final_mark", null);
+            $exam->__set("time", null);
 
             // Získávání ID zkoušejícího učitele
             try {
@@ -211,14 +229,14 @@ class ImportController extends AbstractController
             $exam->__set("class_teacher_id", null);
             $exam->__set("chairman_id", null);
 
-            $importedExams[] = $exam;
+            array_push($importedExams, $exam);
         }
 
         return $importedExams;
     }
 
     public function addToImportErrorLog(string $string) {
-
+        var_dump($string);
     }
 
     public function consturctPreviewTableEntries($exams): array {

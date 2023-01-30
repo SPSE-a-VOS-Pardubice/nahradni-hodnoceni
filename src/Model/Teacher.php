@@ -199,7 +199,7 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         $row = $database->fetchSingle("
             SELECT 
                 * 
-            FROM teachers 
+            FROM Teachers 
             WHERE 
                 surname = :surname
         ", [

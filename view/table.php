@@ -16,21 +16,21 @@ $options = $args["data"]["options"];
  * @param DatabaseEntity $item
  * @return string
  */
-function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $item): string {
-  global $itemsIntermediateData;
-  global $options;
-
+function getDisplayText($itemsIntermediateData, $options, ViewableProperty $property, int $index, DatabaseEntity $item): string {
   if ($property->type === ViewablePropertyType::INTERMEDIATE_DATA) {
     $items = $itemsIntermediateData[$index][$property->name];
     return join(
       ", ",
       array_map(function ($value) {
-        return $value->getFormatted();
+        return $value === null ? null : $value->getFormatted();
       }, $items),
     );
   }
 
   $value = $item->{$property->name};
+  if ($value === null)
+    return "";
+
   if ($property->isSelect)
     $value = $options[$property->name][$value];
 
@@ -54,7 +54,6 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
   <link rel="stylesheet" href="/assets/css/table.css">
 
 </head>
-`
 <body>
   <?php include(VIEW_ROOT . "/component/header.php") ?>
 
@@ -111,7 +110,7 @@ function getDisplayText(ViewableProperty $property, int $index, DatabaseEntity $
               <?php foreach ($args["data"]["schema"] as $property): ?>
               <td>
                 <a href="<?= $args["data"]["path"] . $item->id ?>">
-                  <div style="width: 100%;height: 100%;"><?= getDisplayText($property, $index, $item) ?></div>
+                  <div style="width: 100%;height: 100%;"><?= getDisplayText($itemsIntermediateData, $options, $property, $index, $item) ?></div>
                 </a>
               </td>
               <?php endforeach; ?>

@@ -168,7 +168,7 @@ class Subject extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         $row = $database->fetchSingle("
             SELECT 
                 * 
-            FROM subjects 
+            FROM Subjects 
             WHERE 
                 abbreviation = :abbreviation
         ", [

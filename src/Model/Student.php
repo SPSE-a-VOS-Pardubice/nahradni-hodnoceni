@@ -189,14 +189,14 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         // TODO: Crashne když nenalezne žádného studenta
         $row = $database->fetchSingle("
             SELECT 
-                students.id, students.name, students.surname, students.class_id
-            FROM students, classes 
+                Students.id, Students.name, Students.surname, Students.class_id
+            FROM Students, Classes 
             WHERE 
-                students.class_id = classes.id AND 
-                students.name = :name AND 
-                students.surname = :surname AND 
-                classes.grade = :grade AND 
-                classes.label = :label
+                Students.class_id = Classes.id AND 
+                Students.name = :name AND 
+                Students.surname = :surname AND 
+                Classes.grade = :grade AND 
+                Classes.label = :label
         ", [
             new DatabaseParameter("name", $name),
             new DatabaseParameter("surname", $surname),

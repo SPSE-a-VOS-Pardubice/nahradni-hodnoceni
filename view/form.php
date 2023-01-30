@@ -9,9 +9,7 @@ use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 // je null pouze když uživatel přidává nový záznam
 $item = $args["data"]["item"];
 
-function getDefaultInputValue(ViewableProperty $property): string {
-  global $item;
-
+function getDefaultInputValue($item, ViewableProperty $property): string {
   if (is_null($item))
       return "";
   
@@ -59,9 +57,7 @@ function encodeIntermediateDataForFrontend($objects, $options) {
   ]);
 }
 
-function isSelected($optionName, $value): bool {
-  global $item;
-
+function isSelected($item, $optionName, $value): bool {
   if ($item == null)
     return false;
 
@@ -103,8 +99,11 @@ function isSelected($optionName, $value): bool {
                 <!-- select -->
                 <?php if ($property->isSelect): ?>
                   <select name="<?= $property->name ?>">
+                    <?php if ($property->isNullable): ?>
+                      <option value=""></option>
+                    <?php endif; ?>
                     <?php foreach ($args["data"]["options"][$property->name] as $optionName => $optionDisplayName): ?>
-                      <option value="<?= $optionName ?>" <?= /**$optionName === $value */ isSelected($optionName, $property->name) ? "selected" : "" ?>>
+                      <option value="<?= $optionName ?>" <?= /**$optionName === $value */ isSelected($item, $optionName, $property->name) ? "selected" : "" ?>>
                         <?= $optionDisplayName ?>
                       </option>
                     <?php endforeach; ?>
@@ -113,7 +112,7 @@ function isSelected($optionName, $value): bool {
                 <!-- everything else -->
                 <?php else: ?>
                   <input name="<?= $property->name ?>"
-                    value="<?= getDefaultInputValue($property) ?>"
+                    value="<?= getDefaultInputValue($item, $property) ?>"
                     type="<?= getInputType($property->type) ?>">
                 <?php endif; ?>
 

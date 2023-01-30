@@ -72,12 +72,12 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
             new ViewableProperty("id",                  "ID",               ViewablePropertyType::INTEGER),
             new ViewableProperty("student_id",          "Student",          ViewablePropertyType::INTEGER,  true),
             new ViewableProperty("subject_id",          "Předmět",          ViewablePropertyType::INTEGER,  true),
-            new ViewableProperty("classroom_id",        "Učebna",           ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("classroom_id",        "Učebna",           ViewablePropertyType::INTEGER,  true,   true),
             new ViewableProperty("original_mark",       "Původní známka",   ViewablePropertyType::STRING,   true),
-            new ViewableProperty("final_mark",          "Výsledná známka",  ViewablePropertyType::STRING,   true),
-            new ViewableProperty("time",                "Termín konání",    ViewablePropertyType::DATETIME),
-            new ViewableProperty("chairman_id",         "Předseda",         ViewablePropertyType::INTEGER,  true),
-            new ViewableProperty("class_teacher_id",    "Přísedící",        ViewablePropertyType::INTEGER,  true), // TODO přejmenovat
+            new ViewableProperty("final_mark",          "Výsledná známka",  ViewablePropertyType::STRING,   true,   true),
+            new ViewableProperty("time",                "Termín konání",    ViewablePropertyType::DATETIME, false,  true),
+            new ViewableProperty("chairman_id",         "Předseda",         ViewablePropertyType::INTEGER,  true,   true),
+            new ViewableProperty("class_teacher_id",    "Přísedící",        ViewablePropertyType::INTEGER,  true,   true), // TODO přejmenovat
             new ViewableProperty("examiner_id",         "Zkoušející",       ViewablePropertyType::INTEGER,  true),
         ];
     }
@@ -131,7 +131,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         $object->setProperty("classroom_id",        intval($row[3]));
         $object->setProperty("original_mark",       $row[4]);
         $object->setProperty("final_mark",          $row[5]);
-        $object->setProperty("time",                new DateTime($row[6]));
+        $object->setProperty("time",                $row[6] === null ? null : new DateTime($row[6]));
         $object->setProperty("chairman_id",         intval($row[7]));
         $object->setProperty("class_teacher_id",    intval($row[8]));
         $object->setProperty("examiner_id",         intval($row[9]));

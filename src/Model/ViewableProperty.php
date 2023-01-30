@@ -26,10 +26,16 @@ class ViewableProperty {
      */
     public $isSelect;
 
-    public function __construct(string $name, string $displayName, int $type, bool $isSelect = false) {
+    /**
+     * @var bool
+     */
+    public $isNullable;
+
+    public function __construct(string $name, string $displayName, int $type, bool $isSelect = false, bool $isNullable = false) {
         $this->name = $name;
         $this->displayName = $displayName;
         $this->type = $type;
         $this->isSelect = $isSelect;
+        $this->isNullable = $isNullable;
     }
 }
