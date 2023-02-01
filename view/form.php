@@ -10,7 +10,7 @@ use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
 $item = $args["data"]["item"];
 
 function getDefaultInputValue($item, ViewableProperty $property): string {
-  if (is_null($item))
+  if (is_null($item) || is_null($item->{$property->name}))
       return "";
   
   if ($property->type === ViewablePropertyType::DATETIME)

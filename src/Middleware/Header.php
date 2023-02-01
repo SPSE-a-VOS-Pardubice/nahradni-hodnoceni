@@ -9,13 +9,13 @@ use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as R
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 const tables = [
-    "predmety" => "Predmety",
+    "predmety" => "Předměty",
     "studenti" => "Studenti",
-    "tridy" => "Tridy",
-    "zkousky" => "Zkousky",
-    "ucitele" => "Ucitele",
-    "priznaky" => "Priznaky",
-    "ucebny" => "Ucebny"
+    "tridy" => "Třídy",
+    "zkousky" => "Zkoušky",
+    "ucitele" => "Učitelé",
+    "priznaky" => "Příznaky",
+    "ucebny" => "Učebny"
 ];
 
 class Header {
