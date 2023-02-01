@@ -11,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema nahradni_hodnoceni
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `nahradni_hodnoceni` ;
+CREATE SCHEMA IF NOT EXISTS `nahradni_hodnoceni` DEFAULT CHARACTER SET utf8 COLLATE utf8_czech_ci;
 USE `nahradni_hodnoceni` ;
 
 -- -----------------------------------------------------
