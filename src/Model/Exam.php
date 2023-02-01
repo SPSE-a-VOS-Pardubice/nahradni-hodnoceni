@@ -55,7 +55,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
     private $class_teacher_id;
 
     /**
-     * @var ?int
+     * @var int
      */
     private $examiner_id;
 
@@ -134,7 +134,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         $object->setProperty("time",                $row[6] === null ? null : new DateTime($row[6]));
         $object->setProperty("chairman_id",         $row[7] === null ? null : intval($row[7]));
         $object->setProperty("class_teacher_id",    $row[8] === null ? null : intval($row[8]));
-        $object->setProperty("examiner_id",         $row[9] === null ? null : intval($row[9]));
+        $object->setProperty("examiner_id",         intval($row[9]));
         return $object;
     }
 
