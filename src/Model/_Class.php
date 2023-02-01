@@ -183,4 +183,19 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         $model = $parsedData->model;
         $model->write();
     }
+
+    public function getPropertyValues(): array {
+        $res = [];
+        for($i = 0; $i < count($this->getProperties()); $i++) {
+            $res[] = $this->getProperty($this->getProperties()[$i]->name); 
+        }
+
+        return $res;
+    }
+    
+    public function setPropertyValues($properties): void {
+        for($i = 0; $i < count($properties); $i++) {
+            $this->setProperty($this->getProperties()[$i]->name, $properties[$i]);   
+        }
+    }
 }

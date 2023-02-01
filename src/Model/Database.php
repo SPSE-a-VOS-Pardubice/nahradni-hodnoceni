@@ -49,7 +49,7 @@ class Database {
         $handle->execute();
     }
 
-    public function fetchSingle(string $query, array $params = []): array {
+    public function fetchSingle(string $query, array $params = []): mixed {
         $handle = $this->connection->prepare($query);
         foreach ($params as $param) {
             $handle->bindParam($param->name, $param->value, $param->type);
@@ -59,7 +59,7 @@ class Database {
         return $handle->fetch(\PDO::FETCH_NUM);
     }
 
-    public function fetchMultiple(string $query, array $params = []): array {
+    public function fetchMultiple(string $query, array $params = []): mixed {
         $handle = $this->connection->prepare($query);
         foreach ($params as $param) {
             $handle->bindParam($param->name, $param->value, $param->type);

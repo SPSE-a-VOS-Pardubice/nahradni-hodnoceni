@@ -209,4 +209,19 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
         }
         return Student::fromDatabaseRow($database, $row);
     }
+
+    public function getPropertyValues(): array {
+        $res = [];
+        for($i = 0; $i < count($this->getProperties()); $i++) {
+            $res[] = $this->getProperty($this->getProperties()[$i]->name); 
+        }
+
+        return $res;
+    }
+    
+    public function setPropertyValues($properties): void {
+        for($i = 0; $i < count($properties); $i++) {
+            $this->setProperty($this->getProperties()[$i]->name, $properties[$i]);   
+        }
+    }
 }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Controller;
 
+use Spse\NahradniHodnoceni\Model\Classroom;
 use Spse\NahradniHodnoceni\Model\_Class;
 use Spse\NahradniHodnoceni\View;
 use Spse\NahradniHodnoceni\Model\Exam;
 use Spse\NahradniHodnoceni\Model\Student;
 use Spse\NahradniHodnoceni\Model\Subject;
 use Spse\NahradniHodnoceni\Model\Teacher;
+use Spse\NahradniHodnoceni\Helpers\ClassHelper;
 use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as Request};
 use DateTime;
 
@@ -121,14 +123,16 @@ class ImportController extends AbstractController {
                     ["message" => "\$file->getStream() je null", "backLink" => "/import/upload"]);
         }
 
-        $importedExams = $this->parse($file->getStream());
+        $importedData = $this->parse($file->getStream());
 
         session_start();
-        for ($i = 0; $i < count($importedExams); $i++) {
-            $_SESSION["importedExams"][$i] = $importedExams[$i]->getPropertyValues();
+        foreach ($importedData as $k => $v) {
+            foreach($importedData[$k] as $index => $object) {
+                $_SESSION["importedData"][$k][$index] = $object->getPropertyValues();
+            }
         }
 
-        $previewEntries = $this->consturctPreviewTableEntries($importedExams);
+        $previewEntries = $this->consturctPreviewTableEntries($importedData);
         
         return $view->renderResponse($request, $response, "/importPreview.php", [
             "entries" => $previewEntries
@@ -151,34 +155,61 @@ class ImportController extends AbstractController {
         
         session_start();
         
-        if(!isset($_SESSION["importedExams"])) {
+        if(!isset($_SESSION["importedData"])) {
             session_destroy();
             return $view->renderResponse($request, $response, "/error.php", 
                     ["message" => "Chyba s PHP session", "backLink" => "/import/upload"]);
         }
 
         $database = $this->container->get("database");
-        $importedExams = [];
-        for ($i = 0; $i < count($_SESSION["importedExams"]); $i++) {
-            $importedExams[$i] = new Exam($database);
-            $importedExams[$i]->setPropertyValues($_SESSION["importedExams"][$i]);
-        }
-        
-        $database = $this->container->get("database");
-        for ($i = 0; $i < count($_SESSION["importedExams"]); $i++) {
-            $importedExams[$i]->write();
+        $importedData = array();
+
+        // Deserializace proměnné session
+        foreach ($_SESSION["importedData"] as $k => $v) {
+            foreach($_SESSION["importedData"][$k] as $index => $object) {
+                // TODO: Najít lepší způsob....
+                if($k == "exams") {
+                    $importedData[$k][$index] = new Exam($database);
+                } else if($k == "students") {
+                    $importedData[$k][$index] = new Student($database);
+                } else if($k == "classes") {
+                    $importedData[$k][$index] = new _Class($database);
+                }
+                
+                $importedData[$k][$index]->setPropertyValues($_SESSION["importedData"][$k][$index]);
+            }
         }
 
-        $_SESSION["importedExams"] = [];
+        foreach($importedData["classes"] as $index => $object) {
+            $object->write();
+            if(isset($importedData["students"][$index])) {
+                $importedData["students"][$index]->__set("class_id", $object->__get("id"));
+            }
+        }
+
+        foreach($importedData["students"] as $index => $object) {
+            $object->write();
+            if(isset($importedData["exams"][$index])) {
+                $importedData["exams"][$index]->__set("student_id", $object->__get("id"));
+            }
+        }
+        
+        foreach($importedData["exams"] as $index => $object) {
+            $object->write();
+        }
+
+        $_SESSION["importedData"] = [];
         session_destroy();
         
-        return $this->redirect($response, "/table/priznaky");
+        return $this->redirect($response, "/table/zkousky");
     }
     
     public function parse($stream, string $separator = ";") {
         $database = $this->container->get("database");
 
+        $importedClasses = array();
         $importedExams = array();
+        $importedStudents = array();
         
         $strings = explode("\n", $stream->__toString());
         $lastIndex = count($strings) - 1;
@@ -189,6 +220,9 @@ class ImportController extends AbstractController {
         for ($i = 1; $i < count($strings); $i++) {
             $values = str_getcsv($strings[$i], $separator);
 
+            $student = null;
+            $class = null;
+            
             $exam = new Exam($database);
             $exam->__set("id", 0);
             
@@ -196,9 +230,37 @@ class ImportController extends AbstractController {
             try {
                 $student = Student::getFromNameSurnameClass($database, $values[csvMapping["jmeno"]], $values[csvMapping["prijmeni"]], $values[csvMapping["trida"]]);
                 $exam->__set("student_id", $student->__get("id"));
+                $student = null;
             } catch(\RuntimeException $e) {
-                $this->addToImportErrorLog($e->getMessage());
-                continue;
+                // Vytvořit záznam nového studenta, pokud neexistuje v databázi
+                $student = new Student($database);
+                $student->__set("id", 0);
+                $student->__set("name", $values[csvMapping["jmeno"]]);
+                $student->__set("surname", $values[csvMapping["prijmeni"]]);
+                $student->__set("class_id", 0);
+                
+                // Najít, jestli již v databázi existuje záznam o třídě studenta
+                $parsedClassName = ClassHelper::parseClassName($values[csvMapping["trida"]]);
+                $allClasses = _Class::getAll($database);
+                for($j = 0; $j < count($allClasses); $j++) {
+                    if ($allClasses[$j]->getProperty("grade") == $parsedClassName["grade"] &&
+                        $allClasses[$j]->getProperty("label") == $parsedClassName["label"]) {
+                        $student->__set("class_id", $allClasses[$j]->getProperty("id"));
+                        break;
+                    }
+                }
+                
+                if($student->__get("class_id") == 0) {
+                    // Vytvořit nový zázam třídy, pokud není již v databázi
+                    $class = new _Class($database);
+                    $class->__set("id", 0);
+                    $class->__set("year", intval(date("Y")));
+                    $class->__set("grade", $parsedClassName["grade"]);
+                    $class->__set("label", $parsedClassName["label"]);
+                    $class->__set("class_teacher_id", null);
+                }
+
+                $importedStudents[$i] = $student;
             }
 
             // Získávání subject ID
@@ -229,23 +291,46 @@ class ImportController extends AbstractController {
             $exam->__set("class_teacher_id", null);
             $exam->__set("chairman_id", null);
 
-            array_push($importedExams, $exam);
+            if($class != null) {
+                $importedClasses[$i] = $class;
+            }
+
+            if($student != null) {
+                $importedStudents[$i] = $student;
+            }
+            
+            $importedExams[$i] = $exam;
         }
 
-        return $importedExams;
+        return ["classes" => $importedClasses, "exams" => $importedExams, "students" => $importedStudents];
     }
 
     public function addToImportErrorLog(string $string) {
         var_dump($string);
     }
 
-    public function consturctPreviewTableEntries($exams): array {
+    public function consturctPreviewTableEntries($data): array {
         $database = $this->container->get("database");
+
+        $exams = $data["exams"];
         
         $res = array();
-        for($i = 0; $i < count($exams); $i++) {
-            $student = Student::get($database, intval($exams[$i]->getProperty("student_id")));
-            $class = _Class::get($database, intval($student->getProperty("class_id")));
+        foreach ($exams as $i => $value) {
+            $student = null;
+            $class = null;
+
+            if(isset($data["students"][$i])) {
+                $student = $data["students"][$i];
+            } else {
+                $student = Student::get($database, intval($exams[$i]->getProperty("student_id")));
+            }
+            
+            if(isset($data["classes"][$i])) {
+                $class = $data["classes"][$i];
+            } else {
+                $class = _Class::get($database, intval($student->getProperty("class_id")));
+            }
+            
             $subject = Subject::get($database, intval($exams[$i]->getProperty("subject_id")));
             $teacher = Teacher::get($database, intval($exams[$i]->__get("examiner_id")));
             
