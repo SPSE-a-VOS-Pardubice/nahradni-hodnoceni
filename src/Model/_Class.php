@@ -26,7 +26,7 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
     private $label;
 
     /**
-     * @var int
+     * @var ?int
      */
     private $class_teacher_id;
 
@@ -44,7 +44,7 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
             new ViewableProperty("year",                "Rok",              ViewablePropertyType::INTEGER),
             new ViewableProperty("grade",               "Ročník",           ViewablePropertyType::INTEGER),
             new ViewableProperty("label",               "Označení",         ViewablePropertyType::STRING),
-            new ViewableProperty("class_teacher_id",    "Třídní učitel",    ViewablePropertyType::INTEGER,  true),
+            new ViewableProperty("class_teacher_id",    "Třídní učitel",    ViewablePropertyType::INTEGER,  true, true),
         ];
     }
 
@@ -81,7 +81,7 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         $object->setProperty("year",                intval($row[1]));
         $object->setProperty("grade",               intval($row[2]));
         $object->setProperty("label",               $row[3]);
-        $object->setProperty("class_teacher_id",    intval($row[4]));
+        $object->setProperty("class_teacher_id",    $row[4] === null ? null : intval($row[4]));
         return $object;
     }
 
