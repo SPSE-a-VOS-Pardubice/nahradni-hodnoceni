@@ -128,13 +128,13 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
         $object->setProperty("id",                  intval($row[0]));
         $object->setProperty("student_id",          intval($row[1]));
         $object->setProperty("subject_id",          intval($row[2]));
-        $object->setProperty("classroom_id",        intval($row[3]));
+        $object->setProperty("classroom_id",        $row[3] === null ? null : intval($row[3]));
         $object->setProperty("original_mark",       $row[4]);
-        $object->setProperty("final_mark",          $row[5]);
+        $object->setProperty("final_mark",          $row[5] === null ? null : $row[5]);
         $object->setProperty("time",                $row[6] === null ? null : new DateTime($row[6]));
-        $object->setProperty("chairman_id",         intval($row[7]));
-        $object->setProperty("class_teacher_id",    intval($row[8]));
-        $object->setProperty("examiner_id",         intval($row[9]));
+        $object->setProperty("chairman_id",         $row[7] === null ? null : intval($row[7]));
+        $object->setProperty("class_teacher_id",    $row[8] === null ? null : intval($row[8]));
+        $object->setProperty("examiner_id",         $row[9] === null ? null : intval($row[9]));
         return $object;
     }
 
