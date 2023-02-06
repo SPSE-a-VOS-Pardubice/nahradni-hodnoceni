@@ -2,7 +2,7 @@ body > * {
   max-width: 1200px;
 }
 body {
-  padding: 0 2rem;
+  padding: 0 2rem 5rem 2rem;
 }
 .filter_head {
   font-size: 2rem;
@@ -101,7 +101,9 @@ td {
   text-align: center;
   padding: 1rem 2.5rem;
   border: 1px solid #999;
+  color: #fff;
   transition: 0.35s;
+  position: relative;
 }
 
 td:hover {
@@ -112,6 +114,14 @@ td:hover {
 td a {
   color: #999;
   transition: 0.35s;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 div.table-wrapper {

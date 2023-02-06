@@ -48,7 +48,7 @@ function getDisplayText($itemsIntermediateData, $options, ViewableProperty $prop
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>General Table</title>
+  <title>Table</title>
   <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="/assets/css/global.css">
   <link rel="stylesheet" href="/assets/css/table.css">
@@ -109,9 +109,8 @@ function getDisplayText($itemsIntermediateData, $options, ViewableProperty $prop
             <tr>
               <?php foreach ($args["data"]["schema"] as $property): ?>
               <td>
-                <a href="<?= $args["data"]["path"] . $item->id ?>">
-                  <div style="width: 100%;height: 100%;"><?= getDisplayText($itemsIntermediateData, $options, $property, $index, $item) ?></div>
-                </a>
+                
+                <a href="<?= $args["data"]["path"] . $item->id ?>"><?= getDisplayText($itemsIntermediateData, $options, $property, $index, $item) ?></a>
               </td>
               <?php endforeach; ?>
 
