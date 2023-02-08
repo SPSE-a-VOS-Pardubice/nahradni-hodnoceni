@@ -1,6 +1,3 @@
-# App configuration
-/config/config.php
-
 # Composer
 /composer.phar
 /vendor/
