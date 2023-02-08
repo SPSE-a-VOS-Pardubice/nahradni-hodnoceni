@@ -1,0 +1,11 @@
+některé předměty mají jinou náplň v:
+	různých ročnících 
+		oborech
+
+příznaky -> vhodné i nutné ?? 
+	
+změna gui "nejsem db"
+
+pozn ke generování -- přednost učitelům podle počtu zkoušek
+
+vyhedávání full stak? + nejaké překlikávání a řazení
