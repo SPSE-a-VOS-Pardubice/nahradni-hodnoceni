@@ -109,6 +109,7 @@ ul.dropdown > li > a:hover::after {
   margin-top: 1rem;
   left: 0;
   display: none;
+  z-index: 1;
 }
 
 ul > li:hover > .dropdown {
