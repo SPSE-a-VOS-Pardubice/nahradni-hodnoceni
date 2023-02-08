@@ -105,7 +105,7 @@ class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
             "student_id"        => $student_id,
             "subject_id"        => $subject_id,
             "classroom_id"      => $classroom_id,
-            "original_mark"     => MARK_OPTIONS,
+            "original_mark"     => ["5" => "5", "N" => "N"],
             "final_mark"        => MARK_OPTIONS,
             "chairman_id"       => $teachers,
             "class_teacher_id"  => $teachers,

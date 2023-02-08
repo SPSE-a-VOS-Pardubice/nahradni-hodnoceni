@@ -185,12 +185,16 @@ class ImportController extends AbstractController {
             if(isset($importedData["students"][$index])) {
                 $importedData["students"][$index]->__set("class_id", $object->__get("id"));
             }
+            $id = $importedData["students"][$index]->class_id;
+            echo "zapisuji tridu $id\n<br>";
         }
 
         foreach($importedData["students"] as $index => $object) {
+            if ($object->class_id == 0)
+                continue; // TODO "oprava"
             $object->write();
             if(isset($importedData["exams"][$index])) {
-                $importedData["exams"][$index]->__set("student_id", $object->__get("id"));
+                $importedData["exams"][$index]->student_id = $object->id;
             }
         }
         
@@ -228,9 +232,10 @@ class ImportController extends AbstractController {
             
             // Získávání student ID
             try {
-                $student = Student::getFromNameSurnameClass($database, $values[csvMapping["jmeno"]], $values[csvMapping["prijmeni"]], $values[csvMapping["trida"]]);
-                $exam->__set("student_id", $student->__get("id"));
-                $student = null;
+                // $student = Student::getFromNameSurnameClass($database, $values[csvMapping["jmeno"]], $values[csvMapping["prijmeni"]], $values[csvMapping["trida"]]);
+                // $exam->__set("student_id", $student->__get("id"));
+                // $student = null;
+                throw new \RuntimeException();
             } catch(\RuntimeException $e) {
                 // Vytvořit záznam nového studenta, pokud neexistuje v databázi
                 $student = new Student($database);
@@ -241,16 +246,16 @@ class ImportController extends AbstractController {
                 
                 // Najít, jestli již v databázi existuje záznam o třídě studenta
                 $parsedClassName = ClassHelper::parseClassName($values[csvMapping["trida"]]);
-                $allClasses = _Class::getAll($database);
-                for($j = 0; $j < count($allClasses); $j++) {
-                    if ($allClasses[$j]->getProperty("grade") == $parsedClassName["grade"] &&
-                        $allClasses[$j]->getProperty("label") == $parsedClassName["label"]) {
-                        $student->__set("class_id", $allClasses[$j]->getProperty("id"));
-                        break;
-                    }
-                }
+                // $allClasses = _Class::getAll($database);
+                // for($j = 0; $j < count($allClasses); $j++) {
+                //     if ($allClasses[$j]->getProperty("grade") == $parsedClassName["grade"] &&
+                //         $allClasses[$j]->getProperty("label") == $parsedClassName["label"]) {
+                //         $student->__set("class_id", $allClasses[$j]->getProperty("id"));
+                //         break;
+                //     }
+                // }
                 
-                if($student->__get("class_id") == 0) {
+                if($student->class_id == 0) {
                     // Vytvořit nový zázam třídy, pokud není již v databázi
                     $class = new _Class($database);
                     $class->__set("id", 0);
