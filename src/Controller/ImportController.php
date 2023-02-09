@@ -185,8 +185,6 @@ class ImportController extends AbstractController {
             if(isset($importedData["students"][$index])) {
                 $importedData["students"][$index]->__set("class_id", $object->__get("id"));
             }
-            $id = $importedData["students"][$index]->class_id;
-            echo "zapisuji tridu $id\n<br>";
         }
 
         foreach($importedData["students"] as $index => $object) {

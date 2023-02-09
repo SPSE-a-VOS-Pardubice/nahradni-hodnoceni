@@ -16,11 +16,12 @@ DatabaseEntity -- Database: {
 DatabaseEntity: *DatabaseEntity* {
     shape: class
 
-    \#database Database
+    \#database: Database
+    properties: array<string, mixed>
     "__construct(Database $database)"
     "__set(string $name, $value)": void
     "__get(string $name)": mixed
-    "abstract getProperties()": array<DatabaseEntityProperty>
+    "abstract static getProperties()": array<DatabaseEntityProperty>
     "#setProperty(string $key, $value)": void
     "#getProperty(string $key)": mixed
     "abstract write()": void
@@ -38,6 +39,8 @@ DatabaseEntityProperty: {
     displayName: ?string
     type: PropertyType
     isSelect: bool
+    isNullable: bool
+    defaultValue: mixed
 }
 
 DatabaseEntityPropertyType -- DatabaseEntityProperty: {
@@ -66,19 +69,19 @@ Models: {
     Classroom: {
         shape: class
 
-        "getProperties()": array<DatabaseEntityProperty>
+        "static getProperties()": array<DatabaseEntityProperty>
     }
 
     Exam: {
         shape: class
 
-        "getProperties()": array<DatabaseEntityProperty>
+        "static getProperties()": array<DatabaseEntityProperty>
     }
 
     Teacher: {
         shape: class
 
-        "getProperties()": array<DatabaseEntityProperty>
+        "static getProperties()": array<DatabaseEntityProperty>
     }
 }
 
@@ -95,6 +98,6 @@ Models: {
     ClassroomTrait: {
         shape: class
 
-        "getProperties()": array<DatabaseEntityProperty>
+        "static getProperties()": array<DatabaseEntityProperty>
     }
 }
