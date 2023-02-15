@@ -11,10 +11,9 @@ abstract class DatabaseEntity {
     protected $database;
 
     /**
-     * ID is the only required parameter for a database entity.
-     * @var int
+     * @var array<string, mixed>
      */
-    protected $id;
+    protected $properties; 
 
     public function __construct(Database $database) {
         $this->database = $database;
@@ -27,16 +26,25 @@ abstract class DatabaseEntity {
         $this->setProperty($name, $value);
     }
 
-    public function __get(string $name) {
+    public function __get(string $name): mixed {
         return $this->getProperty($name);
     }
 
     /**
+     * @return array<DatabaseEntityProperty>
+     */
+    public static abstract function getProperties(): array;
+
+    /**
      * Internal method for handling all database `set` calls.
      */
-    abstract protected function setProperty(string $key, $value): void;
+    protected function setProperty(string $key, $value): void {
+        $this->properties[$key] = $value;
+    }
 
-    abstract protected function getProperty(string $key);
+    protected function getProperty(string $key): mixed {
+        return $this->properties[$key];
+    }
 
     /**
      * Construct a single instance from given database row.
