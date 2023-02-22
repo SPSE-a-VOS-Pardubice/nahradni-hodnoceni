@@ -8,17 +8,112 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
     /**
      * @var int
      */
-    protected int $id;
+    public $id;
 
-    public static function get(int $id): FullDatabaseEntity {
-        // TODO: read
+    public function __construct(Database $database) {
+        parent::__construct($database);
     }
 
+    public static function get(Database $database, $id) : mixed {
+        $row = $database->fetchSingle(sprintf("
+            SELECT
+                *
+            FROM %s
+            WHERE
+                id = :id
+        ", get_called_class()), [
+            new DatabaseParameter("id", $id),
+        ]);
+
+        if ($row === false) {
+            return null;
+        }
+        
+        return self::fromDatabaseRow($database, $row);
+    }
+    
     public function write(): void {
-        // TODO: insert|update
+        $parameters = [];
+        foreach ($this->getProperties() as &$property) {
+            array_push($parameters, new DatabaseParameter(
+                $property->name, 
+                $property->serialize($this->getProperty($property->name)))
+                // TODO: Různé datové typy?
+            );
+        }
+
+        if($this->id === 0) {
+            $attributeNames = "";
+            $valueNames = "";
+            foreach($this->getProperties() as $index => $value) {
+                $attributeNames .= $value->name;
+                $valueNames .= ":" . $value->name;
+
+                if($index != count($this->getProperties()) - 1) {
+                    $attributeNames .= ", ";
+                    $valueNames .= ",";
+                }
+            }
+            
+            $this->database->execute(sprintf("
+                INSERT INTO %s (
+                    %s
+                )
+                VALUES (
+                    %s
+                )
+            ", get_called_class(), $attributeNames, $valueNames), [
+                $parameters,
+            ]);
+
+            $this->id = intval($this->database->lastInsertId("id"));
+        } else {
+            array_push($parameters, new DatabaseParameter("id", $this->id));
+            
+            $valuesIndices = "";
+            foreach($this->getProperties() as $index => $value) {
+                $valuesIndices .= $value->name . " = :" . $value->name;
+
+                if($index != count($this->getProperties()) - 1) {
+                    $valuesIndices .= ", ";
+                }
+            }
+            
+            $this->database->execute(sprintf("
+                UPDATE %s
+                SET
+                    %s
+                WHERE
+                    id = :id
+            ", get_called_class(), $valuesIndices), [
+                $parameters,
+            ]);
+        }
     }
 
     public function remove(): void {
-        // TODO: delete
+        $this->database->execute(sprintf("
+            DELETE FROM %s
+            WHERE
+                id = :id
+            LIMIT 1
+        ", get_called_class()), [
+            new DatabaseParameter("id", $this->id),
+        ]);
+    }
+
+    protected static function fromDatabaseRow(Database $database, array $row): mixed {
+        // Zkontroluj délku dané řady.
+        if (count($row) !== count(self::getProperties())) {
+            throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
+        }
+
+        // Vybuduj novou instanci a vrať ji.
+        $object = new static($database);
+        foreach(self::getProperties() as $index => $value) {
+            $object->setProperty($value->name, $value->deserialize($row[$index])); // Atributy musí být ve stejném pořadí jak v deklaraci modelu, tak v databázi
+        }
+        
+        return $object;
     }
 }

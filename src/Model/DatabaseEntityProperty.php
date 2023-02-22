@@ -45,18 +45,30 @@ class DatabaseEntityProperty {
     }
 
     public function serialize($value): mixed {
-        if($this->type == DatabaseEntityPropertyType::DateTime) {
-            return $value->format("Y-m-d H:i:s");
-        } else {
-            return $value;
+        if($value === null) {
+            return null; // TODO: Test
+        }
+        
+        switch($this->type) {
+            case DatabaseEntityPropertyType::DateTime:
+                return $value->format("Y-m-d H:i:s");
+            default:
+                return $value;
         }
     }
 
     public function deserialize($value): mixed {
-        if($this->type == DatabaseEntityPropertyType::DateTime) {
-            return new \DateTime($value);
-        } else {
-            return $value;
+        if($value === null) {
+            return null;
+        }
+        
+        switch($this->type) {
+            case DatabaseEntityPropertyType::DateTime:
+                return new \DateTime($value);
+            case DatabaseEntityPropertyType::Integer:
+                return intval($value);
+            default:
+                return $value;
         }
     } 
 }
