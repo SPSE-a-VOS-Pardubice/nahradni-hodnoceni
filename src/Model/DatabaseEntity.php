@@ -17,6 +17,7 @@ abstract class DatabaseEntity {
 
     public function __construct(Database $database) {
         $this->database = $database;
+        // TODO 
     }
 
     /**
@@ -39,17 +40,13 @@ abstract class DatabaseEntity {
      * Internal method for handling all database `set` calls.
      */
     protected function setProperty(string $key, $value): void {
-        $this->properties[$key] = $value;
+        // TODO
     }
 
     protected function getProperty(string $key): mixed {
-        return $this->properties[$key];
+        // TODO
+        return null;
     }
-
-    /**
-     * Construct a single instance from given database row.
-     */
-    abstract public static function fromDatabaseRow(Database $database, array $row);
 
     /**
      * Write this object to the database. Either update the row or create new if it does not already exist (when `id` equals zero or is empty in case of string).

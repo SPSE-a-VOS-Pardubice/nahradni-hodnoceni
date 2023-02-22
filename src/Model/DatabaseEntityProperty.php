@@ -38,6 +38,7 @@ class DatabaseEntityProperty {
     public function __construct($name, $displayName, $type, $isSelect, $isNullable, $defaultValue) {
         $this->name = $name;
         $this->displayName = $displayName;
+        $this->type = $type;
         $this->isSelect = $isSelect;
         $this->isNullable = $isNullable;
         $this->defaultValue = $defaultValue;

@@ -4,29 +4,12 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
-    /**
-     * @var int
-     */
-    protected $id = 0;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    public function getProperty(string $key) {
-        return $this->$key;
-    }
-
-    protected function setProperty(string $key, $value): void {
-        $this->$key = $value;
-    }
+class _Trait extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new ViewableProperty("id",      "ID",       ViewablePropertyType::INTEGER),
-            new ViewableProperty("name",    "Název",    ViewablePropertyType::STRING),
+            new DatabaseEntityProperty("id", "ID", DatabaseEntityPropertyType::Integer, false, false, 0),
+            new DatabaseEntityProperty("name", "Název", DatabaseEntityPropertyType::Integer, false, false, "")
         ];
     }
 
@@ -41,7 +24,7 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
     public function getIntermediateData(): array {
         return [];
     }
-
+    
     public static function fromDatabaseRow(Database $database, array $row) {
         // Zkontroluj délku dané řady.
         if (count($row) !== 2) {
@@ -55,6 +38,7 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         return $object;
     }
 
+    /*
     public function write(): void {
         // Připrav parametry pro dotaz.
         $parameters = [
@@ -121,7 +105,7 @@ class _Trait extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
         return array_map(function (array $row) use($database) {
             return _Trait::fromDatabaseRow($database, $row);
         }, $rows);
-    }
+    } */
     
     public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
         $model = $id === 0 ? new _Trait($database) : _Trait::get($database, $id);

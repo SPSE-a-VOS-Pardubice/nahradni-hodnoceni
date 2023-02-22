@@ -4,7 +4,7 @@
 
     namespace Spse\NahradniHodnoceni\Model;
     
-    class Classroom extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+    class Classroom extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
         /**
          * @var int
          */
@@ -65,7 +65,8 @@
             $object->setProperty("label",   $row[1]);
             return $object;
         }
-
+        
+        /*
         public function write(): void {
             $parameters = [
                 new DatabaseParameter("label", $this->label),
@@ -132,7 +133,7 @@
             return array_map(function (array $row) use($database) {
                 return Classroom::fromDatabaseRow($database, $row);
             }, $rows);
-        }
+        }*/
 
         public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
             $model = $id === 0 ? new Classroom($database) : Classroom::get($database, $id);

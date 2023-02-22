@@ -5,50 +5,13 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
-    /**
-     * @var int
-     */
-    protected $id = 0;
 
     /**
-     * @var string
+     * @var array<DatabaseEntityProperty>
      */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $surname;
-
-    /**
-     * @var string
-     */
-    private $prefix;
-
-    /**
-     * @var string
-     */
-    private $suffix;
-
-    public function getProperty(string $key) {
-        return $this->$key;
-    }
-
-    protected function setProperty(string $key, $value): void
-    {
-        $this->$key = $value;
-    }
-
-    public static function getProperties(): array
-    {
-        return [
-            new ViewableProperty("id",      "ID",       ViewablePropertyType::INTEGER),
-            new ViewableProperty("name",    "Jméno",    ViewablePropertyType::STRING),
-            new ViewableProperty("surname", "Příjmení", ViewablePropertyType::STRING),
-            new ViewableProperty("prefix",  "Prefix",   ViewablePropertyType::STRING),
-            new ViewableProperty("suffix",  "Suffix",   ViewablePropertyType::STRING),
-            new ViewableProperty("subjects", "Vyučované předměty", ViewablePropertyType::INTERMEDIATE_DATA, true)
-        ];
+    public static function getProperties(): array {
+        // TODO
+        return [];
     }
 
     public static function getSelectOptions(Database $database): array {

@@ -4,71 +4,18 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class SubjectTrait extends DatabaseEntity implements FormattableDatabaseEntity {
+class SubjectTrait extends IntermediateDatabaseEntity implements FormattableDatabaseEntity {
     /**
-     * @var int
+     * @var array<DatabaseEntityProperty>
      */
-    private $trait_id;
-
-    /**
-     * @var int
-     */
-    private $subject_id;
-
-    protected function getProperty(string $key) {
-        return $this->$key;
+    public static function getProperties(): array {
+        // TODO
+        return [];
     }
-
-    protected function setProperty(string $key, $value): void {
-        $this->$key = $value;
-    }
-
     public function getFormatted(): string {
-        return $this->nazev;
-    }
-
-    public static function fromDatabaseRow(Database $database, array $row) {
-        // Zkontroluj délku dané řady.
-        if (count($row) !== 2) {
-            throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
-        }
-
-        // Vybuduj novou instanci a vrať ji.
-        $object = new SubjectTrait($database);
-        $object->setProperty("trait_id",    intval($row[0]));
-        $object->setProperty("subject_id",  intval($row[1]));
-        return $object;
-    }
-    
-
-    public function write(): void {
-        $parameters = [
-            new DatabaseParameter("trait_id",   $this->trait_id),
-            new DatabaseParameter("subject_id", $this->subject_id),
-        ];
-
-        $this->database->execute("
-            INSERT INTO SubjectsTraits (
-                trait_id,
-                subject_id
-            )
-            VALUES (
-                :trait_id,
-                :subject_id
-        )", $parameters);
-    }
-
-    public function remove(): void {
-        $this->database->execute("
-            DELETE FROM SubjectsTraits
-            WHERE
-                trait_id    = :trait_id,
-                subject_id  = :subject_id
-            LIMIT 1
-        ", [
-            new DatabaseParameter("trait_id",   $this->trait_id),
-            new DatabaseParameter("subject_id", $this->subject_id),
-        ]);
+        //return $this->nazev;
+        // TODO
+        return "";
     }
 
     static public function getForSubject(Database $database, int $subject_id): array {

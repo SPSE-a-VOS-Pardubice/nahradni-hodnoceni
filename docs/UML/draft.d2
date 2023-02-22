@@ -1,103 +1,103 @@
-
 Database: {
-    shape: class
+  shape: class
 
-    "execute(string $query, array $params = [])": void
-    "fetchSingle(string $query, array $params = [])": array
-    "fetchMultiple(string $query, array $params = [])": array
+  "execute(string $query, array $params = [])": void
+  "fetchSingle(string $query, array $params = [])": array
+  "fetchMultiple(string $query, array $params = [])": array
 
-    "lastInsertId(?string $name = null)": mixed
+  "lastInsertId(?string $name = null)": mixed
 }
 
 DatabaseEntity -- Database: {
-    source-arrowhead: *
-    target-arrowhead: 1
+  source-arrowhead: *
+  target-arrowhead: 1
 }
 DatabaseEntity: *DatabaseEntity* {
-    shape: class
+  shape: class
 
-    \#database: Database
-    properties: array<string, mixed>
-    "__construct(Database $database)"
-    "__set(string $name, $value)": void
-    "__get(string $name)": mixed
-    "abstract static getProperties()": array<DatabaseEntityProperty>
-    "#setProperty(string $key, $value)": void
-    "#getProperty(string $key)": mixed
-    "abstract write()": void
-    "abstract remove()": void
+  \#database: Database
+  \#properties: array<string, mixed>
+  "__construct(Database $database)"
+  "__set(string $name, $value)": void
+  "__get(string $name)": mixed
+  "abstract static getProperties()": array<DatabaseEntityProperty>
+  "#setProperty(string $key, $value)": void
+  "#getProperty(string $key)": mixed
+  "abstract write()": void
+  "abstract remove()": void
 }
 
 DatabaseEntityProperty -- DatabaseEntity: {
-    source-arrowhead: *
-    target-arrowhead: 1
+  source-arrowhead: *
+  target-arrowhead: 1
 }
 DatabaseEntityProperty: {
-    shape: class
+  shape: class
 
-    name: string
-    displayName: ?string
-    type: PropertyType
-    isSelect: bool
-    isNullable: bool
-    defaultValue: mixed
+  name: string
+  displayName: ?string
+  type: PropertyType
+  isSelect: bool
+  isNullable: bool
+  defaultValue: mixed
+  isIntermediateData: bool
+  availableValues: array<mixed>
 }
 
 DatabaseEntityPropertyType -- DatabaseEntityProperty: {
-    source-arrowhead: 1
-    target-arrowhead: 1
+  source-arrowhead: 1
+  target-arrowhead: 1
 }
 DatabaseEntityPropertyType: {
-    shape: class
+  shape: class
 }
 
 FullDatabaseEntity -> DatabaseEntity
 FullDatabaseEntity: *FullDatabaseEntity* {
-    shape: class
+  shape: class
 
-    id: int
-    "static get(int $id)": mixed
-    "write()": void
-    "remove()": void
-    
+  \#id: int
+  "static get(int $id)": mixed
+  "write()": void
+  "remove()": void
 }
 
 Models.Classroom -> FullDatabaseEntity
 Models.Exam -> FullDatabaseEntity
 Models.Teacher -> FullDatabaseEntity
 Models: {
-    Classroom: {
-        shape: class
+  Classroom: {
+    shape: class
 
-        "static getProperties()": array<DatabaseEntityProperty>
-    }
+    "static getProperties()": array<DatabaseEntityProperty>
+  }
 
-    Exam: {
-        shape: class
+  Exam: {
+    shape: class
 
-        "static getProperties()": array<DatabaseEntityProperty>
-    }
+    "static getProperties()": array<DatabaseEntityProperty>
+  }
 
-    Teacher: {
-        shape: class
+  Teacher: {
+    shape: class
 
-        "static getProperties()": array<DatabaseEntityProperty>
-    }
+    "static getProperties()": array<DatabaseEntityProperty>
+  }
 }
 
 IntermediateDatabaseEntity -> DatabaseEntity
 IntermediateDatabaseEntity: *IntermediateDatabaseEntity* {
-    shape: class
+  shape: class
 
-    "write()": void
-    "remove()": void
+  "write()": void
+  "remove()": void
 }
 
 Models.ClassroomTrait -> IntermediateDatabaseEntity
 Models: {
-    ClassroomTrait: {
-        shape: class
+  ClassroomTrait: {
+    shape: class
 
-        "static getProperties()": array<DatabaseEntityProperty>
-    }
+    "static getProperties()": array<DatabaseEntityProperty>
+  }
 }
