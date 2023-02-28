@@ -7,8 +7,10 @@
     class Classroom extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
         public static function getProperties(): array {
-            // TODO
-            return [];
+            return [
+                new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::String, false, false, ""),
+                new DatabaseEntityProperty("traits", "Příznaky", DatabaseEntityPropertyType::Intermediate_data, true, true, []) // TODO intermediate_data
+            ];
         }
 
         public static function getSelectOptions(Database $database): array {
@@ -17,8 +19,7 @@
         }
 
         public function getFormatted(): string {
-            // TODO
-            return "";
+            return $this->label;
         }
 
         public function getIntermediateData(): array {

@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class _Class extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+class _Class extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
     public static function getProperties(): array {
-        // TODO
-        return [];
+        return [
+            // TODO snad dobře použitý čas
+            new DatabaseEntityProperty("year","Rok", DatabaseEntityPropertyType::DateTime, false, false, new \DateTime("2020-09-01")),// TODO
+            new DatabaseEntityProperty("grade", "Ročník", DatabaseEntityPropertyType::Integer, false, false, 0),
+            new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("class_teacher_id", "Třídní učitel", DatabaseEntityPropertyType::Intermediate_data, true, false) // TODO Intermediate hodnota 
+        ];
     }
 
     public static function getSelectOptions(Database $database): array {
@@ -17,8 +22,7 @@ class _Class extends DatabaseEntity implements FormattableDatabaseEntity, Viewab
     }
 
     public function getFormatted(): string {
-        // TODO 
-        return "";
+        return sprintf("%s.%s", $this->grade, $this->label);
     }
 
     public function getIntermediateData(): array {

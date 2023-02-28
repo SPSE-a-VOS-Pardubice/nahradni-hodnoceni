@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+class Teacher extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
     /**
      * @var array<DatabaseEntityProperty>
      */
     public static function getProperties(): array {
-        // TODO
-        return [];
+        return [
+            // TODO intermediated data
+            new DatabaseEntityProperty("name", "Jméno", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("prefix", "Prefix", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("suffix", "Suffix", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("subjects", "Vyučované předměty", DatabaseEntityPropertyType::Intermediate_data, true, false, []) 
+        ];
     }
 
     public static function getSelectOptions(Database $database): array {
@@ -20,8 +26,7 @@ class Teacher extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
     }
 
     public function getFormatted(): string {
-        // TODO
-        return "";
+        return sprintf("%s %s %s %s",$this->prefix, $this->name, $this->surname, $this->suffix);
     }
 
     public function getIntermediateData(): array {

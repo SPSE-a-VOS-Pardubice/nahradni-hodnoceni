@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class ClassroomTrait extends DatabaseEntity implements FormattableDatabaseEntity {
+class ClassroomTrait extends IntermediateDatabaseEntity implements FormattableDatabaseEntity {
+
+    public static function getProperties(): array {
+        return [
+            // TODO implementace intermediate modelu "getProperties()"
+            new DatabaseEntityProperty("trait_id", "trait_id", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
+            new DatabaseEntityProperty("classroom_id", "classroom_id", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
+        ];
+    }
 
     public function getFormatted(): string {
-        // TODO
-        return "";
+        return $this->nazev; // TODO cool a kde ho vezme?
     }
 
     static public function getForClassroom(Database $database, int $classroom_id): array {

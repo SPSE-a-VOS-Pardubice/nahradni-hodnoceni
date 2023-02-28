@@ -8,8 +8,7 @@ class _Trait extends FullDatabaseEntity implements FormattableDatabaseEntity, Vi
 
     public static function getProperties(): array {
         return [
-            new DatabaseEntityProperty("id", "ID", DatabaseEntityPropertyType::Integer, false, false, 0),
-            new DatabaseEntityProperty("name", "Název", DatabaseEntityPropertyType::Integer, false, false, "")
+            new DatabaseEntityProperty("name", "Název", DatabaseEntityPropertyType::String, false, false, "")
         ];
     }
 
@@ -18,8 +17,7 @@ class _Trait extends FullDatabaseEntity implements FormattableDatabaseEntity, Vi
     }
 
     public function getFormatted(): string {
-        // TODO
-        return "";
+        return $this->name;
     }
 
     public function getIntermediateData(): array {

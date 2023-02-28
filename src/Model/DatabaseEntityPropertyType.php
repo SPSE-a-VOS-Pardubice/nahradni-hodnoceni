@@ -8,4 +8,5 @@ enum DatabaseEntityPropertyType {
     case String;
     case Integer;
     case DateTime;
+    case Intermediate_data;
 }

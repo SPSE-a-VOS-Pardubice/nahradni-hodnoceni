@@ -8,11 +8,21 @@ use Spse\NahradniHodnoceni\Helpers\DateTimeHelper;
 
 const MARK_OPTIONS = ["1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "N" => "N"];
 
-class Exam extends DatabaseEntity implements ViewableDatabaseEntity {
+class Exam extends FullDatabaseEntity implements ViewableDatabaseEntity {
 
     public static function getProperties(): array {
-        // TODO
-        return [];
+        return [
+            // TODO intermediate data
+            new DatabaseEntityProperty("student_id", "Student", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
+            new DatabaseEntityProperty("subject_id", "Předmět", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
+            new DatabaseEntityProperty("classroom_id", "Učebna", DatabaseEntityPropertyType::Intermediate_data, true, true, null),
+            new DatabaseEntityProperty("original_mark", "Původní známka", DatabaseEntityPropertyType::String, true, false, "5"),
+            new DatabaseEntityProperty("final_mark", "Výsledná známka", DatabaseEntityPropertyType::String, true, true, "5"),
+            new DatabaseEntityProperty("time", "Termín konání", DatabaseEntityPropertyType::DateTime, false, true, new \DateTime("2020-09-01")), // TODO
+            new DatabaseEntityProperty("chairman_id", "Předseda", DatabaseEntityPropertyType::Intermediate_data, true, true, null), // TODO
+            new DatabaseEntityProperty("class_teacher_id", "Přísedící", DatabaseEntityPropertyType::Intermediate_data, true, true, null), // TODO
+            new DatabaseEntityProperty("examiner_id", "Zkoušející", DatabaseEntityPropertyType::Intermediate_data, true, false, null), // TODO
+        ];
     }
 
     public static function getSelectOptions(Database $database): array {

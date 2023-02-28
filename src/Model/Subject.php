@@ -7,8 +7,12 @@ namespace Spse\NahradniHodnoceni\Model;
 class Subject extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
     public static function getProperties(): array {
-        // TODO
-        return [];
+        return [
+            // TODO intermediate data
+            new DatabaseEntityProperty("name", "Název", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("abbreviation", "Zkratka", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("traits", "Příznaky", DatabaseEntityPropertyType::Intermediate_data, false, false, [])
+        ];
     }
 
     public static function getSelectOptions(Database $database): array {
@@ -17,9 +21,7 @@ class Subject extends FullDatabaseEntity implements FormattableDatabaseEntity, V
     }
 
     public function getFormatted(): string {
-        //return $this->name;
-        // TODO
-        return "";
+        return $this->name;
     }
 
     public function getIntermediateData(): array {

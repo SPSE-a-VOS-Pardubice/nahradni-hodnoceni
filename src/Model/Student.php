@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Student extends DatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+class Student extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
     public static function getProperties(): array {
-        // TODO
-        return [];
+        return [
+            // TODO intermediate data
+            new DatabaseEntityProperty("name", "Jméno", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::String, false, false, ""),
+            new DatabaseEntityProperty("class_id", "Třída", DatabaseEntityPropertyType::Intermediate_data, true, false, null)
+        ];
     }
 
     public static function getSelectOptions(Database $database): array {
@@ -17,8 +21,7 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
     }
 
     public function getFormatted(): string {
-        // TODO
-        return "";
+        return sprintf("%s %s", $this->surname, $this->name);
     }
 
     public function getIntermediateData(): array {
@@ -62,6 +65,23 @@ class Student extends DatabaseEntity implements FormattableDatabaseEntity, Viewa
             throw new \RuntimeException("Student se jménem " . $name . " " . $surname . " ve třídě " . $class . " nebyl v databázi nalezen");
         }
         return Student::fromDatabaseRow($database, $row);
+    }
+
+    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
+        $model = $id === 0 ? new Student($database) : Student::get($database, $id);
+        if ($model === null) 
+            throw new \RuntimeException("Error Processing Request", 1);
+        
+
+        $model->setProperty("name",        $data["name"]);
+        $model->setProperty("surname",     $data["surname"]);
+
+        // Otestuje zda je třída se zadaným id v db
+        if (_Class::get($database, intVal($data["class_id"])) != null)
+            $model->setProperty("class_id",    intVal($data["class_id"]));
+
+
+        return new ParsedPostData($model, []); // TODO
     }
 
     public function getPropertyValues(): array {
