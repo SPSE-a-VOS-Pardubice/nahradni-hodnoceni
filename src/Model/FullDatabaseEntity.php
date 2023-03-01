@@ -31,6 +31,23 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         
         return static::fromDatabaseRow($database, $row);
     }
+
+    public static function getAll(Database $database): mixed {
+        // TODO nefunguje pro _Class
+        $rows = $database->fetchMultiple(sprintf("
+            SELECT
+                *
+            FROM %s
+        ", static::getDatabaseName()));
+        
+        if ($rows === false) {
+            return null;
+        }
+        
+        return array_map(function (array $row) use($database) {
+            return static::fromDatabaseRow($database, $row);
+        }, $rows);
+    }
     
     public function write(): void {
         $parameters = [];
