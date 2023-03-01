@@ -21,7 +21,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             FROM %s
             WHERE
                 id = :id
-        ", get_called_class()), [
+        ", self::getDatabaseName()), [
             new DatabaseParameter("id", $id),
         ]);
 
@@ -62,7 +62,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                 VALUES (
                     %s
                 )
-            ", get_called_class(), $attributeNames, $valueNames), [
+            ", $this->getDatabaseName(), $attributeNames, $valueNames), [
                 $parameters,
             ]);
 
@@ -85,7 +85,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                     %s
                 WHERE
                     id = :id
-            ", get_called_class(), $valuesIndices), [
+            ", $this->getDatabaseName(), $valuesIndices), [
                 $parameters,
             ]);
         }
@@ -97,7 +97,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             WHERE
                 id = :id
             LIMIT 1
-        ", get_called_class()), [
+        ", $this->getDatabaseName()), [
             new DatabaseParameter("id", $this->id),
         ]);
     }

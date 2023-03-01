@@ -57,4 +57,26 @@ abstract class DatabaseEntity {
      * Remove the object from the database. Works only with non-default `id` values.
      */
     abstract public function remove(): void;
+
+    /**
+     * Return the name of the model in database
+     *  */
+    public function getDatabaseName(): mixed {
+        $result = strtolower(get_called_class());
+        
+        if(str_starts_with($result, "_")) {
+            $result = substr($result, 1);
+        }
+        
+        $exceptions = ["s", "x", "z", "sh", "ch"];
+        foreach($exceptions as &$exception) {
+            if(substr($result, strlen($exception) * -1) == $exception) {
+                $result += "es";
+                goto skipadding;
+            }
+        }
+        $result += "s";
+        skipadding:
+        return $result;
+    }
 }
