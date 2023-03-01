@@ -40,12 +40,11 @@ abstract class DatabaseEntity {
      * Internal method for handling all database `set` calls.
      */
     protected function setProperty(string $key, $value): void {
-        // TODO
+        $this->properties[$key] = $value;
     }
 
     protected function getProperty(string $key): mixed {
-        // TODO
-        return null;
+        return $this->properties[$key];
     }
 
     /**
