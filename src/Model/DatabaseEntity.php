@@ -65,24 +65,5 @@ abstract class DatabaseEntity {
     /**
      * Return the name of the model in database
      *  */
-    public static function getDatabaseName(): mixed {
-        $result = strtolower(get_called_class());
-        $split = explode("\\", $result);
-        $result = $split[count($split) - 1];
-        
-        if(str_starts_with($result, "_")) {
-            $result = substr($result, 1);
-        }
-        
-        $exceptions = ["s", "x", "z", "sh", "ch"];
-        foreach($exceptions as &$exception) {
-            if(substr($result, strlen($exception) * -1) == $exception) {
-                $result .= "es";
-                goto skipadding;
-            }
-        }
-        $result .= "s";
-        skipadding:
-        return $result;
-    }
+    abstract public static function getDatabaseName(): mixed;
 }

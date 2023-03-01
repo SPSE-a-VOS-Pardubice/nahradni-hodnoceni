@@ -63,4 +63,8 @@ class _Class extends FullDatabaseEntity implements FormattableDatabaseEntity, Vi
             $this->setProperty($this->getProperties()[$i]->name, $properties[$i]);   
         }
     }
+
+    public static function getDatabaseName(): mixed {
+        return "classes";
+    }
 }
