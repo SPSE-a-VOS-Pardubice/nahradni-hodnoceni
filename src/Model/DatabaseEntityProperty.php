@@ -21,9 +21,9 @@ class DatabaseEntityProperty {
     public $type;
 
     /**
-     * @var bool
+     * @var mixed // užít ?array
      */
-    public $isSelect;
+    public $selectedOption;
 
     /**
      * @var bool
@@ -35,11 +35,11 @@ class DatabaseEntityProperty {
      */
     public $defaultValue;
 
-    public function __construct($name, $displayName, $type, $isSelect, $isNullable, $defaultValue) {
+    public function __construct($name, $displayName, $type, $selectedOption, $isNullable, $defaultValue) {
         $this->name = $name;
         $this->displayName = $displayName;
         $this->type = $type;
-        $this->isSelect = $isSelect;
+        $this->selectedOption = $selectedOption;
         $this->isNullable = $isNullable;
         $this->defaultValue = $defaultValue;
     }

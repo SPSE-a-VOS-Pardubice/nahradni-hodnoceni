@@ -8,10 +8,9 @@ class Subject extends FullDatabaseEntity implements FormattableDatabaseEntity, V
 
     public static function getProperties(): array {
         return [
-            // TODO intermediate data
             new DatabaseEntityProperty("name", "Název", DatabaseEntityPropertyType::String, false, false, ""),
             new DatabaseEntityProperty("abbreviation", "Zkratka", DatabaseEntityPropertyType::String, false, false, ""),
-            new DatabaseEntityProperty("traits", "Příznaky", DatabaseEntityPropertyType::Intermediate_data, false, false, [])
+            new DatabaseEntityProperty("traits", "Příznaky", DatabaseEntityPropertyType::Intermediate_data, false, false, []) // TODO intermediate data
         ];
     }
 

@@ -9,10 +9,9 @@ class TeacherSuitability extends IntermediateDatabaseEntity implements Formattab
      * @var array<DatabaseEntityProperty>
      */
     public static function getProperties(): array {
-        // TODO implementace intermediate modelu "getProperties()"
         return [
-            new DatabaseEntityProperty("subject_id", "subject_id", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
-            new DatabaseEntityProperty("teacher_id", "teacher_id", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
+            new DatabaseEntityProperty("subject_id", null, DatabaseEntityPropertyType::Intermediate_data, true, false, null),// TODO intermediated data
+            new DatabaseEntityProperty("teacher_id", null, DatabaseEntityPropertyType::Intermediate_data, true, false, null)// TODO intermediated data
         ];
     }
 

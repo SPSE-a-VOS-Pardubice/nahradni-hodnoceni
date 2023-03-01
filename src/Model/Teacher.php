@@ -11,12 +11,11 @@ class Teacher extends FullDatabaseEntity implements FormattableDatabaseEntity, V
      */
     public static function getProperties(): array {
         return [
-            // TODO intermediated data
             new DatabaseEntityProperty("name", "Jméno", DatabaseEntityPropertyType::String, false, false, ""),
             new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::String, false, false, ""),
             new DatabaseEntityProperty("prefix", "Prefix", DatabaseEntityPropertyType::String, false, false, ""),
             new DatabaseEntityProperty("suffix", "Suffix", DatabaseEntityPropertyType::String, false, false, ""),
-            new DatabaseEntityProperty("subjects", "Vyučované předměty", DatabaseEntityPropertyType::Intermediate_data, true, false, []) 
+            new DatabaseEntityProperty("subjects", "Vyučované předměty", DatabaseEntityPropertyType::Intermediate_data, true, false, []) // TODO intermediated data
         ];
     }
 

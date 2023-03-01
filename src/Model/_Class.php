@@ -10,7 +10,6 @@ class _Class extends FullDatabaseEntity implements FormattableDatabaseEntity, Vi
         $currentYear = new \DateTime();
         
         return [
-            // TODO snad dobře použitý čas
             new DatabaseEntityProperty("year","Rok", DatabaseEntityPropertyType::Integer, false, false, $currentYear->format("w")),
             new DatabaseEntityProperty("grade", "Ročník", DatabaseEntityPropertyType::Integer, false, false, 0),
             new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::String, false, false, ""),

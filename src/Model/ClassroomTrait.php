@@ -8,9 +8,8 @@ class ClassroomTrait extends IntermediateDatabaseEntity implements FormattableDa
 
     public static function getProperties(): array {
         return [
-            // TODO implementace intermediate modelu "getProperties()"
-            new DatabaseEntityProperty("trait_id", "trait_id", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
-            new DatabaseEntityProperty("classroom_id", "classroom_id", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
+            new DatabaseEntityProperty("trait_id", null, DatabaseEntityPropertyType::Intermediate_data, true, false, null),// TODO intermediate_data
+            new DatabaseEntityProperty("classroom_id", null, DatabaseEntityPropertyType::Intermediate_data, true, false, null),// TODO intermediate_data
         ];
     }
 

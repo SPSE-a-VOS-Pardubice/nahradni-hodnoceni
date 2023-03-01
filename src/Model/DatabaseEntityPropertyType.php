@@ -8,5 +8,5 @@ enum DatabaseEntityPropertyType {
     case String;
     case Integer;
     case DateTime;
-    case Intermediate_data;
+    case Intermediate_data; // TODO def hodnota
 }

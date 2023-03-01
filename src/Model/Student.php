@@ -8,10 +8,9 @@ class Student extends FullDatabaseEntity implements FormattableDatabaseEntity, V
 
     public static function getProperties(): array {
         return [
-            // TODO intermediate data
             new DatabaseEntityProperty("name", "Jméno", DatabaseEntityPropertyType::String, false, false, ""),
             new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::String, false, false, ""),
-            new DatabaseEntityProperty("class_id", "Třída", DatabaseEntityPropertyType::Intermediate_data, true, false, null)
+            new DatabaseEntityProperty("class_id", "Třída", DatabaseEntityPropertyType::Intermediate_data, true, false, null)// TODO intermediate data
         ];
     }
 

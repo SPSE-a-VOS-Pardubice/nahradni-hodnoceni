@@ -10,9 +10,8 @@ class SubjectTrait extends IntermediateDatabaseEntity implements FormattableData
      */
     public static function getProperties(): array {
         return [
-            // TODO implementace intermediate modelu "getProperties()"
-            new DatabaseEntityProperty("trait_id", "trait_id", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
-            new DatabaseEntityProperty("subject_id", "subject_id", DatabaseEntityPropertyType::Intermediate_data, true, false, null),
+            new DatabaseEntityProperty("trait_id", null, DatabaseEntityPropertyType::Intermediate_data, true, false, null), // TODO intermediate data
+            new DatabaseEntityProperty("subject_id", null, DatabaseEntityPropertyType::Intermediate_data, true, false, null) // TODO intermediate data
         ];
     }
     public function getFormatted(): string {
