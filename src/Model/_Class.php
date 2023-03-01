@@ -7,12 +7,14 @@ namespace Spse\NahradniHodnoceni\Model;
 class _Class extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
 
     public static function getProperties(): array {
+        $currentYear = new \DateTime();
+        
         return [
             // TODO snad dobře použitý čas
-            new DatabaseEntityProperty("year","Rok", DatabaseEntityPropertyType::DateTime, false, false, new \DateTime("2020-09-01")),// TODO
+            new DatabaseEntityProperty("year","Rok", DatabaseEntityPropertyType::Integer, false, false, $currentYear->format("w")),
             new DatabaseEntityProperty("grade", "Ročník", DatabaseEntityPropertyType::Integer, false, false, 0),
             new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::String, false, false, ""),
-            new DatabaseEntityProperty("class_teacher_id", "Třídní učitel", DatabaseEntityPropertyType::Intermediate_data, true, false) // TODO Intermediate hodnota 
+            new DatabaseEntityProperty("class_teacher_id", "Třídní učitel", DatabaseEntityPropertyType::Intermediate_data, true, false, null) // TODO Intermediate hodnota 
         ];
     }
 

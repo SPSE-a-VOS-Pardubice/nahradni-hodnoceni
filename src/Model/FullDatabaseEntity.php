@@ -8,7 +8,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
     /**
      * @var int
      */
-    public $id;
+    public $id = 0;
 
     public function __construct(Database $database) {
         parent::__construct($database);
@@ -21,7 +21,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             FROM %s
             WHERE
                 id = :id
-        ", self::getDatabaseName()), [
+        ", static::getDatabaseName()), [
             new DatabaseParameter("id", $id),
         ]);
 
@@ -29,7 +29,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             return null;
         }
         
-        return self::fromDatabaseRow($database, $row);
+        return static::fromDatabaseRow($database, $row);
     }
     
     public function write(): void {
@@ -62,9 +62,8 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                 VALUES (
                     %s
                 )
-            ", $this->getDatabaseName(), $attributeNames, $valueNames), [
-                $parameters,
-            ]);
+            ", $this->getDatabaseName(), $attributeNames, $valueNames),
+            $parameters);
 
             $this->id = intval($this->database->lastInsertId("id"));
         } else {
@@ -85,9 +84,8 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                     %s
                 WHERE
                     id = :id
-            ", $this->getDatabaseName(), $valuesIndices), [
-                $parameters,
-            ]);
+            ", $this->getDatabaseName(), $valuesIndices),
+            $parameters);
         }
     }
 
@@ -104,14 +102,15 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
 
     protected static function fromDatabaseRow(Database $database, array $row): mixed {
         // Zkontroluj délku dané řady.
-        if (count($row) !== count(self::getProperties())) {
+        if (count($row) !== count(static::getProperties()) + 1) {
             throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
         }
 
         // Vybuduj novou instanci a vrať ji.
         $object = new static($database);
-        foreach(self::getProperties() as $index => $value) {
-            $object->setProperty($value->name, $value->deserialize($row[$index])); // Atributy musí být ve stejném pořadí jak v deklaraci modelu, tak v databázi
+        $object->id = $row[0];
+        foreach(static::getProperties() as $index => $value) {
+            $object->setProperty($value->name, $value->deserialize($row[$index + 1])); // Atributy musí být ve stejném pořadí jak v deklaraci modelu, tak v databázi
         }
         
         return $object;
