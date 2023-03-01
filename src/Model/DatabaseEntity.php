@@ -63,6 +63,8 @@ abstract class DatabaseEntity {
      *  */
     public function getDatabaseName(): mixed {
         $result = strtolower(get_called_class());
+        $split = explode("\\", $result);
+        $result = $split[count($split) - 1];
         
         if(str_starts_with($result, "_")) {
             $result = substr($result, 1);
@@ -71,11 +73,11 @@ abstract class DatabaseEntity {
         $exceptions = ["s", "x", "z", "sh", "ch"];
         foreach($exceptions as &$exception) {
             if(substr($result, strlen($exception) * -1) == $exception) {
-                $result += "es";
+                $result .= "es";
                 goto skipadding;
             }
         }
-        $result += "s";
+        $result .= "s";
         skipadding:
         return $result;
     }
