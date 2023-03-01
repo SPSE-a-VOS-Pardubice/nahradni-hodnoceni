@@ -17,6 +17,11 @@ abstract class DatabaseEntity {
 
     public function __construct(Database $database) {
         $this->database = $database;
+        
+        foreach ($this->getProperties() as &$property) {
+            $this->setProperty($property->name, null);
+        }
+        
         // TODO 
     }
 
@@ -60,7 +65,7 @@ abstract class DatabaseEntity {
     /**
      * Return the name of the model in database
      *  */
-    public function getDatabaseName(): mixed {
+    public static function getDatabaseName(): mixed {
         $result = strtolower(get_called_class());
         $split = explode("\\", $result);
         $result = $split[count($split) - 1];
