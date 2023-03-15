@@ -48,8 +48,6 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             return static::fromDatabaseRow($database, $row);
         }, $rows);
     }
-
-    abstract public static function getSelectOptions(Database $database): array;
     
     public function write(): void {
         $parameters = [];
