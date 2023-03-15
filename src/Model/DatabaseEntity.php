@@ -65,5 +65,5 @@ abstract class DatabaseEntity {
     /**
      * Return the name of the model in database
      *  */
-    abstract public static function getDatabaseName(): mixed;
+    abstract public static function getDatabaseName(): string;
 }

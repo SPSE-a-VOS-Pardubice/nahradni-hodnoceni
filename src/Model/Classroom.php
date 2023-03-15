@@ -43,6 +43,10 @@
 
             // TODO
         }
+        public static function getDatabaseName(): string {
+            return "classrooms";
+        }
     }
+
 
 ?>

@@ -32,4 +32,8 @@ class ClassroomTrait extends IntermediateDatabaseEntity implements FormattableDa
             return ClassroomTrait::fromDatabaseRow($database, $row);
         }, $rows);
     }
+
+    public static function getDatabaseName(): string {
+        return "classroomstraits";
+    }
 }

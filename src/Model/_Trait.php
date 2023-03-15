@@ -38,4 +38,8 @@ class _Trait extends FullDatabaseEntity implements FormattableDatabaseEntity, Vi
         $model = $parsedData->model;
         $model->write();
     }
+
+    public static function getDatabaseName(): string {
+        return "traits";
+    }
 }

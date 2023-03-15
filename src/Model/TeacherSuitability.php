@@ -37,4 +37,8 @@ class TeacherSuitability extends IntermediateDatabaseEntity implements Formattab
             return TeacherSuitability::fromDatabaseRow($database, $row);
         }, $rows);
     }
+
+    public static function getDatabaseName(): string {
+        return "teacherssuitability";
+    }
 }

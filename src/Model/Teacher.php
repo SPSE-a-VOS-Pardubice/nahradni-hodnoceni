@@ -68,4 +68,8 @@ class Teacher extends FullDatabaseEntity implements FormattableDatabaseEntity, V
         }
         return Teacher::fromDatabaseRow($database, $row);
     }
+
+    public static function getDatabaseName(): string {
+        return "teachers";
+    }
 }

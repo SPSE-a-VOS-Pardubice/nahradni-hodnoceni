@@ -97,4 +97,8 @@ class Student extends FullDatabaseEntity implements FormattableDatabaseEntity, V
             $this->setProperty($this->getProperties()[$i]->name, $properties[$i]);   
         }
     }
+
+    public static function getDatabaseName(): string {
+        return "students";
+    }
 }

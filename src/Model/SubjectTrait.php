@@ -33,4 +33,8 @@ class SubjectTrait extends IntermediateDatabaseEntity implements FormattableData
             return SubjectTrait::fromDatabaseRow($database, $row);
         }, $rows);
     }
+
+    public static function getDatabaseName(): string {
+        return "subjectstraits";
+    }
 }

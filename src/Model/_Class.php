@@ -64,7 +64,7 @@ class _Class extends FullDatabaseEntity implements FormattableDatabaseEntity, Vi
         }
     }
 
-    public static function getDatabaseName(): mixed {
+    public static function getDatabaseName(): string {
         return "classes";
     }
 }

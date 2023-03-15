@@ -70,4 +70,8 @@ class Exam extends FullDatabaseEntity implements ViewableDatabaseEntity {
             $this->setProperty($this->getProperties()[$i]->name, $properties[$i]);   
         }
     }
+
+    public static function getDatabaseName(): string {
+        return "exams";
+    }
 }

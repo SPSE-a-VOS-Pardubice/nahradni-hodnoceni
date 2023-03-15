@@ -61,4 +61,8 @@ class Subject extends FullDatabaseEntity implements FormattableDatabaseEntity, V
         }
         return Subject::fromDatabaseRow($database, $row);
     }
+    
+    public static function getDatabaseName(): string {
+        return "subjects";
+    }
 }
