@@ -135,4 +135,37 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         return $object;
     }
 
+    public static function getPropertiesWithouthIntermediate(): array {
+        $properties = [];
+        foreach(static::getProperties() as $index => $prop) {
+            if ($prop->type !== DatabaseEntityPropertyType::Intermediate_data) {
+                $properties[] = $prop;
+            }
+        } 
+
+        return $properties;
+    }
+
+    /**
+     * @var array $data - představují pole hdonot ve stejném pořadí v jakém jsou v db 
+     */
+    public static function build(Database $database, array $data): mixed {
+
+        // Získej si z getProperties jen ty valstnosti, které nejsou intermediate
+        if (count($data) !== count(static::getPropertiesWithouthIntermediate()) + 1) {
+            throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
+        }
+
+        // vytvoř instanci a dej ji ID
+        $instance = new static($database);
+        // TODO pokud je id typu string přetypuj ho 
+        $instance->id = $data[0] >= 0 ? $data[0] : 0; 
+
+        foreach(static::getPropertiesWithouthIntermediate() as $index => $value) {
+            $instance->setProperty($value->name, $value->deserialize($data[$index + 1]));
+        }
+
+        return $instance;
+    }
+
 }
