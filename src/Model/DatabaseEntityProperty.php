@@ -21,9 +21,11 @@ class DatabaseEntityProperty {
     public $type;
 
     /**
-     * @var mixed // užít ?array
+     * 
+     * 
+     * @var ?array // TODO or a class
      */
-    public $selectedOption;
+    public $selectOptionsSource;
 
     /**
      * @var bool

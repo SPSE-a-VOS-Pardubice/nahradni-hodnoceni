@@ -12,4 +12,6 @@ abstract class IntermediateDatabaseEntity extends DatabaseEntity {
     public function remove(): void {
         // TODO: delete
     }
+
+    // TODO vytvořít statické metody pro manipulaci se záznamy při POSTu (updateData)
 }

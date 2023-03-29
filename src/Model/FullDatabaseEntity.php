@@ -21,7 +21,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             FROM %s
             WHERE
                 id = :id
-        ", static::getDatabaseName()), [
+        ", static::getTableName()), [
             new DatabaseParameter("id", $id),
         ]);
 
@@ -29,7 +29,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             return null;
         }
         
-        return static::fromDatabaseRow($database, $row);
+        return static::fromDatabase($database, $row);
     }
     
     public static function getAll(Database $database): mixed {
@@ -38,17 +38,23 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         SELECT
             *
         FROM %s
-        ", static::getDatabaseName()));
+        ", static::getTableName()));
         
         if ($rows === false) {
             return null;
         }
         
         return array_map(function (array $row) use($database) {
-            return static::fromDatabaseRow($database, $row);
+            return static::fromDatabase($database, $row);
         }, $rows);
     }
     
+
+    /**
+     * Propíše data z instance do databáze.
+     * 
+     * Jedná se pouze o jednoduché typy.
+     */
     public function write(): void {
         $parameters = [];
         foreach ($this->getProperties() as &$property) {
@@ -117,7 +123,13 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         ]);
     }
 
-    protected static function fromDatabaseRow(Database $database, array $row): mixed {
+
+    /**
+     * 
+     * 
+     * Zkonstruuje instanci modelu podle dat z databáze.
+     */
+    protected static function fromDatabase(Database $database, array $row): mixed {
         // Zkontroluj délku dané řady.
         // TODO neprojížděj ty property, které jsou intermediate
         if (count($row) !== count(static::getProperties()) + 1) {
@@ -135,37 +147,47 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         return $object;
     }
 
-    public static function getPropertiesWithouthIntermediate(): array {
-        $properties = [];
-        foreach(static::getProperties() as $index => $prop) {
-            if ($prop->type !== DatabaseEntityPropertyType::Intermediate_data) {
-                $properties[] = $prop;
-            }
-        } 
-
-        return $properties;
+    
+    /**
+     * Aktualizace dat.
+     * 
+     * Metoda je volána při postu dat a stará se o aktualizaci svého modelu i záznamů mezitabulek v DB.
+     */
+    public static function updateData(Database $database, array $row): void {
+        // TODO
     }
+
 
     /**
-     * @var array $data - představují pole hdonot ve stejném pořadí v jakém jsou v db 
+     * Získej možnosti pro danou třídu.
+     * 
+     * Vrací mapu kde klíč je název vlastnosti a hodnota je mapa id => formátovaná hodnota.
+     * Metoda se používá pro vypsání možností u selectů.
+     * 
+     * ```
+     * {
+     *   "subjects": {
+     *     69: "Matematika",
+     *   },
+     * }
+     * ```
+     * 
+     * Tato metoda pracuje s getProperties a s daty z databáze.
      */
-    public static function build(Database $database, array $data): mixed {
-
-        // Získej si z getProperties jen ty valstnosti, které nejsou intermediate
-        if (count($data) !== count(static::getPropertiesWithouthIntermediate()) + 1) {
-            throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
-        }
-
-        // vytvoř instanci a dej ji ID
-        $instance = new static($database);
-        // TODO pokud je id typu string přetypuj ho 
-        $instance->id = $data[0] >= 0 ? $data[0] : 0; 
-
-        foreach(static::getPropertiesWithouthIntermediate() as $index => $value) {
-            $instance->setProperty($value->name, $value->deserialize($data[$index + 1]));
-        }
-
-        return $instance;
+    public static function getAvailableOptions(Database $database): mixed {
+        // TODO
     }
 
+
+    /**
+     * Získej vybrané možnosti pro specifickou instanci.
+     * 
+     * Vrací mapu kde klíč je název vlastnosti a hodnota je mapa id => naformátovaná hodnota.
+     * Metoda se používá pro vypsání **vybraných** možností u selectů.
+     * 
+     * Tato metoda pracuje s daty z modelu.
+     */
+    public function getSelectedOptions(): mixed {
+        // TODO
+    }
 }

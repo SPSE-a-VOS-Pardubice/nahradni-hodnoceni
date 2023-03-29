@@ -63,7 +63,7 @@ abstract class DatabaseEntity {
     abstract public function remove(): void;
 
     /**
-     * Return the name of the model in database
-     *  */
-    abstract public static function getDatabaseName(): string;
+     * Vrací název tabulky odpovídající modelu.
+     */
+    abstract public static function getTableName(): string;
 }
