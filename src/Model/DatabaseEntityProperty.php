@@ -5,37 +5,22 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 class DatabaseEntityProperty {
-    /**
-     * @var string
-     */
-    public $name;
+
+    public string $name;
+
+    public string $displayName;
+
+    public DatabaseEntityPropertyType $type;
 
     /**
-     * @var string
+     * Tato vlastnost poskytuje možnosti pro <select> prvky.
+     * - null - 
      */
-    public $displayName;
+    public null | array | string $selectOptionsSource;
 
-    /**
-     * @var DatabaseEntityPropertyType
-     */
-    public $type;
+    public bool $isNullable;
 
-    /**
-     * 
-     * 
-     * @var ?array // TODO or a class
-     */
-    public $selectOptionsSource;
-
-    /**
-     * @var bool
-     */
-    public $isNullable;
-
-    /**
-     * @var mixed
-     */
-    public $defaultValue;
+    public mixed $defaultValue;
 
     public function __construct($name, $displayName, $type, $selectedOption, $isNullable, $defaultValue) {
         $this->name = $name;

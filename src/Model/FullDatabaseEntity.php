@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 abstract class FullDatabaseEntity extends DatabaseEntity {
-    /**
-     * @var int
-     */
-    public $id = 0;
+    
+    public int $id = 0;
 
     public function __construct(Database $database) {
         parent::__construct($database);

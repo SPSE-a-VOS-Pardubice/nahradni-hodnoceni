@@ -59,6 +59,8 @@ xdebug.start_with_request = yes
 ```
 Po spuštění PHP serveru obvyklým způsobem je zapotřebí zapnout debugger pomocí launch configuration Visual Studia s názvem ``Listen for Xdebug``.
 
+- https://wiki.archlinux.org/title/PHP#XDebug
+
 
 ## Deployment
 TODO, Issue je [zde](https://github.com/SPSE-a-VOS-Pardubice/nahradni-hodnoceni/issues/8)
