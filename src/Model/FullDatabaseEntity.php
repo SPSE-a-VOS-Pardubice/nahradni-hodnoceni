@@ -12,6 +12,8 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         parent::__construct($database);
     }
 
+    abstract public function getFormatted(): string;
+
     public static function get(Database $database, $id) : ?FullDatabaseEntity {
         $row = $database->fetchSingle(sprintf("
             SELECT
@@ -129,9 +131,11 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      * Zkonstruuje instanci modelu podle dat z databáze.
      */
     protected static function fromDatabase(Database $database, array $row): FullDatabaseEntity {
-        // Zkontroluj délku dané řady.
-        // TODO neprojížděj ty property, které jsou intermediate
-        if (count($row) !== count(static::getProperties()) + 1) {
+        // Zkontroluj délku dané řady (+id).
+        $properties = array_filter(static::getProperties(), function (DatabaseEntityProperty $property) {
+            return $property->type !== DatabaseEntityPropertyType::INTERMEDIATE_DATA;
+        });
+        if (count($row) !== count($properties) + 1) {
             throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
         }
 
@@ -139,7 +143,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         $object = new static($database);
         $object->id = $row[0];
         // TODO neprojížděj ty property, které jsou intermediate
-        foreach(static::getProperties() as $index => $value) {
+        foreach($properties as $index => $value) {
             $object->setProperty($value->name, $value->deserialize($row[$index + 1])); // Atributy musí být ve stejném pořadí jak v deklaraci modelu, tak v databázi
         }
         
