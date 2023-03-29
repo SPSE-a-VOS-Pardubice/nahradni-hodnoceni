@@ -12,7 +12,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         parent::__construct($database);
     }
 
-    public static function get(Database $database, $id) : mixed {
+    public static function get(Database $database, $id) : ?FullDatabaseEntity {
         $row = $database->fetchSingle(sprintf("
             SELECT
                 *
@@ -30,7 +30,8 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         return static::fromDatabase($database, $row);
     }
     
-    public static function getAll(Database $database): mixed {
+    // TODO @returns ?array<FullDatabaseEntity>
+    public static function getAll(Database $database): array {
         // TODO nefunguje pro _Class
         $rows = $database->fetchMultiple(sprintf("
         SELECT
@@ -127,7 +128,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      * 
      * Zkonstruuje instanci modelu podle dat z databáze.
      */
-    protected static function fromDatabase(Database $database, array $row): mixed {
+    protected static function fromDatabase(Database $database, array $row): FullDatabaseEntity {
         // Zkontroluj délku dané řady.
         // TODO neprojížděj ty property, které jsou intermediate
         if (count($row) !== count(static::getProperties()) + 1) {
@@ -172,7 +173,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      * 
      * Tato metoda pracuje s getProperties a s daty z databáze.
      */
-    public static function getAvailableOptions(Database $database): mixed {
+    public static function getAvailableOptions(Database $database): array {
         // TODO
     }
 
@@ -185,7 +186,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      * 
      * Tato metoda pracuje s daty z modelu.
      */
-    public function getSelectedOptions(): mixed {
+    public function getSelectedOptions(): array {
         // TODO
     }
 }

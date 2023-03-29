@@ -73,5 +73,6 @@ $app->group("/api", function (RouteCollectorProxy $group) {
 });
 
 // Registeruj globální middlewary a spusť aplikaci.
-$errorMiddleware = $app->addErrorMiddleware(getenv("DEBUG") === "true", true, true);
+$DEBUG_OPTION = getenv("DEBUG");
+$errorMiddleware = $app->addErrorMiddleware($DEBUG_OPTION === "true" || $DEBUG_OPTION === "1", true, true);
 $app->run();

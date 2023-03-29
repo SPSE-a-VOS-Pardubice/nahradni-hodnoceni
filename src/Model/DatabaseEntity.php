@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 abstract class DatabaseEntity {
-    /**
-     * @var Database
-     */
-    protected $database;
+    protected Database $database;
 
-    /**
-     * @var array<string, mixed>
-     */
-    protected $properties; 
+    // array<string, mixed>
+    protected array $properties;
 
     public function __construct(Database $database) {
         $this->database = $database;
@@ -22,7 +17,7 @@ abstract class DatabaseEntity {
             $this->setProperty($property->name, null);
         }
         
-        // TODO 
+        // TODO initialize with default values
     }
 
     /**
@@ -36,15 +31,16 @@ abstract class DatabaseEntity {
         return $this->getProperty($name);
     }
 
-    /**
-     * @return array<DatabaseEntityProperty>
-     */
+    // TODO @return array<DatabaseEntityProperty>
     public static abstract function getProperties(): array;
 
     /**
      * Internal method for handling all database `set` calls.
      */
-    protected function setProperty(string $key, $value): void {
+    protected function setProperty(string $key, mixed $value): void {
+        
+        // TODO check type
+        
         $this->properties[$key] = $value;
     }
 

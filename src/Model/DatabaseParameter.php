@@ -5,20 +5,11 @@ declare(strict_types=1);
 namespace Spse\NahradniHodnoceni\Model;
 
 class DatabaseParameter {
-    /**
-     * @var string
-     */
-    public $name;
+    public string $name;
 
-    /**
-     * @var mixed
-     */
-    public $value;
+    public mixed $value;
 
-    /**
-     * @var int
-     */
-    public $type;
+    public int $type;
 
     public function __construct(string $name, $value, int $type = -1) {
 

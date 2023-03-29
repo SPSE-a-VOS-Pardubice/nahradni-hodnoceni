@@ -25,7 +25,7 @@ DatabaseEntity: *DatabaseEntity* {
   "#getProperty(string $key)": mixed
   "abstract write()": void
   "abstract remove()": void
-  "abstract static getDatabaseName()": string
+  "abstract static getTableName()": string
 }
 
 DatabaseEntityProperty -- DatabaseEntity: {
@@ -38,11 +38,9 @@ DatabaseEntityProperty: {
   name: string
   displayName: ?string
   type: PropertyType
-  isSelect: bool
+  selectOptionsSource: null \| array \| string
   isNullable: bool
   defaultValue: mixed
-  isIntermediateData: bool
-  availableValues: array<mixed>
 }
 
 DatabaseEntityPropertyType -- DatabaseEntityProperty: {
@@ -61,6 +59,11 @@ FullDatabaseEntity: *FullDatabaseEntity* {
   "static get(int $id)": mixed
   "write()": void
   "remove()": void
+
+  "#static fromDatabase(Database $database, array $row)": FullDatabaseEntity
+  "static updateData(Database $database, array $row)": void
+  "static getAvailableOptions(Database $database)": array
+  "getSelectedOptions()": array
 }
 
 Models.Classroom -> FullDatabaseEntity

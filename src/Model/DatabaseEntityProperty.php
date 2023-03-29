@@ -13,8 +13,10 @@ class DatabaseEntityProperty {
     public DatabaseEntityPropertyType $type;
 
     /**
-     * Tato vlastnost poskytuje možnosti pro <select> prvky.
-     * - null - 
+     * Tato vlastnost poskytuje **možnosti** pro <select> prvky.
+     * - `null` - nereprezentuje <select>
+     * - `array` - instance reprezentuje hodnotu, uživatel si může vybrat z předdefinovaných možností v selectu
+     * - `string` (ve skutečnosti `__CLASS__`) - instance reprezentuje referenci na jinou tabulku, uživatel si může vybrat jakýkoliv záznam z externí tabulky
      */
     public null | array | string $selectOptionsSource;
 
@@ -22,7 +24,7 @@ class DatabaseEntityProperty {
 
     public mixed $defaultValue;
 
-    public function __construct($name, $displayName, $type, $selectedOption, $isNullable, $defaultValue) {
+    public function __construct(string $name, ?string $displayName, DatabaseEntityPropertyType $type, null | array | string $selectedOption, bool $isNullable, mixed $defaultValue) {
         $this->name = $name;
         $this->displayName = $displayName;
         $this->type = $type;
@@ -31,9 +33,12 @@ class DatabaseEntityProperty {
         $this->defaultValue = $defaultValue;
     }
 
-    public function serialize($value): mixed {
+    /**
+     * Serializuje danou hodnotu pro SQL dotaz (`\PDO`).
+     */
+    public function serialize($value): ?string {
         if($value === null) {
-            return null; // TODO: Test
+            return null; // TODO: test
         }
         
         switch($this->type) {
@@ -44,7 +49,10 @@ class DatabaseEntityProperty {
         }
     }
 
-    public function deserialize($value): mixed {
+    /**
+     * Deserializuje hodnotu z výstupu z SQL databáze (`\PDO`).
+     */
+    public function deserialize(string $value): mixed {
         if($value === null) {
             return null;
         }
