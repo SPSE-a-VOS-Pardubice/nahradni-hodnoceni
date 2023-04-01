@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class ClassroomTrait extends IntermediateDatabaseEntity implements FormattableDatabaseEntity {
+class ClassroomTrait extends IntermediateDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new DatabaseEntityProperty("trait_id", null, DatabaseEntityPropertyType::Intermediate_data, true, false, null),// TODO intermediate_data
-            new DatabaseEntityProperty("classroom_id", null, DatabaseEntityPropertyType::Intermediate_data, true, false, null),// TODO intermediate_data
+            new DatabaseEntityProperty("trait_id", null, DatabaseEntityPropertyType::EXTERNAL_DATA, _Trait::class, false, null),// TODO intermediate_data
+            new DatabaseEntityProperty("classroom_id", null, DatabaseEntityPropertyType::EXTERNAL_DATA, Classroom::class, false, null),// TODO intermediate_data
         ];
     }
 
@@ -33,7 +33,7 @@ class ClassroomTrait extends IntermediateDatabaseEntity implements FormattableDa
         }, $rows);
     }
 
-    public static function getDatabaseName(): string {
-        return "classroomstraits";
+    public static function getTableName(): string {
+        return "ClassroomsTraits";
     }
 }

@@ -86,7 +86,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                 VALUES (
                     %s
                 )
-            ", $this->getDatabaseName(), $attributeNames, $valueNames),
+            ", $this->getTableName(), $attributeNames, $valueNames),
             $parameters);
 
             $this->id = intval($this->database->lastInsertId("id"));
@@ -108,7 +108,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                     %s
                 WHERE
                     id = :id
-            ", $this->getDatabaseName(), $valuesIndices),
+            ", $this->getTableName(), $valuesIndices),
             $parameters);
         }
     }
@@ -119,7 +119,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             WHERE
                 id = :id
             LIMIT 1
-        ", $this->getDatabaseName()), [
+        ", $this->getTableName()), [
             new DatabaseParameter("id", $this->id),
         ]);
     }
@@ -157,7 +157,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      * Metoda je volána při postu dat a stará se o aktualizaci svého modelu i záznamů mezitabulek v DB.
      */
     public static function updateData(Database $database, array $row): void {
-        // TODO
+        // TODO 
     }
 
 
@@ -179,6 +179,24 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      */
     public static function getAvailableOptions(Database $database): array {
         // TODO
+        $availableOptions = [];
+
+        foreach (static::getProperties() as $prop) {
+            if ($prop->selectOptionsSource !== null) {
+                // pokud je $selectOptionsSource array nastav ho 
+                if (gettype($prop->selectOptionsSource) === "array") {
+                    $availableOptions[$prop->name] = $prop->selectOptionsSource;
+                // pokud je $selectOptionsSource string aka classa:
+                } else if (gettype($prop->selectOptionsSource) === "string") {
+                    // je to fulldatabase entitiy
+                        // ano načti vše co dokážeš a nastav je
+                        // ne // TODO jak se odkázat na tu správnou FullDatabaseEntity (nechceš hodit do selectu hodnotu z intermediate tabulky)
+                }
+                    
+            }
+        }
+
+        return $availableOptions;
     }
 
 
@@ -192,5 +210,19 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      */
     public function getSelectedOptions(): array {
         // TODO
+        $selectedOptions = [];
+
+        foreach ($this->properties as $prop) {
+            // je to fulldatabase entitiy
+                // ano načti ji 
+            if ($prop->type === DatabaseEntityPropertyType::EXTERNAL_DATA) {
+            }
+                // ne // TODO jak se odkázat na tu správnou FullDatabaseEntity (nechceš hodit do selectu hodnotu z intermediate tabulky)
+            if ($prop->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
+                # code...
+            }
+        }
+
+        return $selectedOptions;
     }
 }

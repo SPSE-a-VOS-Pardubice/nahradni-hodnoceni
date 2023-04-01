@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Student extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+class Student extends FullDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new DatabaseEntityProperty("name", "Jméno", DatabaseEntityPropertyType::String, false, false, ""),
-            new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::String, false, false, ""),
-            new DatabaseEntityProperty("class_id", "Třída", DatabaseEntityPropertyType::Intermediate_data, true, false, null)// TODO intermediate data
+            new DatabaseEntityProperty("name", "Jméno", DatabaseEntityPropertyType::STRING, null, false, ""),
+            new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::STRING, null, false, ""),
+            new DatabaseEntityProperty("class_id", "Třída", DatabaseEntityPropertyType::EXTERNAL_DATA, _Class::class, false, null)// TODO intermediate data
         ];
     }
 
@@ -98,7 +98,7 @@ class Student extends FullDatabaseEntity implements FormattableDatabaseEntity, V
         }
     }
 
-    public static function getDatabaseName(): string {
-        return "students";
+    public static function getTableName(): string {
+        return "Students";
     }
 }

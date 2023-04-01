@@ -28,7 +28,7 @@ class DatabaseEntityProperty {
         $this->name = $name;
         $this->displayName = $displayName;
         $this->type = $type;
-        $this->selectedOption = $selectedOption;
+        $this->selectOptionsSource = $selectedOption;
         $this->isNullable = $isNullable;
         $this->defaultValue = $defaultValue;
     }

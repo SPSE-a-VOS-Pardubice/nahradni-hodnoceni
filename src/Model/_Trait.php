@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class _Trait extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+class _Trait extends FullDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new DatabaseEntityProperty("name", "Název", DatabaseEntityPropertyType::String, false, false, "")
+            new DatabaseEntityProperty("name", "Název", DatabaseEntityPropertyType::STRING, null, false, "")
         ];
     }
 
@@ -39,7 +39,7 @@ class _Trait extends FullDatabaseEntity implements FormattableDatabaseEntity, Vi
         $model->write();
     }
 
-    public static function getDatabaseName(): string {
-        return "traits";
+    public static function getTableName(): string {
+        return "Traits";
     }
 }

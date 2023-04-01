@@ -4,12 +4,12 @@
 
     namespace Spse\NahradniHodnoceni\Model;
     
-    class Classroom extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+    class Classroom extends FullDatabaseEntity {
 
         public static function getProperties(): array {
             return [
-                new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::String, false, false, ""),
-                new DatabaseEntityProperty("traits", "Příznaky", DatabaseEntityPropertyType::Intermediate_data, true, true, []) // TODO intermediate_data
+                new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::STRING, null, false, ""),
+                new DatabaseEntityProperty("traits", "Příznaky", DatabaseEntityPropertyType::INTERMEDIATE_DATA, ClassroomTrait::class, true, []) // TODO intermediate_data
             ];
         }
 
@@ -43,8 +43,8 @@
 
             // TODO
         }
-        public static function getDatabaseName(): string {
-            return "classrooms";
+        public static function getTableName(): string {
+            return "Classrooms";
         }
     }
 

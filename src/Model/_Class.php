@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class _Class extends FullDatabaseEntity implements FormattableDatabaseEntity, ViewableDatabaseEntity {
+class _Class extends FullDatabaseEntity {
 
     public static function getProperties(): array {
         $currentYear = new \DateTime();
         
         return [
-            new DatabaseEntityProperty("year","Rok", DatabaseEntityPropertyType::Integer, false, false, $currentYear->format("w")),
-            new DatabaseEntityProperty("grade", "Ročník", DatabaseEntityPropertyType::Integer, false, false, 0),
-            new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::String, false, false, ""),
-            new DatabaseEntityProperty("class_teacher_id", "Třídní učitel", DatabaseEntityPropertyType::Intermediate_data, true, false, null) // TODO Intermediate hodnota 
+            new DatabaseEntityProperty("year","Rok", DatabaseEntityPropertyType::INTEGER, null, false, $currentYear->format("w")),
+            new DatabaseEntityProperty("grade", "Ročník", DatabaseEntityPropertyType::INTEGER, null, false, 0),
+            new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::STRING, null, false, ""),
+            new DatabaseEntityProperty("class_teacher_id", "Třídní učitel", DatabaseEntityPropertyType::EXTERNAL_DATA, ClassroomTrait::class, false, null) // TODO Intermediate hodnota 
         ];
     }
 
@@ -64,7 +64,7 @@ class _Class extends FullDatabaseEntity implements FormattableDatabaseEntity, Vi
         }
     }
 
-    public static function getDatabaseName(): string {
-        return "classes";
+    public static function getTableName(): string {
+        return "Classes";
     }
 }
