@@ -50,18 +50,18 @@ INSERT INTO `SubjectsTraits` (`trait_id`, `subject_id`) VALUES (5, 4);
 INSERT INTO `SubjectsTraits` (`trait_id`, `subject_id`) VALUES (6, 3);
 INSERT INTO `SubjectsTraits` (`trait_id`, `subject_id`) VALUES (6, 4);
 -- vhodnost učitelů
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (1, 1);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (1, 1);
 
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (2, 2);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (2, 2);
 
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (3, 3);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (3, 3);
 
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (4, 3);
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (4, 4);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (4, 3);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (4, 4);
 
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (5, 1);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (5, 1);
 
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (6, 6);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (6, 6);
 
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (7, 7);
-INSERT INTO `TeachersSuitability` (`subject_id`, `teacher_id`) VALUES (7, 8);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (7, 7);
+INSERT INTO `TeacherSuitabilities` (`subject_id`, `teacher_id`) VALUES (7, 8);
