@@ -11,9 +11,8 @@ class _Class extends FullDatabaseEntity {
         
         return [
             new DatabaseEntityProperty("year","Rok", DatabaseEntityPropertyType::INTEGER, null, false, $currentYear->format("w")),
-            new DatabaseEntityProperty("grade", "Ročník", DatabaseEntityPropertyType::INTEGER, null, false, 0),
             new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::STRING, null, false, ""),
-            new DatabaseEntityProperty("class_teacher_id", "Třídní učitel", DatabaseEntityPropertyType::EXTERNAL_DATA, ClassroomTrait::class, false, null) // TODO Intermediate hodnota 
+            new DatabaseEntityProperty("class_teacher_id", "Třídní učitel", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, false, null) 
         ];
     }
 

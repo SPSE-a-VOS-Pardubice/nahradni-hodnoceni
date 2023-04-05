@@ -157,72 +157,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      * Metoda je volána při postu dat a stará se o aktualizaci svého modelu i záznamů mezitabulek v DB.
      */
     public static function updateData(Database $database, array $row): void {
-        // TODO 
+        // TODO zamyslet se nad přesunutím do DatabaseEntity
     }
 
-
-    /**
-     * Získej možnosti pro danou třídu.
-     * 
-     * Vrací mapu kde klíč je název vlastnosti a hodnota je mapa id => formátovaná hodnota.
-     * Metoda se používá pro vypsání možností u selectů.
-     * 
-     * ```
-     * {
-     *   "subjects": {
-     *     69: "Matematika",
-     *   },
-     * }
-     * ```
-     * 
-     * Tato metoda pracuje s getProperties a s daty z databáze.
-     */
-    public static function getAvailableOptions(Database $database): array {
-        // TODO
-        $availableOptions = [];
-
-        foreach (static::getProperties() as $prop) {
-            if ($prop->selectOptionsSource !== null) {
-                // pokud je $selectOptionsSource array nastav ho 
-                if (gettype($prop->selectOptionsSource) === "array") {
-                    $availableOptions[$prop->name] = $prop->selectOptionsSource;
-                // pokud je $selectOptionsSource string aka classa:
-                } else if (gettype($prop->selectOptionsSource) === "string") {
-                    // je to fulldatabase entitiy
-                        // ano načti vše co dokážeš a nastav je
-                        // ne // TODO jak se odkázat na tu správnou FullDatabaseEntity (nechceš hodit do selectu hodnotu z intermediate tabulky)
-                }
-                    
-            }
-        }
-
-        return $availableOptions;
-    }
-
-
-    /**
-     * Získej vybrané možnosti pro specifickou instanci.
-     * 
-     * Vrací mapu kde klíč je název vlastnosti a hodnota je mapa id => naformátovaná hodnota.
-     * Metoda se používá pro vypsání **vybraných** možností u selectů.
-     * 
-     * Tato metoda pracuje s daty z modelu.
-     */
-    public function getSelectedOptions(): array {
-        // TODO
-        $selectedOptions = [];
-
-        foreach ($this->properties as $prop) {
-            // je to fulldatabase entitiy
-                // ano načti ji 
-            if ($prop->type === DatabaseEntityPropertyType::EXTERNAL_DATA) {
-            }
-                // ne // TODO jak se odkázat na tu správnou FullDatabaseEntity (nechceš hodit do selectu hodnotu z intermediate tabulky)
-            if ($prop->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
-                # code...
-            }
-        }
-
-        return $selectedOptions;
-    }
 }

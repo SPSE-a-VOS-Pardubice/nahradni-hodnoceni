@@ -12,15 +12,15 @@ class Exam extends FullDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new DatabaseEntityProperty("student_id", "Student", DatabaseEntityPropertyType::EXTERNAL_DATA, Student::class, false, null), // TODO intermediate data
-            new DatabaseEntityProperty("subject_id", "Předmět", DatabaseEntityPropertyType::EXTERNAL_DATA, Subject::class, false, null), // TODO intermediate data
-            new DatabaseEntityProperty("classroom_id", "Učebna", DatabaseEntityPropertyType::EXTERNAL_DATA, Classroom::class, true, null), // TODO intermediate data
+            new DatabaseEntityProperty("student_id", "Student", DatabaseEntityPropertyType::EXTERNAL_DATA, Student::class, false, null), 
+            new DatabaseEntityProperty("subject_id", "Předmět", DatabaseEntityPropertyType::EXTERNAL_DATA, Subject::class, false, null), 
+            new DatabaseEntityProperty("classroom_id", "Učebna", DatabaseEntityPropertyType::EXTERNAL_DATA, Classroom::class, true, null), 
             new DatabaseEntityProperty("original_mark", "Původní známka", DatabaseEntityPropertyType::STRING, ["1","2","3","4","5","N"], false, "5"),
             new DatabaseEntityProperty("final_mark", "Výsledná známka", DatabaseEntityPropertyType::STRING, ["1","2","3","4","5","N"], true, "5"),
             new DatabaseEntityProperty("time", "Termín konání", DatabaseEntityPropertyType::DATE_TIME, null, true, new \DateTime("2020-09-01 12:00:00")),
-            new DatabaseEntityProperty("chairman_id", "Předseda", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, true, null), // TODO intermediate data
-            new DatabaseEntityProperty("class_teacher_id", "Přísedící", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, true, null), // TODO intermediate data
-            new DatabaseEntityProperty("examiner_id", "Zkoušející", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, false, null), // TODO intermediate data
+            new DatabaseEntityProperty("chairman_id", "Předseda", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, true, null), 
+            new DatabaseEntityProperty("class_teacher_id", "Přísedící", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, true, null), 
+            new DatabaseEntityProperty("examiner_id", "Zkoušející", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, false, null), 
         ];
     }
 

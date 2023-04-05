@@ -9,7 +9,7 @@
         public static function getProperties(): array {
             return [
                 new DatabaseEntityProperty("label", "Označení", DatabaseEntityPropertyType::STRING, null, false, ""),
-                new DatabaseEntityProperty("traits", "Příznaky", DatabaseEntityPropertyType::INTERMEDIATE_DATA, ClassroomTrait::class, true, []) // TODO intermediate_data
+                new DatabaseEntityProperty("traits", "Příznaky", DatabaseEntityPropertyType::INTERMEDIATE_DATA, ClassroomTrait::class, true, []) 
             ];
         }
 
