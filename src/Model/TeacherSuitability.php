@@ -44,6 +44,6 @@ class TeacherSuitability extends IntermediateDatabaseEntity implements Formattab
 
     public static function getTableName(): string
     {
-        return "teacherssuitability";
+        return "teachersuitabilities";
     }
 }
