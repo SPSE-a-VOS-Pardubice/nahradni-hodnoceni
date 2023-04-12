@@ -68,5 +68,5 @@ class DatabaseEntityProperty {
             default:
                 return $value;
         }
-    } 
+    }
 }

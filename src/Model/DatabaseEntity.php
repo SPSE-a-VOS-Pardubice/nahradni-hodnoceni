@@ -66,7 +66,7 @@ abstract class DatabaseEntity {
     /**
      * Získej vybrané možnosti pro specifickou instanci.
      * 
-     * Vrací mapu kde klíč je název vlastnosti a hodnota je mapa id => naformátovaná hodnota.
+     * Vrací mapu kde klíč je název vlastnosti a hodnota je pole id.
      * Metoda se používá pro vypsání **vybraných** možností u selectů.
      * 
      * Tato metoda pracuje s daty z modelu.

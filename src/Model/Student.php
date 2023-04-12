@@ -78,7 +78,7 @@ class Student extends FullDatabaseEntity {
 
         // Otestuje zda je třída se zadaným id v db
         if (_Class::get($database, intVal($data["class_id"])) != null)
-            $model->setProperty("class_id", intVal($data["class_id"]));
+            $model->setProperty("classs_id", intVal($data["class_id"]));
 
 
         return new ParsedPostData($model, []); // TODO

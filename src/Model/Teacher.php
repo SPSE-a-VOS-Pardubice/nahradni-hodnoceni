@@ -79,6 +79,6 @@ class Teacher extends FullDatabaseEntity
 
     public static function getTableName(): string
     {
-        return "teachers";
+        return "Teachers";
     }
 }

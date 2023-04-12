@@ -15,6 +15,6 @@ class SubjectTrait extends IntermediateDatabaseEntity {
     }
 
     public static function getTableName(): string {
-        return "SubjectsTraits";
+        return "SubjectTraits";
     }
 }

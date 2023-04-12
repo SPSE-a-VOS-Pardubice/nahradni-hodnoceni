@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class TeacherSuitability extends IntermediateDatabaseEntity implements FormattableDatabaseEntity
+class TeacherSuitability extends IntermediateDatabaseEntity
 {
     /**
      * @var array<DatabaseEntityProperty>
@@ -12,17 +12,10 @@ class TeacherSuitability extends IntermediateDatabaseEntity implements Formattab
     public static function getProperties(): array
     {
         return [
-            new DatabaseEntityProperty("subject_id", null, DatabaseEntityPropertyType::EXTERNAL_DATA, Subject::class, false, null), 
-            new DatabaseEntityProperty("teacher_id", null, DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, false, null) 
+            new DatabaseEntityProperty("subject_id", null, DatabaseEntityPropertyType::EXTERNAL_DATA, Subject::class, false, null),
+            new DatabaseEntityProperty("teacher_id", null, DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, false, null),
+            new DatabaseEntityProperty("suitability", null, DatabaseEntityPropertyType::INTEGER, ["vhodny", "nahovno"], false, null),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getFormatted(): string
-    {
-        return $this->nazev; // TODO cool a kde ho vezme?
     }
 
     static public function getForTeacher(Database $database, int $teacher_id): array
@@ -44,6 +37,6 @@ class TeacherSuitability extends IntermediateDatabaseEntity implements Formattab
 
     public static function getTableName(): string
     {
-        return "teachersuitabilities";
+        return "TeacherSuitabilities";
     }
 }
