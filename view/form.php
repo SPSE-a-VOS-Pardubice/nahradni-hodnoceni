@@ -3,32 +3,32 @@
 declare(strict_types=1);
 
 use Spse\NahradniHodnoceni\Model\DatabaseEntity;
-use Spse\NahradniHodnoceni\Model\ViewableProperty;
-use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
+use Spse\NahradniHodnoceni\Model\DatabaseEntityProperty;
+use Spse\NahradniHodnoceni\Model\DatabaseEntityPropertyType;
 
 // je null pouze když uživatel přidává nový záznam
 $item = $args["data"]["item"];
 
-function getDefaultInputValue($item, ViewableProperty $property): string {
+function getDefaultInputValue($item, DatabaseEntityProperty $property): string {
   if (is_null($item) || is_null($item->{$property->name}))
       return "";
   
-  if ($property->type === ViewablePropertyType::DATETIME)
+  if ($property->type === DatabaseEntityPropertyType::DATE_TIME)
     return $item->{$property->name}->format("Y-m-d\TH:i");
 
   return strval($item->{$property->name});
 }
 
-function getInputType(int $propType): string {
+function getInputType(DatabaseEntityPropertyType $propType): string {
   switch ($propType) {
-    case ViewablePropertyType::BOOLEAN:
-      return "checkbox";
-    case ViewablePropertyType::INTEGER:
-    case ViewablePropertyType::DOUBLE:
+    /*case DatabaseEntityPropertyType::BOOLEAN:
+      return "checkbox";*/
+    case DatabaseEntityPropertyType::INTEGER:
+    /*case DatabaseEntityPropertyType::DOUBLE:*/
       return "number";
-    case ViewablePropertyType::STRING:
+    case DatabaseEntityPropertyType::STRING:
       return "text";
-    case ViewablePropertyType::DATETIME:
+    case DatabaseEntityPropertyType::DATE_TIME:
       return "datetime-local";
   }
 
@@ -89,15 +89,14 @@ function isSelected($item, $optionName, $value): bool {
       <!-- řádek s vlastností -->
       <?php foreach ($args["data"]["schema"] as $property): ?>
         <?php if ($property->name !== "id"): ?>
-          <!--$args["data"]["intermediateData"][$property->name] neexistuje -->
-          <div class="form-row" <?= $property->type === ViewablePropertyType::INTERMEDIATE_DATA ? sprintf("data-intermediate=\"%s\"", htmlspecialchars(encodeIntermediateDataForFrontend($args["data"]["intermediateData"] === [] ? [] : $args["data"]["intermediateData"][$property->name], $args["data"]["options"][$property->name]))) : "" ?>>
+          <div class="form-row" <?= $property->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA ? sprintf("data-intermediate=\"%s\"", htmlspecialchars(encodeIntermediateDataForFrontend($args["data"]["intermediateData"] === [] ? [] : $args["data"]["intermediateData"][$property->name], $args["data"]["options"][$property->name]))) : "" ?>>
             <label for="<?= $property->name ?>">
               <?= $property->displayName ?>
             </label>
             <div class="col">
-              <?php if ($property->type !== ViewablePropertyType::INTERMEDIATE_DATA): ?>
+              <?php if ($property->type !== DatabaseEntityPropertyType::INTERMEDIATE_DATA): ?>
                 <!-- select -->
-                <?php if ($property->isSelect): ?>
+                <?php if (is_array($property->selectOptionsSource)): ?>
                   <select name="<?= $property->name ?>">
                     <?php if ($property->isNullable): ?>
                       <option value=""></option>
