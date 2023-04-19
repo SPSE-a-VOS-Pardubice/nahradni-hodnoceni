@@ -8,7 +8,7 @@ abstract class DatabaseEntity {
     protected Database $database;
 
     // array<string, mixed>
-    protected array $properties;
+    protected array $properties = [];
 
     public function __construct(Database $database) {
         $this->database = $database;
@@ -63,32 +63,6 @@ abstract class DatabaseEntity {
      */
     abstract public static function getTableName(): string;
 
-    /**
-     * Získej vybrané možnosti pro specifickou instanci.
-     * 
-     * Vrací mapu kde klíč je název vlastnosti a hodnota je pole id.
-     * Metoda se používá pro vypsání **vybraných** možností u selectů.
-     * 
-     * Tato metoda pracuje s daty z modelu.
-     */
-    public function getSelectedOptions(): array {
-        // TODO
-        $selectedOptions = [];
-
-        foreach ($this->properties as $prop) {
-            // je to fulldatabase entitiy
-                // ano načti ji 
-            if ($prop->type === DatabaseEntityPropertyType::EXTERNAL_DATA) {
-            }
-                // ne // TODO jak se odkázat na tu správnou FullDatabaseEntity (nechceš hodit do selectu hodnotu z intermediate tabulky)
-            if ($prop->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
-                # code...
-            }
-        }
-
-        return $selectedOptions;
-    }
-
     
     /**
      * Získej možnosti pro danou třídu.
@@ -108,7 +82,6 @@ abstract class DatabaseEntity {
      * Tato metoda pracuje s getProperties a s daty z databáze.
      */
     public static function getAvailableOptions(Database $database): array {
-        // TODO
         $availableOptions = [];
 
         foreach (static::getProperties() as $prop) {
@@ -117,12 +90,17 @@ abstract class DatabaseEntity {
                 if (gettype($prop->selectOptionsSource) === "array") {
                     $availableOptions[$prop->name] = $prop->selectOptionsSource;
                 // pokud je $selectOptionsSource string aka classa:
-                } else if (gettype($prop->selectOptionsSource) === "string") {
-                    // je to fulldatabase entitiy
-                        // ano načti vše co dokážeš a nastav je
-                        // ne // TODO jak se odkázat na tu správnou FullDatabaseEntity (nechceš hodit do selectu hodnotu z intermediate tabulky)
+                // a pokud se jedná o EXTERNAL DATA tak...
+                } else if (gettype($prop->selectOptionsSource) === "string" && $prop->type === DatabaseEntityPropertyType::EXTERNAL_DATA) {
+                    // načti vše co dokážeš 
+                    $asocMap = [];
+
+                    foreach ($prop->selectOptionsSource::getAll() as $oneRecord) {
+                        $asocMap[$oneRecord->id] = $oneRecord->getFormatted();
+                    }
+
+                    $availableOptions[$prop->name] = $asocMap;
                 }
-                    
             }
         }
 

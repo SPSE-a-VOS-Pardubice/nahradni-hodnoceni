@@ -160,4 +160,59 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         // TODO zamyslet se nad přesunutím do DatabaseEntity
     }
 
+    /**
+     * Získej všechny instance IntermediateDatabaseEntity, které uchovávají reference (ve formě id) na instanci, na které je volána tato metoda 
+     * 
+     * Účelem této metody je získání n ku n dat z db 
+     * 
+     * Vrací asociativní mapu název proměné a pole instancí 
+     * 
+     * př. 
+     * 
+     * ```
+     * teacher.getIntermediateData() => {
+     *      "subjects": [
+     *          "availableOptions": [ // zavoláno na třídě TeacherSuitability
+     *              "subject_id": [
+     *                  0: "ČJ"
+     *                  1: "MA"
+     *              ] 
+     *              "suitability": [
+     *                  "vhodny",
+     *                  "nahovno"  
+     *              ]
+     *          ],
+     *          "data": [ 
+     *              instance TeacherSuitability {subject_id:1,teacher_id:1,suitability:"vhodny"}
+     *              instance TeacherSuitability {subject_id:2,teacher_id:1,suitability:"vhodny"}
+     *              instance TeacherSuitability {subject_id:3,teacher_id:1,suitability:"vhodny"}
+     *      ]
+     *  }
+     * ```
+     * 
+     * Tato metoda pracuje s daty z modelu.
+     */
+        // TODO
+    public function getIntermediateData(): array {
+        $intermediateData = [];
+
+        foreach ($this->properties as $prop) {
+            $intProps = [];
+            if ($prop->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
+                $availableOptions = $prop->selectOptionsSource::getAvailableOptions($this->database);
+
+                // TODO nefunguje metoda getRestricted
+                // TODO doplnit druhý parametr
+                // TODO je třeba promyslet jak z mezitabulky získat jen záznamy vážícíse k instanci, na které byla metoda zavolána
+                $data = $prop->selectOptionsSource->getRestricted($this->database, []);
+
+                $intProps["availableOptions"] = $availableOptions;
+                $intProps["data"] = $data;
+            }
+            $intermediateData[] = $intProps;
+        }
+
+        return $intermediateData;
+    }
+
 }
