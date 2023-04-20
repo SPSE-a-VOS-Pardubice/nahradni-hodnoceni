@@ -42,7 +42,7 @@ class TableController extends AbstractController {
             "items"                 => $items,
             "itemsIntermediateData" => array_map(function ($item) { return $item->getIntermediateData(); }, $items),
             "path"                  => $tableRoute,
-            "options"               => $model::getSelectOptions($database),
+            "options"               => $model::getAvailableOptions($database),
         ]);
     }
 }

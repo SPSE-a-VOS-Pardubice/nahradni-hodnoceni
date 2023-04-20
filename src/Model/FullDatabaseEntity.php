@@ -34,7 +34,6 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
     
     // TODO @returns ?array<FullDatabaseEntity>
     public static function getAll(Database $database): array {
-        // TODO nefunguje pro _Class
         $rows = $database->fetchMultiple(sprintf("
         SELECT
             *
@@ -58,6 +57,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      */
     public function write(): void {
         $parameters = [];
+        // TODO z parametrů je třeba vyloučit INTERMEDIATE DATA
         foreach ($this->getProperties() as &$property) {
             array_push($parameters, new DatabaseParameter(
                 $property->name, 
@@ -135,6 +135,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         $properties = array_filter(static::getProperties(), function (DatabaseEntityProperty $property) {
             return $property->type !== DatabaseEntityPropertyType::INTERMEDIATE_DATA;
         });
+
         if (count($row) !== count($properties) + 1) {
             throw new \InvalidArgumentException("Délka řady z databáze neodpovídá.");
         }
@@ -142,7 +143,8 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         // Vybuduj novou instanci a vrať ji.
         $object = new static($database);
         $object->id = $row[0];
-        // TODO neprojížděj ty property, které jsou intermediate
+
+        // neprojížděj ty property, které jsou intermediate
         foreach($properties as $index => $value) {
             $object->setProperty($value->name, $value->deserialize($row[$index + 1])); // Atributy musí být ve stejném pořadí jak v deklaraci modelu, tak v databázi
         }
@@ -192,24 +194,23 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      * 
      * Tato metoda pracuje s daty z modelu.
      */
-        // TODO
+    // TODO
     public function getIntermediateData(): array {
         $intermediateData = [];
 
-        foreach ($this->properties as $prop) {
+        foreach ($this->getProperties() as $prop) {
             $intProps = [];
             if ($prop->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
-                $availableOptions = $prop->selectOptionsSource::getAvailableOptions($this->database);
+
+                $intProps["availableOptions"] = $prop->selectOptionsSource::getAvailableOptions($this->database);
 
                 // TODO nefunguje metoda getRestricted
                 // TODO doplnit druhý parametr
                 // TODO je třeba promyslet jak z mezitabulky získat jen záznamy vážícíse k instanci, na které byla metoda zavolána
-                $data = $prop->selectOptionsSource->getRestricted($this->database, []);
-
-                $intProps["availableOptions"] = $availableOptions;
-                $intProps["data"] = $data;
+                $intProps["data"] = $prop->selectOptionsSource::getRestricted($this->database, [$this]);
+                
+                $intermediateData[$prop->name] = $intProps;
             }
-            $intermediateData[] = $intProps;
         }
 
         return $intermediateData;

@@ -13,18 +13,8 @@
             ];
         }
 
-        public static function getSelectOptions(Database $database): array {
-            // TODO
-            return [];
-        }
-
         public function getFormatted(): string {
             return $this->label;
-        }
-
-        public function getIntermediateData(): array {
-            // TODO
-            return [];
         }
 
         public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
@@ -39,14 +29,11 @@
 
         public static function applyPostData(ParsedPostData $parsedData): void {
             $model = $parsedData->model;
-            $model->write();
-
-            // TODO
+            $model->write();// TODO
         }
         public static function getTableName(): string {
             return "Classrooms";
         }
     }
-
 
 ?>

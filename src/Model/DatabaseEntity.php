@@ -14,10 +14,10 @@ abstract class DatabaseEntity {
         $this->database = $database;
         
         foreach ($this->getProperties() as &$property) {
-            $this->setProperty($property->name, null);
+            // TODO je třaba ukládat intermediate data do properties?? Pak to bude akorát dělat bordel a data v nich stejně nebudou? a jako popis si je vždy získám z getProperties()            
+            $this->setProperty($property->name, $property->defaultValue);
         }
         
-        // TODO initialize with default values
     }
 
     /**
@@ -31,7 +31,9 @@ abstract class DatabaseEntity {
         return $this->getProperty($name);
     }
 
-    // TODO @return array<DatabaseEntityProperty>
+    /**
+     * @return array<DatabaseEntityProperty>
+     */
     public static abstract function getProperties(): array;
 
     /**
@@ -95,7 +97,7 @@ abstract class DatabaseEntity {
                     // načti vše co dokážeš 
                     $asocMap = [];
 
-                    foreach ($prop->selectOptionsSource::getAll() as $oneRecord) {
+                    foreach ($prop->selectOptionsSource::getAll($database) as $oneRecord) {
                         $asocMap[$oneRecord->id] = $oneRecord->getFormatted();
                     }
 

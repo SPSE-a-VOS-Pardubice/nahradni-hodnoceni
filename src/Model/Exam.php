@@ -20,17 +20,8 @@ class Exam extends FullDatabaseEntity {
             new DatabaseEntityProperty("time", "Termín konání", DatabaseEntityPropertyType::DATE_TIME, null, true, new \DateTime("2020-09-01 12:00:00")),
             new DatabaseEntityProperty("chairman_id", "Předseda", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, true, null), 
             new DatabaseEntityProperty("class_teacher_id", "Přísedící", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, true, null), 
-            new DatabaseEntityProperty("examiner_id", "Zkoušející", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, false, null), 
+            new DatabaseEntityProperty("examiner_id", "Zkoušející", DatabaseEntityPropertyType::EXTERNAL_DATA, Teacher::class, false, null)
         ];
-    }
-
-    public static function getSelectOptions(Database $database): array {
-        // TODO
-        return [];
-    }
-
-    public function getIntermediateData(): array {
-        return [];
     }
 
     public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
@@ -53,7 +44,7 @@ class Exam extends FullDatabaseEntity {
 
     public static function applyPostData(ParsedPostData $parsedData): void {
         $model = $parsedData->model;
-        $model->write();
+        $model->write();// TODO
     }
 
     public function getPropertyValues(): array {

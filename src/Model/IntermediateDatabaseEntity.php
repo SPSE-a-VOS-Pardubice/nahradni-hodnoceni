@@ -6,13 +6,11 @@ namespace Spse\NahradniHodnoceni\Model;
 
 abstract class IntermediateDatabaseEntity extends DatabaseEntity
 {
-    public function write(): void
-    {
+    public function write(): void {
         // TODO: insert|update
     }
 
-    public function remove(): void
-    {
+    public function remove(): void {
         // TODO: delete
     }
 
@@ -22,8 +20,7 @@ abstract class IntermediateDatabaseEntity extends DatabaseEntity
      * @var array<FullDatabaseEntity> omezení, podle kterých se vyfitrují záznamy z mezitabulky
      * @return array<IntermediateDatabaseEntity> vyfiltrované záznamy z mezitabulky
      */
-    public static function getRestricted(Database $database, array $classes): array
-    {
+    public static function getRestricted(Database $database, array $classes): array {
         // TODO obecná metoda pro získání záznamů pomocí restrikce
         return [];
     }

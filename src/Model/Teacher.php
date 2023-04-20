@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Model;
 
-class Teacher extends FullDatabaseEntity
-{
+class Teacher extends FullDatabaseEntity {
 
     /**
      * @var array<DatabaseEntityProperty>
      */
-    public static function getProperties(): array
-    {
+    public static function getProperties(): array {
         return [
             new DatabaseEntityProperty("name", "Jméno", DatabaseEntityPropertyType::STRING, null, false, ""),
             new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::STRING, null, false, ""),
@@ -21,25 +19,11 @@ class Teacher extends FullDatabaseEntity
         ];
     }
 
-    public static function getSelectOptions(Database $database): array
-    {
-        // TODO
-        return [];
-    }
-
-    public function getFormatted(): string
-    {
+    public function getFormatted(): string {
         return sprintf("%s %s %s %s", $this->prefix, $this->name, $this->surname, $this->suffix);
     }
 
-    public function getIntermediateData(): array
-    {
-        // TODO
-        return [];
-    }
-
-    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData
-    {
+    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
         $model = $id === 0 ? new Teacher($database) : Teacher::get($database, $id);
         if ($model === null)
             throw new \RuntimeException("Error Processing Request", 1);
@@ -52,15 +36,12 @@ class Teacher extends FullDatabaseEntity
         return new ParsedPostData($model, []); // TODO
     }
 
-    public static function applyPostData(ParsedPostData $parsedData): void
-    {
+    public static function applyPostData(ParsedPostData $parsedData): void {
         $model = $parsedData->model;
         $model->write();
         // TODO
     }
-
-    public static function getFromSurname(Database $database, string $surname): Teacher
-    {
+    public static function getFromSurname(Database $database, string $surname): Teacher {
         $row = $database->fetchSingle("
             SELECT 
                 * 
@@ -77,8 +58,7 @@ class Teacher extends FullDatabaseEntity
         return Teacher::fromDatabase($database, $row);
     }
 
-    public static function getTableName(): string
-    {
+    public static function getTableName(): string {
         return "Teachers";
     }
 }

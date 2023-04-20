@@ -3,21 +3,21 @@
 declare(strict_types=1);
 
 use Spse\NahradniHodnoceni\Model\DatabaseEntity;
-use Spse\NahradniHodnoceni\Model\ViewableProperty;
-use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
+use Spse\NahradniHodnoceni\Model\DatabaseEntityProperty;
+use Spse\NahradniHodnoceni\Model\DatabaseEntityPropertyType;
 
 $itemsIntermediateData = $args["data"]["itemsIntermediateData"];
 $options = $args["data"]["options"];
 
 /**
  * Sestav zobrazitelnout hodnotu pro políčko v tabulce
- * @param ViewableProperty $property
+ * @param DatabaseEntityProperty $property
  * @param int $index
  * @param DatabaseEntity $item
  * @return string
  */
-function getDisplayText($itemsIntermediateData, $options, ViewableProperty $property, int $index, DatabaseEntity $item): string {
-  if ($property->type === ViewablePropertyType::INTERMEDIATE_DATA) {
+function getDisplayText($itemsIntermediateData, $options, DatabaseEntityProperty $property, int $index, DatabaseEntity $item): string {
+  if ($property->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
     $items = $itemsIntermediateData[$index][$property->name];
     return join(
       ", ",
@@ -34,7 +34,7 @@ function getDisplayText($itemsIntermediateData, $options, ViewableProperty $prop
   if ($property->isSelect)
     $value = $options[$property->name][$value];
 
-  if ($property->type === ViewablePropertyType::DATETIME)
+  if ($property->type === DatabaseEntityPropertyType::DATETIME)
     return $value->format("j. n. Y");
   return strval($value);
 }

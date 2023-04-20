@@ -14,24 +14,10 @@ class Student extends FullDatabaseEntity {
         ];
     }
 
-    public static function getSelectOptions(Database $database): array {
-        // TODO 
-        return [];
-    }
-
-    public function getFormatted(): string
-    {
+    public function getFormatted(): string {
         return sprintf("%s %s", $this->surname, $this->name);
     }
 
-    public function getIntermediateData(): array {
-        return [];
-    }
-
-    public static function applyPostData(ParsedPostData $parsedData): void {
-        $model = $parsedData->model;
-        $model->write();
-    }
 
     public static function getFromNameSurnameClass(Database $database, string $name, string $surname, string $class): Student {
         $explodedClass = explode(".", $class);
@@ -82,6 +68,11 @@ class Student extends FullDatabaseEntity {
 
 
         return new ParsedPostData($model, []); // TODO
+    }
+
+    public static function applyPostData(ParsedPostData $parsedData): void {
+        $model = $parsedData->model;
+        $model->write();
     }
 
     public function getPropertyValues(): array {

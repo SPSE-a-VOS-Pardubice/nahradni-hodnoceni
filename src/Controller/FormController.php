@@ -54,15 +54,14 @@ class FormController extends AbstractController
         return $view->renderResponse($request, $response, "/form.php", [
             "schema"            => $model::getProperties(),
             "item"              => $item,
-            "intermediateData"  => $item == null ? [] : $item->getIntermediateData(),
+            "intermediateData"  => $item == null ? (new $model($database))->getIntermediateData() : $item->getIntermediateData(),
             "type"              => tableMap[$name],
             "path"              => $path,
-            "options"           => $model::getSelectOptions($database),
+            "options"           => $model::getAvailableOptions($database),
         ]);
     }
 
-    public function post(Request $request, Response $response, array $args): Response
-    {
+    public function post(Request $request, Response $response, array $args): Response {
         $parsedBody = $request->getParsedBody();
 
         

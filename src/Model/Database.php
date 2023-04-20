@@ -29,6 +29,7 @@ class Database {
         );
     }
 
+    // TODO prázdná metoda. Co má dělat?
     public function check(): void {
 
     }

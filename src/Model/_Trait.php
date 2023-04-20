@@ -12,18 +12,10 @@ class _Trait extends FullDatabaseEntity {
         ];
     }
 
-    public static function getSelectOptions(Database $database): array{
-        return [];
-    }
-
     public function getFormatted(): string {
         return $this->name;
     }
 
-    public function getIntermediateData(): array {
-        return [];
-    }
-    
     public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
         $model = $id === 0 ? new _Trait($database) : _Trait::get($database, $id);
         if ($model === null) 
@@ -36,7 +28,7 @@ class _Trait extends FullDatabaseEntity {
 
     public static function applyPostData(ParsedPostData $parsedData): void {
         $model = $parsedData->model;
-        $model->write();
+        $model->write();// TODO
     }
 
     public static function getTableName(): string {

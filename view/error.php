@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Spse\NahradniHodnoceni\Model\DatabaseEntity;
-use Spse\NahradniHodnoceni\Model\ViewableProperty;
-use Spse\NahradniHodnoceni\Model\ViewablePropertyType;
+use Spse\NahradniHodnoceni\Model\DatabaseEntityProperty;
+use Spse\NahradniHodnoceni\Model\DatabaseEntityPropertyType;
 
 ?>
 

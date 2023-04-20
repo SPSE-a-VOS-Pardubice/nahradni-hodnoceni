@@ -16,18 +16,8 @@ class _Class extends FullDatabaseEntity {
         ];
     }
 
-    public static function getSelectOptions(Database $database): array {
-        // TODO 
-        return [];
-    }
-
     public function getFormatted(): string {
         return sprintf("%s.%s", $this->grade, $this->label);
-    }
-
-    public function getIntermediateData(): array {
-        // mělo by vracet učitele
-        return [];
     }
 
     public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
@@ -45,7 +35,7 @@ class _Class extends FullDatabaseEntity {
 
     public static function applyPostData(ParsedPostData $parsedData): void {
         $model = $parsedData->model;
-        $model->write();
+        $model->write();// TODO
     }
 
     public function getPropertyValues(): array {

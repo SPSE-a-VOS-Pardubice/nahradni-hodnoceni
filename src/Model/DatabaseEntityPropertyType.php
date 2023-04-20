@@ -9,5 +9,5 @@ enum DatabaseEntityPropertyType {
     case INTEGER;
     case DATE_TIME;
     case EXTERNAL_DATA; // externí entita (jedno ID)
-    case INTERMEDIATE_DATA; // list dat z mezitabulky (více ID) // TODO def hodnota <- nechápu TODO comment @vfosnar
+    case INTERMEDIATE_DATA; // list dat z mezitabulky (více ID) // TODO def hodnota <- nechápu TODO comment @vfosnar // jen mě zajímá co má být defaultní hodnota @rozeja
 }

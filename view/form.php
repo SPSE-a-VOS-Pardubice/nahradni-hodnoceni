@@ -6,6 +6,8 @@ use Spse\NahradniHodnoceni\Model\DatabaseEntity;
 use Spse\NahradniHodnoceni\Model\DatabaseEntityProperty;
 use Spse\NahradniHodnoceni\Model\DatabaseEntityPropertyType;
 
+// TODO: vypsat to co pro mě připravil kontroler
+
 // je null pouze když uživatel přidává nový záznam
 $item = $args["data"]["item"];
 
