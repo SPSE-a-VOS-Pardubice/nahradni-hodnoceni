@@ -23,24 +23,6 @@ class Teacher extends FullDatabaseEntity {
         return sprintf("%s %s %s %s", $this->prefix, $this->name, $this->surname, $this->suffix);
     }
 
-    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
-        $model = $id === 0 ? new Teacher($database) : Teacher::get($database, $id);
-        if ($model === null)
-            throw new \RuntimeException("Error Processing Request", 1);
-
-        $model->setProperty("name", $data["name"]);
-        $model->setProperty("surname", $data["surname"]);
-        $model->setProperty("prefix", $data["prefix"]);
-        $model->setProperty("suffix", $data["suffix"]);
-
-        return new ParsedPostData($model, []); // TODO
-    }
-
-    public static function applyPostData(ParsedPostData $parsedData): void {
-        $model = $parsedData->model;
-        $model->write();
-        // TODO
-    }
     public static function getFromSurname(Database $database, string $surname): Teacher {
         $row = $database->fetchSingle("
             SELECT 

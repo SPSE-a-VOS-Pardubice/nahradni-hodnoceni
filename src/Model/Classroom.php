@@ -16,21 +16,7 @@
         public function getFormatted(): string {
             return $this->label;
         }
-
-        public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
-            $model = $id === 0 ? new Classroom($database) : Classroom::get($database, $id);
-            if ($model === null) 
-                throw new \RuntimeException("Error Processing Request", 1);
-
-            $model->setProperty("label", $data["label"]);
-
-            return new ParsedPostData($model, []); // TODO
-        }
-
-        public static function applyPostData(ParsedPostData $parsedData): void {
-            $model = $parsedData->model;
-            $model->write();// TODO
-        }
+        
         public static function getTableName(): string {
             return "Classrooms";
         }

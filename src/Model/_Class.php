@@ -20,24 +20,6 @@ class _Class extends FullDatabaseEntity {
         return sprintf("%s.%s", $this->grade, $this->label);
     }
 
-    public static function parsePostData(Database $database, array $data, int $id = 0): ParsedPostData {
-        $model = $id === 0 ? new _Class($database) : _Class::get($database, $id);
-        if ($model === null) 
-            throw new \RuntimeException("Error Processing Request", 1);
-
-        $model->setProperty("year",             intval($data["year"]));
-        $model->setProperty("grade",            intval($data["grade"]));
-        $model->setProperty("label",            $data["label"]);
-        $model->setProperty("class_teacher_id", intval($data["class_teacher_id"]));
-
-        return new ParsedPostData($model, []); // TODO
-    }
-
-    public static function applyPostData(ParsedPostData $parsedData): void {
-        $model = $parsedData->model;
-        $model->write();// TODO
-    }
-
     public function getPropertyValues(): array {
         $res = [];
         for($i = 0; $i < count($this->getProperties()); $i++) {
