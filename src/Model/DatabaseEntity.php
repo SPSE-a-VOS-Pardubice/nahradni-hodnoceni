@@ -14,8 +14,8 @@ abstract class DatabaseEntity {
         $this->database = $database;
         
         foreach ($this->getProperties() as &$property) {
-            // TODO je třaba ukládat intermediate data do properties?? Pak to bude akorát dělat bordel a data v nich stejně nebudou? a jako popis si je vždy získám z getProperties()            
-            $this->setProperty($property->name, $property->defaultValue);
+            if ($property->type !== DatabaseEntityPropertyType::INTERMEDIATE_DATA)
+                $this->setProperty($property->name, $property->defaultValue);
         }
         
     }
