@@ -19,9 +19,12 @@ abstract class IntermediateDatabaseEntity extends DatabaseEntity
     /**
      * @var array<FullDatabaseEntity> omezení, podle kterých se vyfitrují záznamy z mezitabulky
      * @return array<IntermediateDatabaseEntity> vyfiltrované záznamy z mezitabulky
+     * 
+     * $restrictions je pole restrikcí `Restriction[]`
      */
-    public static function getRestricted(Database $database, array $classes): array {
+    public static function getRestricted(Database $database, array $restrictions): array {
         // TODO obecná metoda pro získání záznamů pomocí restrikce
+        // blokováno QueryBuilderem
         return [];
     }
 }

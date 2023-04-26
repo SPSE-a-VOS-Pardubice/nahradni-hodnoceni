@@ -18,7 +18,6 @@ class Student extends FullDatabaseEntity {
         return sprintf("%s %s", $this->surname, $this->name);
     }
 
-
     public static function getFromNameSurnameClass(Database $database, string $name, string $surname, string $class): Student {
         $explodedClass = explode(".", $class);
         //TODO: Zkontrolovat validitu textového řetězce třídy
