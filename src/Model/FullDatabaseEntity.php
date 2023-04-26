@@ -124,7 +124,6 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         ]);
     }
 
-
     /**
      * 
      * 
@@ -156,9 +155,11 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
     /**
      * Aktualizace dat.
      * 
+     * $models je pole modelů: IntermediateDataEntity[]
+     * 
      * Metoda je volána při postu dat a stará se o aktualizaci svého modelu i záznamů mezitabulek v DB.
      */
-    public static function updateData(Database $database, array $row): void {
+    public static function updateData(Database $database, array $models): void {
         // TODO zamyslet se nad přesunutím do DatabaseEntity
     }
 
@@ -194,7 +195,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      * 
      * Tato metoda pracuje s daty z modelu.
      */
-    // TODO
+    // TODO v budoucnu predelat na strukturu/tridu
     public function getIntermediateData(): array {
         $intermediateData = [];
 
