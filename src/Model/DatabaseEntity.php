@@ -41,7 +41,7 @@ abstract class DatabaseEntity {
      */
     protected function setProperty(string $key, mixed $value): void {
         
-        // TODO check type
+        static::getProperties()[$key]->checkType($value);
         
         $this->properties[$key] = $value;
     }

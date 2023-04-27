@@ -6,7 +6,9 @@ namespace Spse\NahradniHodnoceni\Model;
 
 class SubjectTrait extends IntermediateDatabaseEntity {
     
-    // TODO @var array<DatabaseEntityProperty>
+    /**
+     *  @return array<DatabaseEntityProperty>
+     */
     public static function getProperties(): array {
         return [
             new DatabaseEntityProperty("trait_id",      "Příznak",   DatabaseEntityPropertyType::EXTERNAL_DATA,  _Trait::class,   false,  null),

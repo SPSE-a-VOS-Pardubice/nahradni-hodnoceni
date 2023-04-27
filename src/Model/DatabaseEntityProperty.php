@@ -22,9 +22,9 @@ class DatabaseEntityProperty {
 
     public bool $isNullable;
 
-    public mixed $defaultValue; // TODO defaultní hodnota pro intermediate data ?
+    public mixed $defaultValue;
 
-    public function __construct(string $name, ?string $displayName, DatabaseEntityPropertyType $type, null | array | string $selectedOption, bool $isNullable, mixed $defaultValue) {
+    public function __construct(string $name, ?string $displayName, DatabaseEntityPropertyType $type, null | array | string $selectedOption, bool $isNullable, mixed $defaultValue = null) {
         $this->name = $name;
         $this->displayName = $displayName;
         $this->type = $type;
@@ -62,11 +62,35 @@ class DatabaseEntityProperty {
         
         switch($this->type) {
             case DatabaseEntityPropertyType::DATE_TIME:
-                return new \DATE_TIME($value);
+                return new \DateTime($value);
             case DatabaseEntityPropertyType::INTEGER:
                 return intval($value);
             default:
                 return $value;
+        }
+    }
+
+    public function checkType(mixed $value): void {
+        $type = gettype($value);
+
+        switch ($this->type) {
+            case DatabaseEntityPropertyType::STRING: 
+                if ($type !== "string")
+                    throw new \Exception();
+                break;
+            case DatabaseEntityPropertyType::INTEGER:
+            case DatabaseEntityPropertyType::EXTERNAL_DATA: 
+                if ($type !== "integer")
+                    throw new \Exception(); 
+                break;    
+            case DatabaseEntityPropertyType::DATE_TIME:
+                // TODO nenapadlo mě nic lepšího
+                // vezme všechny instance object
+                if ($type !== "object")
+                    throw new \Exception(); 
+                break;
+            default:
+                break;
         }
     }
 }

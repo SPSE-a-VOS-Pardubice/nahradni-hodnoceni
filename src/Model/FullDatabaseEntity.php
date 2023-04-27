@@ -32,8 +32,10 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
         return static::fromDatabase($database, $row);
     }
     
-    // TODO @returns ?array<FullDatabaseEntity>
-    public static function getAll(Database $database): array {
+    /**
+     * @return ?array<FullDatabaseEntity>
+     */
+    public static function getAll(Database $database): ?array {
         $rows = $database->fetchMultiple(sprintf("
         SELECT
             *
@@ -57,23 +59,27 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      */
     public function write(): void {
         $parameters = [];
-        // TODO z parametrů je třeba vyloučit INTERMEDIATE DATA
-        foreach ($this->getProperties() as &$property) {
+        
+        $properties = array_filter(static::getProperties(), function (DatabaseEntityProperty $property) {
+            return $property->type !== DatabaseEntityPropertyType::INTERMEDIATE_DATA;
+        });
+
+        foreach ($properties as &$property) {
             array_push($parameters, new DatabaseParameter(
                 $property->name, 
                 $property->serialize($this->getProperty($property->name)))
-                // TODO: Různé datové typy?
+                // TODO: Různé datové typy? // měly by být veyřešeny metodou serialize
             );
         }
 
         if($this->id === 0) {
             $attributeNames = "";
             $valueNames = "";
-            foreach($this->getProperties() as $index => $value) {
+            foreach($properties as $index => $value) {
                 $attributeNames .= $value->name;
                 $valueNames .= ":" . $value->name;
 
-                if($index != count($this->getProperties()) - 1) {
+                if($index != count($properties) - 1) {
                     $attributeNames .= ", ";
                     $valueNames .= ",";
                 }
@@ -94,10 +100,10 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             array_push($parameters, new DatabaseParameter("id", $this->id));
             
             $valuesIndices = "";
-            foreach($this->getProperties() as $index => $value) {
+            foreach($properties as $index => $value) {
                 $valuesIndices .= $value->name . " = :" . $value->name;
 
-                if($index != count($this->getProperties()) - 1) {
+                if($index != count($properties) - 1) {
                     $valuesIndices .= ", ";
                 }
             }
@@ -161,6 +167,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
      */
     public static function updateData(Database $database, array $models): void {
         // TODO zamyslet se nad přesunutím do DatabaseEntity
+        // nemel by být problém do db budu zapisovat stejně získáním jeho vlastnost metodou get properties, takž se metoda bude stejně chovat jak pro Full tak pro IntermediatedDatabaseEntity
     }
 
     /**
@@ -205,10 +212,25 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
 
                 $intProps["availableOptions"] = $prop->selectOptionsSource::getAvailableOptions($this->database);
 
+                
+
+                /*  vytvoř restrikci 
+                    restrikce způsobý že se z db načtou jen data z mezitabulky, které se vážou k této instanci
+
+                    př. Teacher s id 69
+                    $restrinction = new Restriction(Teacher::class, "teacher_id", 69);
+                
+                    $intProps["data"] = TeacherSuitability::getRestricted($this->database, [$restriction]);
+                */
+
+                $restrictionPropertyName = $prop->selectOptionsSource::getPropNameFromClass(static::class);
+                $restriction = new Restriction();
+                $restriction->classname = static::class;
+                $restriction->propertyName = $restrictionPropertyName;
+                $restriction->value = $this->id;
+
                 // TODO nefunguje metoda getRestricted
-                // TODO doplnit druhý parametr
-                // TODO je třeba promyslet jak z mezitabulky získat jen záznamy vážícíse k instanci, na které byla metoda zavolána
-                $intProps["data"] = $prop->selectOptionsSource::getRestricted($this->database, [$this]);
+                $intProps["data"] = $prop->selectOptionsSource::getRestricted($this->database, [$restriction]);
                 
                 $intermediateData[$prop->name] = $intProps;
             }

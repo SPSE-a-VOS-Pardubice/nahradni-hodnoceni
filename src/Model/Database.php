@@ -29,11 +29,6 @@ class Database {
         );
     }
 
-    // TODO prázdná metoda. Co má dělat?
-    public function check(): void {
-
-    }
-
     public function lastInsertId(?string $name = null) {
         return $this->connection->lastInsertId($name);
     }

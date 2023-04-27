@@ -15,7 +15,7 @@ class Teacher extends FullDatabaseEntity {
             new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::STRING, null, false, ""),
             new DatabaseEntityProperty("prefix", "Prefix", DatabaseEntityPropertyType::STRING, null, false, ""),
             new DatabaseEntityProperty("suffix", "Suffix", DatabaseEntityPropertyType::STRING, null, false, ""),
-            new DatabaseEntityProperty("subjects", "Vyučované předměty", DatabaseEntityPropertyType::INTERMEDIATE_DATA, TeacherSuitability::class, false, []) 
+            new DatabaseEntityProperty("subjects", "Vyučované předměty", DatabaseEntityPropertyType::INTERMEDIATE_DATA, TeacherSuitability::class, false, null) 
         ];
     }
 
