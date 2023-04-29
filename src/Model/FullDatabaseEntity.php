@@ -68,7 +68,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
             array_push($parameters, new DatabaseParameter(
                 $property->name, 
                 $property->serialize($this->getProperty($property->name)))
-                // TODO: Různé datové typy? // měly by být veyřešeny metodou serialize
+                // TODO: Různé datové typy? // měly by být vyřešeno metodou serialize
             );
         }
 
@@ -168,6 +168,9 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
     public static function updateData(Database $database, array $models): void {
         // TODO zamyslet se nad přesunutím do DatabaseEntity
         // nemel by být problém do db budu zapisovat stejně získáním jeho vlastnost metodou get properties, takž se metoda bude stejně chovat jak pro Full tak pro IntermediatedDatabaseEntity
+
+        
+
     }
 
     /**

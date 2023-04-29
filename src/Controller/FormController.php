@@ -64,8 +64,6 @@ class FormController extends AbstractController
     public function post(Request $request, Response $response, array $args): Response {
         $parsedBody = $request->getParsedBody();
 
-        
-
         // var_dump($parsedBody);
         // return $parsedBody;
         

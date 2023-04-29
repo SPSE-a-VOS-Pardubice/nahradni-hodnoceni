@@ -42,8 +42,10 @@ class Exam extends FullDatabaseEntity {
     public static function getTableName(): string {
         return "Exams";
     }
+    
     public function getFormatted(): string {
         // TODO jen získat stringová data záznam 524 69 5 nic uživateli neřekne on pořěbuje Jan Novák - Český jazyk - 5
-        return sprintf("%s - %s - %s", $this->student_id, $this->subjenc_id, $this->original_mark);
+        // Data budou třeba jinak vytáhnout
+        return sprintf("student%s - subject%s - %s", $this->student_id, $this->subjenc_id, $this->original_mark);
     }
 }
