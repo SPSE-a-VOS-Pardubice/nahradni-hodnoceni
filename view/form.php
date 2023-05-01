@@ -21,10 +21,7 @@ function getDefaultInputValue($item, DatabaseEntityProperty $property): string {
 
 function getInputType(DatabaseEntityPropertyType $propType): string {
   switch ($propType) {
-    /*case DatabaseEntityPropertyType::BOOLEAN:
-      return "checkbox";*/
     case DatabaseEntityPropertyType::INTEGER:
-    /*case DatabaseEntityPropertyType::DOUBLE:*/
       return "number";
     case DatabaseEntityPropertyType::STRING:
       return "text";
@@ -64,6 +61,81 @@ function isSelected($item, $optionName, $value): bool {
   return $optionName === $item->$value;
 }
 
+function renderNonIntermediateProperty($args, $item, DatabaseEntityProperty $property) {
+  ob_start(); ?>
+  <div class="form-row">
+    <label for="<?= $property->name ?>"><?= $property->displayName ?></label>
+    <div class="col">
+      <!-- select -->
+      <?php if (is_array($property->selectOptionsSource)): ?>
+        
+
+      <!-- everything else -->
+      <?php else: ?>
+        <input name="<?= $property->name ?>"
+          value="<?= getDefaultInputValue($item, $property) ?>"
+          type="<?= getInputType($property->type) ?>">
+      <?php endif; ?>
+
+      <!-- <div class="form-active form-row">
+        <label for="active" id="active_label">Aktivní</label>
+        <div class="col">
+          <input type="checkbox" name="active" id="checkbox">
+        </div>
+      </div> -->
+    </div>
+  </div>
+  <?php
+    return ob_get_clean();
+} 
+
+function putProperty(DatabaseEntityProperty $property, $name = null) {
+  if($name == null) {
+    $name = $property->name;
+  }
+  
+  ob_start(); ?>
+  <div class="form-row">
+    <label for="<?= $name ?>"><?= $property->displayName ?></label>
+    <div class="col">
+    <!-- TODO: Nejsem si jistý v jakém formátu budou human-readable možnosti do drop-down menu -->
+    <?php if (is_array($property->selectOptionsSource)): ?>
+      <select name="<?= $name ?>">
+        <?php if ($property->isNullable): ?>
+          <option value=""></option>
+        <?php endif; ?>
+        <?php foreach($property->selectOptionsSource as $option): ?>
+          <option value="<?= $option ?>"><?= $option ?></option> <!-- TODO: Přidat human-readable text a načítání vybrané možnosti -->
+        <?php endforeach; ?>
+      </select>
+    <?php else: ?>
+      <input name="<?= $name ?>"
+            value="<?= is_null($property->defaultValue) ? "" : $property->defaultValue; ?>"
+            type="<?= getInputType($property->type) ?>">
+    <?php endif; ?>
+    </div>
+  </div>
+  
+  <?php return ob_get_clean();
+}
+
+function putExternal(DatabaseEntityProperty $property, $name, $index, array $availableOptions, array $intermediateData) {
+  ob_start(); ?>
+  <div class="form-row">
+    <label for="<?= $name ?>"><?= $property->displayName ?></label>
+    <div class="col">
+      <select name="<?= $name ?>">
+        <?php foreach($availableOptions as $optionIndex => $option): ?>
+          <option value="<?= $optionIndex ?>" <?= $intermediateData[$index][$property->name] == $optionIndex ? "selected" : "" ?>> <!-- TODO: Zkontrolovat jestli dává smysl... -->
+            <?= $option ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+  </div> 
+  <?php return ob_get_clean();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -85,46 +157,31 @@ function isSelected($item, $optionName, $value): bool {
   <main>
     <h2 class="general_head">Název</h2>
     <form action="" method="post" class="general_form">
+      <!-- projít všechny properties (také nezahrnuje id), které nejsou intermediate data -->
+      <?php foreach(array_filter($args["data"]["schema"], function($p) { 
+        return $p->type !== DatabaseEntityPropertyType::INTERMEDIATE_DATA;}) 
+      as $property): ?>
+        <?php echo(putProperty($property)); ?>
+      <?php endforeach; ?>
 
-      <!-- řádek s vlastností -->
-      <?php foreach ($args["data"]["schema"] as $property): ?>
-        <?php if ($property->name !== "id"): ?>
-          <div class="form-row" <?= $property->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA ? sprintf("data-intermediate=\"%s\"", htmlspecialchars(encodeIntermediateDataForFrontend($args["data"]["intermediateData"] === [] ? [] : $args["data"]["intermediateData"][$property->name], $args["data"]["options"][$property->name]))) : "" ?>>
-            <label for="<?= $property->name ?>">
-              <?= $property->displayName ?>
-            </label>
-            <div class="col">
-              <?php if ($property->type !== DatabaseEntityPropertyType::INTERMEDIATE_DATA): ?>
-                <!-- select -->
-                <?php if (is_array($property->selectOptionsSource)): ?>
-                  <select name="<?= $property->name ?>">
-                    <?php if ($property->isNullable): ?>
-                      <option value=""></option>
-                    <?php endif; ?>
-                    <?php foreach ($args["data"]["options"][$property->name] as $optionName => $optionDisplayName): ?>
-                      <option value="<?= $optionName ?>" <?= /**$optionName === $value */ isSelected($item, $optionName, $property->name) ? "selected" : "" ?>>
-                        <?= $optionDisplayName ?>
-                      </option>
-                    <?php endforeach; ?>
-                  </select>
-
-                <!-- everything else -->
-                <?php else: ?>
-                  <input name="<?= $property->name ?>"
-                    value="<?= getDefaultInputValue($item, $property) ?>"
-                    type="<?= getInputType($property->type) ?>">
-                <?php endif; ?>
-
-                <!-- <div class="form-active form-row">
-                  <label for="active" id="active_label">Aktivní</label>
-                  <div class="col">
-                    <input type="checkbox" name="active" id="checkbox">
-                  </div>
-                </div> -->
-              <?php endif; ?>
-            </div>
-          </div>
-        <?php endif; ?>
+      <!-- projít všechny intermediate properties -->
+      <?php foreach(array_filter($args["data"]["schema"], function($p) { return $p->type == DatabaseEntityPropertyType::INTERMEDIATE_DATA;}) as $property): ?>
+        <div>
+          <p><?= $property->displayName; ?></p>
+          <!-- projít všechny properties dané intermediate property-->
+          <?php foreach ($property->selectOptionsSource::getProperties() as $intPropertyIndex => $intProperty): ?>
+            <?php if($intProperty->type == DatabaseEntityPropertyType::EXTERNAL_DATA && $item instanceof $intProperty->selectOptionsSource): ?>
+              <?php continue; ?>
+            <?php endif; ?>
+            
+            <?php $name = $property->name . "-" . $intPropertyIndex . "-" . $intProperty->name; ?>
+            <?php if ($intProperty->type == DatabaseEntityPropertyType::EXTERNAL_DATA): ?>
+              <?php echo(putExternal($intProperty, $name, $intPropertyIndex, $args["data"]["compiledAvailableOptions"][$intProperty->selectOptionsSource::getTableName()], $args["data"]["projectedIntermediateData"][$property->name])); ?>
+            <?php else: ?>
+              <?php echo(putProperty($intProperty, $name)); ?>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        </div>
       <?php endforeach; ?>
 
       <input type="submit" value="Aktualizovat" id="submit">

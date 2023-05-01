@@ -52,12 +52,19 @@ class FormController extends AbstractController
         }
 
         return $view->renderResponse($request, $response, "/form.php", [
-            "schema"            => $model::getProperties(),
-            "item"              => $item,
-            "intermediateData"  => $item == null ? (new $model($database))->getIntermediateData() : $item->getIntermediateData(),
+            "schema"                    => $model::getProperties(),
+            "item"                      => $item,
+            "compiledAvailableOptions"  => array("Subjects" => // "Subjects" v tomto případě značí název tabulky v databázi
+                array(1 => "Číslicová Technika", 2 => "Servis PC", 3 => "Webové Aplikace", 4 => "Programování", 
+                5 => "Technická dokumentace", 6 => "Anglický jazyk", 7 => "Fyzika", 8 => "Matematika")),
+            "projectedIntermediateData" => array("subjects" => // "subjects" v tomto případě značí název intermediate property v modelu Teacher
+                array(0 => array("subject_id" => 1, "suitability" => "vhodny"), 1 => array("subject_id" => 5, "suitability" => "nahovno"))),
+            
+            // staré
+            "intermediateData"  => null, // $item == null ? [] : $item->getIntermediateData(),
             "type"              => tableMap[$name],
             "path"              => $path,
-            "options"           => $model::getAvailableOptions($database),
+            "options"           => $model::getAvailableOptions($database), // Jsou možnosti selectů a human-readable forma externích dat intermediate tabulky jedno a to samé?
         ]);
     }
 
