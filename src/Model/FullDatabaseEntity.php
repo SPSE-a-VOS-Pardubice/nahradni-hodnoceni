@@ -161,16 +161,59 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
     /**
      * Aktualizace dat.
      * 
-     * $models je pole modelů: IntermediateDataEntity[]
+     * $models je asociativní pole modelů: IntermediateDataEntity[]
      * 
      * Metoda je volána při postu dat a stará se o aktualizaci svého modelu i záznamů mezitabulek v DB.
      */
-    public static function updateData(Database $database, array $models): void {
+    public static function updateData(Database $database, array $models, int $recordID): void {
         // TODO zamyslet se nad přesunutím do DatabaseEntity
-        // nemel by být problém do db budu zapisovat stejně získáním jeho vlastnost metodou get properties, takž se metoda bude stejně chovat jak pro Full tak pro IntermediatedDatabaseEntity
+        // nemel by být problém do db budu zapisovat stejně získáním jeho vlastnost metodou get properties, takž se metoda bude stejně chovat jak pro Full tak pro IntermediatedDatabaseEntity        
 
-        
+        /**
+         * v asociativním poly dostaneš "název vlastnosti" => kolekci záznamů
+         * 
+         * porovněj kolekci s tím co načtěš z db tímto žpůsobem:
+         * 
+         * to co je v kolekci a není v db přidej do db
+         * to co je v db a není v kolekci z db odeber
+         */
 
+        foreach ($models as $propName => $collOfMdels) {
+            $propClass = static::findPropetyClass($propName);
+
+            if ($propClass !== null) {
+                $restrictionPropertyName = $propClass::getPropNameFromClass(static::class);
+                $restriction = new Restriction();
+                $restriction->classname = static::class;
+                $restriction->propertyName = $restrictionPropertyName;
+                $restriction->value = $recordID;// id toho záznamu, ke kterému se to váže
+
+                $recordsInDB = $propClass::getRestricted($database, [$restriction]);
+
+                // TODO: toto řešení není asi v pohodě ale stejně tak se mi nelíbí projíždět pole property na každém záznamu z $collOfModels a porovnávat to s každým záznamem v $recordsInDB jestli náhodou najdu shodu 
+                // toto je stožitost 2n - jedno projetí odebere druhé přidá
+                // tamto je minimálně 2^n - musíš pro každý záznam projet všechny property a porovnat je pokaždé se všemi property na každém záznaku v $recordsInDB a podle toho je odebrt nebo přidat
+                foreach ($recordsInDB as $propInDB) {
+                    $propInDB->remove();
+                }
+                foreach ($collOfMdels as $propFromUser) {
+                    $propFromUser->write();
+                }
+            }
+        }
+
+        // v popisu metody je, že přijímá IntermediateDataEntity[], ale taky, že se stará i o update vlastní instance modelu. Pro což zde prostě nejsou data
+        // jinak asi pokud by se metoda volala na modelu $this->write();
+    }
+
+    private static function findPropetyClass(string $propName): ?string {
+        foreach (static::getProperties() as $property) {
+            if ($property->name === $propName && $property->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
+                return $property->selectOptionsSource;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -177,6 +177,20 @@ abstract class IntermediateDatabaseEntity extends DatabaseEntity {
     public static function getRestricted(Database $database, array $restrictions): array {
         // TODO obecná metoda pro získání záznamů pomocí restrikce
         // blokováno QueryBuilderem
-        return [];
+        //return [];
+
+        // TODO předběžná implementace předělat s příchodem QB
+        $restrictionString = "";
+        $restrictionsValues = [];
+        foreach ($restrictions as $restriction) {
+            $restrictionString .= $restriction->propertyName . " = :" . $restriction->propertyName;
+            $restrictionsValues[$restriction->propertyName] = $restriction->value;
+        }
+
+        $rows = $database->fetchMultiple(sprintf("
+        SELECT
+            *
+        FROM %s
+        WHERE %s", static::getTableName(), $restrictionString), $restrictionsValues);
     }
 }
