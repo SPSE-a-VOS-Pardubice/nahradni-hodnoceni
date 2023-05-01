@@ -40,8 +40,13 @@ abstract class DatabaseEntity {
      * Internal method for handling all database `set` calls.
      */
     protected function setProperty(string $key, mixed $value): void {
-        
-        static::getProperties()[$key]->checkType($value);
+        $properties = static::getProperties();
+        foreach ($properties as $property) {
+            if($property->name === $key) {
+                $property->checkType($value);
+                break;
+            }
+        }
         
         $this->properties[$key] = $value;
     }
