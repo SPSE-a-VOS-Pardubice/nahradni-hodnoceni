@@ -192,5 +192,13 @@ abstract class IntermediateDatabaseEntity extends DatabaseEntity {
             *
         FROM %s
         WHERE %s", static::getTableName(), $restrictionString), $restrictionsValues);
+
+        if ($rows === false) {
+            return [];
+        }
+        
+        return array_map(function (array $row) use($database) {
+            return static::fromDatabase($database, $row);
+        }, $rows);
     }
 }
