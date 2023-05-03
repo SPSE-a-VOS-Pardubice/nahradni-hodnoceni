@@ -1,12 +1,76 @@
+window.onload = function () {
+    generateEntities(document.querySelectorAll(".intermediate-property"));
+}
 
+function generateEntities(nodes) {
+    nodes.forEach(node => {
+        let intermediate = node.parentNode;
+        let properties = JSON.parse(intermediate.dataset.properties);
 
+        //Tlačítko pro odebrání
+        let removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.innerHTML = "Odebrat";
+        removeButton.addEventListener("click", event => {intermediate.removeChild(node);});
+        node.append(removeButton);
+
+        properties.forEach(prop => {
+            let row = document.createElement("div");
+            row.classList.add("form-row");
+            node.append(row);
+            
+            let label = document.createElement("label");
+            label.for = prop.name;
+            label.innerText = prop.displayName; 
+            row.append(label);
+            
+            let col = document.createElement("div");
+            col.classList.add("col");
+            row.append(col);
+            
+            if(prop.type == "select") {
+                let select = document.createElement("select");
+                select.name = prop.name;
+
+                let available = prop.available;
+                available.forEach(optionVal => {
+                    let option = document.createElement("option");
+                    option.value = optionVal.value;
+                    option.innerText = optionVal.display;
+                    select.append(option);
+                });
+
+                col.append(select);
+            } else {
+                let input = document.createElement("input");
+                input.name = prop.name;
+                input.type = prop.type;
+
+                col.append(input);
+            }
+        });
+    });
+}
+
+function addRecord(target) {
+    let newRecord = document.createElement("div");
+    newRecord.classList.add("intermediate-property");
+    newRecord.dataset.value = "";
+    target.parentNode.append(newRecord);
+    generateEntities([newRecord]);
+}
+
+/**
+ * Je tohle ještě důležité?
+ *            |
+ *            v
+ */
 
 /**
  * Tohle je příklad funkce která je v `onload` zaregistrovaná na všech selectech pro mezitabulky
  * @param {Event} event
  */
 function onchange(event) {
-
     // V proměnné `event` jsou teď uloženy informace o tom, co se stalo
     // https://developer.mozilla.org/en-US/docs/Web/API/Event
     console.log(event);

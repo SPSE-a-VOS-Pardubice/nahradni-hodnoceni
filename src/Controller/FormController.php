@@ -46,25 +46,25 @@ class FormController extends AbstractController
             $path = "/table/" . $args["name"] . "/" . $id; 
             $item = $model::get($database, intval($id));
             if (is_null($item))
-                return $view->renderResponse($request, $response, "/error.php", []);
+                return $view->renderResponse($request, $response, "/error.php", ["message" => "Failed to fetch the item."]);
         } else {
-            return $view->renderResponse($request, $response, "/error.php", []);
+            return $view->renderResponse($request, $response, "/error.php", ["message" => "Invalid ID entered."]);
         }
 
         return $view->renderResponse($request, $response, "/form.php", [
             "schema"                    => $model::getProperties(),
             "item"                      => $item,
-            "compiledAvailableOptions"  => array("Subjects" => // "Subjects" v tomto případě značí název tabulky v databázi
+            "availableOptions"          => $item::getAvailableOptions($database),
+            "explicatedExternal"  => array("Subjects" => // "Subjects" v tomto případě značí název tabulky v databázi
                 array(1 => "Číslicová Technika", 2 => "Servis PC", 3 => "Webové Aplikace", 4 => "Programování", 
                 5 => "Technická dokumentace", 6 => "Anglický jazyk", 7 => "Fyzika", 8 => "Matematika")),
-            "projectedIntermediateData" => array("subjects" => // "subjects" v tomto případě značí název intermediate property v modelu Teacher
-                array(0 => array("subject_id" => 1, "suitability" => "vhodny"), 1 => array("subject_id" => 5, "suitability" => "nahovno"))),
+            "intermediateValues" => array("subjects" => // "subjects" v tomto případě značí název intermediate property v modelu Teacher
+                array(0 => array("subject_id" => 1, "suitability" => 0), 1 => array("subject_id" => 5, "suitability" => 1))),
             
             // staré
-            "intermediateData"  => null, // $item == null ? [] : $item->getIntermediateData(),
             "type"              => tableMap[$name],
             "path"              => $path,
-            "options"           => $model::getAvailableOptions($database), // Jsou možnosti selectů a human-readable forma externích dat intermediate tabulky jedno a to samé?
+            "options"           => $model::getAvailableOptions($database),
         ]);
     }
 

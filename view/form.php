@@ -61,34 +61,6 @@ function isSelected($item, $optionName, $value): bool {
   return $optionName === $item->$value;
 }
 
-function renderNonIntermediateProperty($args, $item, DatabaseEntityProperty $property) {
-  ob_start(); ?>
-  <div class="form-row">
-    <label for="<?= $property->name ?>"><?= $property->displayName ?></label>
-    <div class="col">
-      <!-- select -->
-      <?php if (is_array($property->selectOptionsSource)): ?>
-        
-
-      <!-- everything else -->
-      <?php else: ?>
-        <input name="<?= $property->name ?>"
-          value="<?= getDefaultInputValue($item, $property) ?>"
-          type="<?= getInputType($property->type) ?>">
-      <?php endif; ?>
-
-      <!-- <div class="form-active form-row">
-        <label for="active" id="active_label">Aktivní</label>
-        <div class="col">
-          <input type="checkbox" name="active" id="checkbox">
-        </div>
-      </div> -->
-    </div>
-  </div>
-  <?php
-    return ob_get_clean();
-} 
-
 function putProperty(DatabaseEntityProperty $property, $name = null) {
   if($name == null) {
     $name = $property->name;
@@ -98,7 +70,6 @@ function putProperty(DatabaseEntityProperty $property, $name = null) {
   <div class="form-row">
     <label for="<?= $name ?>"><?= $property->displayName ?></label>
     <div class="col">
-    <!-- TODO: Nejsem si jistý v jakém formátu budou human-readable možnosti do drop-down menu -->
     <?php if (is_array($property->selectOptionsSource)): ?>
       <select name="<?= $name ?>">
         <?php if ($property->isNullable): ?>
@@ -136,6 +107,44 @@ function putExternal(DatabaseEntityProperty $property, $name, $index, array $ava
   <?php return ob_get_clean();
 }
 
+function genIntProps($args, $intProp) {
+  $semantics = [];
+  
+  foreach($intProp->selectOptionsSource::getProperties() as $prop) {
+    $arr = [];
+    
+    if($prop->selectOptionsSource == $args["data"]["item"]::class) {
+      continue;
+    }
+    
+    $arr["name"] = $prop->name;
+    $arr["displayName"] = $prop->displayName;
+    $arr["type"] = "text";
+    if(is_array($prop->selectOptionsSource) || $prop->type == DatabaseEntityPropertyType::EXTERNAL_DATA) {
+      $arr["type"] = "select";
+      if($prop->type == DatabaseEntityPropertyType::EXTERNAL_DATA) {
+        foreach($args["data"]["explicatedExternal"][$prop->selectOptionsSource::getTableName()] as $value => $display) {
+          $arr["available"][] = array("value" => $value, "display" => strval($display));
+        }
+      } else {
+        if($prop->isNullable) {
+          $arr["available"][] = array("value" => NAN, "display" => ""); // TODO: Popřemýšlet o hodnodě null
+        }
+        
+        foreach($prop->selectOptionsSource as $value => $display) {
+          $arr["available"][] = array("value" => $value, "display" => $display);
+        }
+      }
+    }
+    
+    $semantics[] = $arr;
+  }
+
+  $encoded = json_encode($semantics);
+  $encoded = htmlentities($encoded, ENT_QUOTES, 'UTF-8');
+  return $encoded;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -157,7 +166,7 @@ function putExternal(DatabaseEntityProperty $property, $name, $index, array $ava
   <main>
     <h2 class="general_head">Název</h2>
     <form action="" method="post" class="general_form">
-      <!-- projít všechny properties (také nezahrnuje id), které nejsou intermediate data -->
+      <!-- projít všechny properties (nezahrnuje id), které nejsou intermediate data -->
       <?php foreach(array_filter($args["data"]["schema"], function($p) { 
         return $p->type !== DatabaseEntityPropertyType::INTERMEDIATE_DATA;}) 
       as $property): ?>
@@ -166,19 +175,12 @@ function putExternal(DatabaseEntityProperty $property, $name, $index, array $ava
 
       <!-- projít všechny intermediate properties -->
       <?php foreach(array_filter($args["data"]["schema"], function($p) { return $p->type == DatabaseEntityPropertyType::INTERMEDIATE_DATA;}) as $property): ?>
-        <div>
+        <div class="intermediate" data-properties="<?php echo(genIntProps($args, $property)); ?>">
           <p><?= $property->displayName; ?></p>
-          <!-- projít všechny properties dané intermediate property-->
-          <?php foreach ($property->selectOptionsSource::getProperties() as $intPropertyIndex => $intProperty): ?>
-            <?php if($intProperty->type == DatabaseEntityPropertyType::EXTERNAL_DATA && $item instanceof $intProperty->selectOptionsSource): ?>
-              <?php continue; ?>
-            <?php endif; ?>
-            
-            <?php $name = $property->name . "-" . $intPropertyIndex . "-" . $intProperty->name; ?>
-            <?php if ($intProperty->type == DatabaseEntityPropertyType::EXTERNAL_DATA): ?>
-              <?php echo(putExternal($intProperty, $name, $intPropertyIndex, $args["data"]["compiledAvailableOptions"][$intProperty->selectOptionsSource::getTableName()], $args["data"]["projectedIntermediateData"][$property->name])); ?>
-            <?php else: ?>
-              <?php echo(putProperty($intProperty, $name)); ?>
+          <button class="" type="button" onclick="addRecord(this);">Přidat</button>
+          <?php foreach ($property->selectOptionsSource::getProperties() as $entPropIdx => $entProp): ?>
+            <?php if($entProp->selectOptionsSource != $item::class): ?>
+              <div class="intermediate-property" data-value="<?= $args["data"]["intermediateValues"][$property->name][$entPropIdx]; ?>"></div> <!-- TODO: Nefunguje -->
             <?php endif; ?>
           <?php endforeach; ?>
         </div>
