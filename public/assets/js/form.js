@@ -15,12 +15,29 @@ function generateEntities(nodes) {
         node.append(removeButton);
 
         properties.forEach(prop => {
+            // Hledání indexu daného nodu
+            let localNodes = intermediate.querySelectorAll(".intermediate-property");
+            let propIndex = 0;
+            for(let i = 0; i < localNodes.length; i++) {
+                if(localNodes[i] === node) {
+                    propIndex = i;
+                    break;
+                }
+            }
+
+            let value = ""; 
+            if(node.dataset.value != "") {
+                value = JSON.parse(node.dataset.value)[prop.name];
+            }
+            
+            let formattedName = `${intermediate.dataset.name}-${propIndex}-${prop.name}`;
+            
             let row = document.createElement("div");
             row.classList.add("form-row");
             node.append(row);
             
             let label = document.createElement("label");
-            label.for = prop.name;
+            label.for = formattedName;
             label.innerText = prop.displayName; 
             row.append(label);
             
@@ -30,21 +47,25 @@ function generateEntities(nodes) {
             
             if(prop.type == "select") {
                 let select = document.createElement("select");
-                select.name = prop.name;
+                select.name = formattedName;
 
                 let available = prop.available;
                 available.forEach(optionVal => {
                     let option = document.createElement("option");
                     option.value = optionVal.value;
                     option.innerText = optionVal.display;
+                    if(option.value == value) {
+                        option.selected = "selected";
+                    }
                     select.append(option);
                 });
 
                 col.append(select);
             } else {
                 let input = document.createElement("input");
-                input.name = prop.name;
+                input.name = formattedName;
                 input.type = prop.type;
+                input.value = value;
 
                 col.append(input);
             }

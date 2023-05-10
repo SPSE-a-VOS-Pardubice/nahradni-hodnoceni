@@ -175,13 +175,11 @@ function genIntProps($args, $intProp) {
 
       <!-- projít všechny intermediate properties -->
       <?php foreach(array_filter($args["data"]["schema"], function($p) { return $p->type == DatabaseEntityPropertyType::INTERMEDIATE_DATA;}) as $property): ?>
-        <div class="intermediate" data-properties="<?php echo(genIntProps($args, $property)); ?>">
-          <p><?= $property->displayName; ?></p>
+        <div class="intermediate" data-name="<?= $property->name; ?>" data-properties="<?php echo(genIntProps($args, $property)); ?>">
+          <p class="intermediate-name"><?= $property->displayName; ?></p>
           <button class="" type="button" onclick="addRecord(this);">Přidat</button>
-          <?php foreach ($property->selectOptionsSource::getProperties() as $entPropIdx => $entProp): ?>
-            <?php if($entProp->selectOptionsSource != $item::class): ?>
-              <div class="intermediate-property" data-value="<?= $args["data"]["intermediateValues"][$property->name][$entPropIdx]; ?>"></div> <!-- TODO: Nefunguje -->
-            <?php endif; ?>
+          <?php foreach ($args["data"]["intermediateValues"][$property->name] as $entPropIdx => $entProp): ?>
+            <div class="intermediate-property" data-value="<?= htmlentities(json_encode($args["data"]["intermediateValues"][$property->name][$entPropIdx]), ENT_QUOTES, 'UTF-8'); ?>"></div>  
           <?php endforeach; ?>
         </div>
       <?php endforeach; ?>
