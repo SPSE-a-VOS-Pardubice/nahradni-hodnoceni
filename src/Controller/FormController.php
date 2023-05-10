@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Spse\NahradniHodnoceni\Controller;
 
+use Spse\NahradniHodnoceni\Model\DatabaseEntityPropertyType;
 use Spse\NahradniHodnoceni\View;
 use Psr\Http\Message\{ResponseInterface as Response, ServerRequestInterface as Request};
+use Spse\NahradniHodnoceni\Model\DatabaseEntityProperty;
+use Spse\NahradniHodnoceni\Model\DatabaseEntity;
 
 const modelNamespace = "Spse\\NahradniHodnoceni\\Model\\";
 const EditableDatabaseEntity = "Spse\NahradniHodnoceni\Model\EditableDatabaseEntity";
@@ -71,8 +74,8 @@ class FormController extends AbstractController
     public function post(Request $request, Response $response, array $args): Response {
         $parsedBody = $request->getParsedBody();
 
-        // var_dump($parsedBody);
-        // return $parsedBody;
+        var_dump($parsedBody);
+        // // return $parsedBody;
         
         $view = $this->container->get("view");
         $database = $this->container->get("database");
@@ -88,25 +91,122 @@ class FormController extends AbstractController
         // vytváří nový nebo edituje starý
         $id = $args["id"];
         if ($id === "new") {
-        
-            // vytváří nový 
+            // vytváří nový
+         
+        //     try {
+        //         $model::applyPostData($model::parsePostData($database, $parsedBody));
+        //     } catch (\Throwable $th) {
+        //         return $view->renderResponse($request, $response, "/error.php", [
+        //             "message" => $th->getMessage()
+        //         ]);
+        //     }
+
             try {
-                $model::applyPostData($model::parsePostData($database, $parsedBody));
+                $model = new $model($database);
+    
+                $intermediateKeys = [];
+                foreach($model::getProperties() as $property) {
+                    if ($property->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
+    
+                        $intermediateKeys[$property->name] = [];
+                        // splitni si pole
+                        foreach ($parsedBody as $key => $value) {
+                            $parsedKey = explode("-", $key);
+                            
+                            if ($parsedKey[0] === $property->name) {
+
+                                if (!key_exists($parsedKey[1], $intermediateKeys[$property->name]))
+                                    $intermediateKeys[$property->name][$parsedKey[1]] = [];
+                            
+                                $intermediateKeys[$property->name][$parsedKey[1]][$parsedKey[2]] = $value;
+                            }
+                        }
+    
+                    } else {
+                        $model->$property->name = $parsedBody[$property->name];
+                    }
+                }
+                
+                $model->write();
+                    
+                foreach ($intermediateKeys as $propName => $values) {
+                    foreach ($values as $key => $values) {
+                        $intermediateModel = $model::findPropetyClass($propName);
+                        $instance = new $intermediateModel($database);
+    
+                        foreach ($intermediateModel::getProperties() as $property) {
+                            if (key_exists($property->name, $intermediateKeys[$propName][$key])) {
+                                $instance->$property->name = $intermediateKeys[$propName][$key][$property->name];
+                            } else if ($property->selectOptionsSource === $model::class) {
+                                $instance->$property->name = $model->id; // id modelu
+                            } else {
+                                $instance->$property->name = $key;
+                            }
+                        }
+                        $instance->write();
+                    }
+                }
             } catch (\Throwable $th) {
-                return $view->renderResponse($request, $response, "/error.php", [
-                    "message" => $th->getMessage()
-                ]);
+                throw $th;
             }
 
         } else {
-            // edituje starý 
-            try {
-                $model::applyPostData($model::parsePostData($database, $parsedBody, intval($id)));
-            } catch (\Throwable $th) {
-                return $view->renderResponse($request, $response, "/error.php", [
-                    "message" => $th->getMessage()
-                ]);
+        //     // edituje starý 
+        //     try {
+        //         $model::applyPostData($model::parsePostData($database, $parsedBody, intval($id)));
+        //     } catch (\Throwable $th) {
+        //         return $view->renderResponse($request, $response, "/error.php", [
+        //             "message" => $th->getMessage()
+        //         ]);
+        //     }
+
+            $model = new $model($database);
+            $model->id = intval($parsedBody["id"]);
+
+            $intermediateKeys = [];
+            foreach($model::getProperties() as $property) {
+                if ($property->type === DatabaseEntityPropertyType::INTERMEDIATE_DATA) {
+
+                    $intermediateKeys[$property->name] = [];
+                    // splitni si pole
+                    foreach ($parsedBody as $key => $value) {
+                        $parsedKey = explode("-", $key);
+                        
+                        if (!key_exists($parsedKey[1], $intermediateKeys[$property->name]))
+                            $intermediateKeys[$property->name][$parsedKey[1]] = [];
+                        
+                        $intermediateKeys[$property->name][$parsedKey[1]][$parsedKey[2]] = $value;
+                    }
+
+                } else {
+                    $model->$property->name = $parsedBody[$property->name];
+                }
             }
+            
+            $model->write();
+            
+            $intermediateModels = [];
+            foreach ($intermediateKeys as $propName => $values) {
+                $intermediateModels[$propName] = [];
+                foreach ($values as $key => $values) {
+                    $intermediateModel = $model::findPropetyClass($propName);
+                    $instance = new $intermediateModel($database);
+
+                    foreach ($intermediateModel::getProperties() as $property) {
+                        if (key_exists($property->name, $intermediateKeys[$propName][$key])) {
+                            $instance->$property->name = $intermediateKeys[$propName][$key][$property->name];
+                        } else if ($property->selectOptionsSource === $model::class) {
+                            $instance->$property->name = $model->id; // id modelu
+                        } else {
+                            $instance->$property->name = $key;
+                        }
+                    }
+                    
+                    $intermediateModels[$propName][] = $instance;
+                }
+            }
+
+            $model::updateData($database, $intermediateModels);
         }
 
         return $this->redirect($response, "/table/$name");
