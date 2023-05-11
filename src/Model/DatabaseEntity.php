@@ -70,6 +70,7 @@ abstract class DatabaseEntity {
      */
     abstract public static function getTableName(): string;
 
+    abstract protected static function fromDatabase(Database $database, array $row): DatabaseEntity;
     
     /**
      * Získej možnosti pro danou třídu.
@@ -112,5 +113,46 @@ abstract class DatabaseEntity {
         }
 
         return $availableOptions;
+    }
+
+    public static function getRestricted(Database $database, array $restrictions): ?static {
+        $results = static::getRestrictedAll($database, $restrictions, 1);
+        if (count($results) === 0)
+            return null;
+        return $results[0];
+    }
+
+    /**
+     * @var array<FullDatabaseEntity> omezení, podle kterých se vyfitrují záznamy z mezitabulky
+     * @return array<IntermediateDatabaseEntity> vyfiltrované záznamy z mezitabulky
+     * 
+     * $restrictions je pole restrikcí `Restriction[]`
+     */
+    public static function getRestrictedAll(Database $database, array $restrictions, int $limit = 0): array {
+        // TODO obecná metoda pro získání záznamů pomocí restrikce
+        // blokováno QueryBuilderem
+        //return [];
+
+        // TODO předběžná implementace předělat s příchodem QB
+        $restrictionString = "";
+        $restrictionsValues = [];
+        foreach ($restrictions as $restriction) {
+            $restrictionString .= $restriction->propertyName . " = :" . $restriction->propertyName;
+            $restrictionsValues[$restriction->propertyName] = $restriction->value;
+        }
+
+        $rows = $database->fetchMultiple(sprintf("
+        SELECT
+            *
+        FROM %s
+        WHERE %s", static::getTableName(), $restrictionString), $restrictionsValues);
+
+        if ($rows === false) {
+            return [];
+        }
+        
+        return array_map(function (array $row) use($database) {
+            return static::fromDatabase($database, $row);
+        }, $rows);
     }
 }

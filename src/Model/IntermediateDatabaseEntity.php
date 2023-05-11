@@ -167,38 +167,4 @@ abstract class IntermediateDatabaseEntity extends DatabaseEntity {
 
         return null;
     }
-  
-    /**
-     * @var array<FullDatabaseEntity> omezení, podle kterých se vyfitrují záznamy z mezitabulky
-     * @return array<IntermediateDatabaseEntity> vyfiltrované záznamy z mezitabulky
-     * 
-     * $restrictions je pole restrikcí `Restriction[]`
-     */
-    public static function getRestricted(Database $database, array $restrictions): array {
-        // TODO obecná metoda pro získání záznamů pomocí restrikce
-        // blokováno QueryBuilderem
-        //return [];
-
-        // TODO předběžná implementace předělat s příchodem QB
-        $restrictionString = "";
-        $restrictionsValues = [];
-        foreach ($restrictions as $restriction) {
-            $restrictionString .= $restriction->propertyName . " = :" . $restriction->propertyName;
-            $restrictionsValues[$restriction->propertyName] = $restriction->value;
-        }
-
-        $rows = $database->fetchMultiple(sprintf("
-        SELECT
-            *
-        FROM %s
-        WHERE %s", static::getTableName(), $restrictionString), $restrictionsValues);
-
-        if ($rows === false) {
-            return [];
-        }
-        
-        return array_map(function (array $row) use($database) {
-            return static::fromDatabase($database, $row);
-        }, $rows);
-    }
 }

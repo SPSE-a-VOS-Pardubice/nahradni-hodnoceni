@@ -188,7 +188,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                 $restriction->propertyName = $restrictionPropertyName;
                 $restriction->value = $recordID;// id toho záznamu, ke kterému se to váže
 
-                $recordsInDB = $propClass::getRestricted($database, [$restriction]);
+                $recordsInDB = $propClass::getRestrictedAll($database, [$restriction]);
 
                 // TODO: toto řešení není asi v pohodě ale stejně tak se mi nelíbí projíždět pole property na každém záznamu z $collOfModels a porovnávat to s každým záznamem v $recordsInDB jestli náhodou najdu shodu 
                 // toto je stožitost 2n - jedno projetí odebere druhé přidá
@@ -266,7 +266,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                     př. Teacher s id 69
                     $restrinction = new Restriction(Teacher::class, "teacher_id", 69);
                 
-                    $intProps["data"] = TeacherSuitability::getRestricted($this->database, [$restriction]);
+                    $intProps["data"] = TeacherSuitability::getRestrictedAll($this->database, [$restriction]);
                 */
 
                 $restrictionPropertyName = $prop->selectOptionsSource::getPropNameFromClass(static::class);
@@ -275,8 +275,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                 $restriction->propertyName = $restrictionPropertyName;
                 $restriction->value = $this->id;
 
-                // TODO nefunguje metoda getRestricted
-                $intProps["data"] = $prop->selectOptionsSource::getRestricted($this->database, [$restriction]);
+                $intProps["data"] = $prop->selectOptionsSource::getRestrictedAll($this->database, [$restriction]);
                 
                 $intermediateData[$prop->name] = $intProps;
             }
