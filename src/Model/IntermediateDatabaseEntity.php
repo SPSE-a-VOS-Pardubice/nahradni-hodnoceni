@@ -138,7 +138,7 @@ abstract class IntermediateDatabaseEntity extends DatabaseEntity {
 
         // neprojížděj ty property, které jsou intermediate
         foreach($properties as $index => $value) {
-            $object->setProperty($value->name, $value->deserialize($row[$index + 1])); 
+            $object->setProperty($value->name, $value->deserialize($row[$index])); 
             // Atributy musí být ve stejném pořadí jak v deklaraci modelu, tak v databázi
         }
         
@@ -156,7 +156,7 @@ abstract class IntermediateDatabaseEntity extends DatabaseEntity {
      */
     public static function getPropNameFromClass(string $class): ?string {
         $properties = array_filter(static::getProperties(), function (DatabaseEntityProperty $property) {
-            return $property->type !== DatabaseEntityPropertyType::EXTERNAL_DATA;
+            return $property->type === DatabaseEntityPropertyType::EXTERNAL_DATA;
         });
 
         foreach ($properties as $property) { 

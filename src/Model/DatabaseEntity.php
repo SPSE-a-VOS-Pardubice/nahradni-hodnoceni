@@ -138,7 +138,7 @@ abstract class DatabaseEntity {
         $restrictionsValues = [];
         foreach ($restrictions as $restriction) {
             $restrictionString .= $restriction->propertyName . " = :" . $restriction->propertyName;
-            $restrictionsValues[$restriction->propertyName] = $restriction->value;
+            $restrictionsValues[] = new DatabaseParameter($restriction->propertyName, $restriction->value);
         }
 
         $rows = $database->fetchMultiple(sprintf("

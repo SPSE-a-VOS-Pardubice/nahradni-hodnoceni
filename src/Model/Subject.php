@@ -11,7 +11,7 @@ class Subject extends FullDatabaseEntity {
         return [
             new DatabaseEntityProperty("name",          "Název",    DatabaseEntityPropertyType::STRING,             null,                   false,  ""),
             new DatabaseEntityProperty("abbreviation",  "Zkratka",  DatabaseEntityPropertyType::STRING,             null,                   false,  ""),
-            new DatabaseEntityProperty("traits",        "Příznaky", DatabaseEntityPropertyType::INTERMEDIATE_DATA,  SubjectTrait::class,    false, null)
+            new DatabaseEntityProperty("traits",        "Příznaky", DatabaseEntityPropertyType::INTERMEDIATE_DATA,  SubjectTrait::class,    false, 0)
         ];
     }
     

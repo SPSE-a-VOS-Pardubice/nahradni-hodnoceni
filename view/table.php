@@ -22,7 +22,9 @@ function getDisplayText($itemsIntermediateData, $options, DatabaseEntityProperty
     return join(
       ", ",
       array_map(function ($value) {
+        // TODO METODA neexistuje
         return $value === null ? null : $value->getFormatted();
+        //return "";
       }, $items),
     );
   }
@@ -31,10 +33,10 @@ function getDisplayText($itemsIntermediateData, $options, DatabaseEntityProperty
   if ($value === null)
     return "";
 
-  if ($property->isSelect)
+  if ($property->selectedOption !== null) // isSelect true => === selectedOption !== null => true
     $value = $options[$property->name][$value];
 
-  if ($property->type === DatabaseEntityPropertyType::DATETIME)
+  if ($property->type === DatabaseEntityPropertyType::DATE_TIME)
     return $value->format("j. n. Y");
   return strval($value);
 }

@@ -10,7 +10,7 @@ class Student extends FullDatabaseEntity {
         return [
             new DatabaseEntityProperty("name", "Jméno", DatabaseEntityPropertyType::STRING, null, false, ""),
             new DatabaseEntityProperty("surname", "Příjmení", DatabaseEntityPropertyType::STRING, null, false, ""),
-            new DatabaseEntityProperty("class_id", "Třída", DatabaseEntityPropertyType::EXTERNAL_DATA, _Class::class, false, null) 
+            new DatabaseEntityProperty("class_id", "Třída", DatabaseEntityPropertyType::EXTERNAL_DATA, _Class::class, false, 0) 
         ];
     }
 

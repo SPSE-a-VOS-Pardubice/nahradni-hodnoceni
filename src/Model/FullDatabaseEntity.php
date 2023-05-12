@@ -183,10 +183,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
 
             if ($propClass !== null) {
                 $restrictionPropertyName = $propClass::getPropNameFromClass(static::class);
-                $restriction = new Restriction();
-                $restriction->classname = static::class;
-                $restriction->propertyName = $restrictionPropertyName;
-                $restriction->value = $recordID;// id toho záznamu, ke kterému se to váže
+                $restriction = new Restriction($restrictionPropertyName, $recordID);
 
                 $recordsInDB = $propClass::getRestrictedAll($database, [$restriction]);
 
@@ -270,10 +267,7 @@ abstract class FullDatabaseEntity extends DatabaseEntity {
                 */
 
                 $restrictionPropertyName = $prop->selectOptionsSource::getPropNameFromClass(static::class);
-                $restriction = new Restriction();
-                $restriction->classname = static::class;
-                $restriction->propertyName = $restrictionPropertyName;
-                $restriction->value = $this->id;
+                $restriction = new Restriction($restrictionPropertyName, $this->id);
 
                 $intProps["data"] = $prop->selectOptionsSource::getRestrictedAll($this->database, [$restriction]);
                 

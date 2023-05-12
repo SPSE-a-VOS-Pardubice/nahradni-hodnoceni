@@ -11,12 +11,12 @@ class SubjectTrait extends IntermediateDatabaseEntity {
      */
     public static function getProperties(): array {
         return [
-            new DatabaseEntityProperty("trait_id",      "Příznak",   DatabaseEntityPropertyType::EXTERNAL_DATA,  _Trait::class,   false,  null),
-            new DatabaseEntityProperty("subject_id",    "Předmět",   DatabaseEntityPropertyType::EXTERNAL_DATA,  Subject::class,   false,  null)
+            new DatabaseEntityProperty("trait_id",      "Příznak",   DatabaseEntityPropertyType::EXTERNAL_DATA,  _Trait::class,   false,  0),
+            new DatabaseEntityProperty("subject_id",    "Předmět",   DatabaseEntityPropertyType::EXTERNAL_DATA,  Subject::class,   false,  0)
         ];
     }
 
     public static function getTableName(): string {
-        return "SubjectTraits";
+        return "SubjectStraits";
     }
 }

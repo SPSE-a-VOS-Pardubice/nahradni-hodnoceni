@@ -8,8 +8,8 @@ class ClassroomTrait extends IntermediateDatabaseEntity {
 
     public static function getProperties(): array {
         return [
-            new DatabaseEntityProperty("trait_id", "Ročník", DatabaseEntityPropertyType::EXTERNAL_DATA, _Trait::class, false, null), 
-            new DatabaseEntityProperty("classroom_id", "Učebna", DatabaseEntityPropertyType::EXTERNAL_DATA, Classroom::class, false, null)
+            new DatabaseEntityProperty("trait_id", "Ročník", DatabaseEntityPropertyType::EXTERNAL_DATA, _Trait::class, false, 0), 
+            new DatabaseEntityProperty("classroom_id", "Učebna", DatabaseEntityPropertyType::EXTERNAL_DATA, Classroom::class, false, 0)
         ];
     }
 
