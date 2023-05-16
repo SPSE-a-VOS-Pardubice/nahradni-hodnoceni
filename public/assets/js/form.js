@@ -2,6 +2,11 @@ window.onload = function () {
     generateEntities(document.querySelectorAll(".intermediate-property"));
 }
 
+/**
+ * U všech nodes se třídou "intermediate-property" poskytnutých v parametru
+ * vygeneruje potřebné kontrolní prvky.
+ * @param {*} nodes nodes, u kterých budou kontrolní prvky vygenerovány
+ */
 function generateEntities(nodes) {
     nodes.forEach(node => {
         let intermediate = node.parentNode;
@@ -73,6 +78,11 @@ function generateEntities(nodes) {
     });
 }
 
+/**
+ * Přidá div se třídou "intermediate-property" a vygeneruje kontrolní prvky
+ * daného divu u uvedeného rodiče.
+ * @param target Budoucí rodič nového divu
+ */
 function addRecord(target) {
     let newRecord = document.createElement("div");
     newRecord.classList.add("intermediate-property");

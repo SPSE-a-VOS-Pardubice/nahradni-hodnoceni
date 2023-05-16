@@ -9,16 +9,10 @@ use Spse\NahradniHodnoceni\Model\DatabaseEntityPropertyType;
 // je null pouze když uživatel přidává nový záznam
 $item = $args["data"]["item"];
 
-function getDefaultInputValue($item, DatabaseEntityProperty $property): string {
-  if (is_null($item) || is_null($item->{$property->name}))
-      return "";
-  
-  if ($property->type === DatabaseEntityPropertyType::DATE_TIME)
-    return $item->{$property->name}->format("Y-m-d\TH:i");
-
-  return strval($item->{$property->name});
-}
-
+/**
+ * Převede DatabaseEntityPropertyType na typ HTML inputu
+ * @param DatabaseEntityPropertyType $propType typ, který bude převeden
+ */
 function getInputType(DatabaseEntityPropertyType $propType): string {
   switch ($propType) {
     case DatabaseEntityPropertyType::INTEGER:
@@ -33,38 +27,11 @@ function getInputType(DatabaseEntityPropertyType $propType): string {
 }
 
 /**
- * @param array<DatabaseEntity> $objects
- * @param array<string, string> $options
- * @return string
+ * Vyrendruje property v HTML pro jednu property, která není intermediate
+ * @param DatabaseEntityProperty $property daná property
  */
-function encodeIntermediateDataForFrontend($objects, $options) {
-
-  if ($objects == null) {
-    $objects = [];
-  }
-
-  $objectsMap = [];
-  foreach ($objects as $object) {
-    $objectsMap[$object->id] = $object->getFormatted();
-  }
-
-  return json_encode([
-    "objects" => $objectsMap,
-    "options" => $options,
-  ]);
-}
-
-function isSelected($item, $optionName, $value): bool {
-  if ($item == null)
-    return false;
-
-  return $optionName === $item->$value;
-}
-
 function putProperty(DatabaseEntityProperty $property, $name = null) {
-  if($name == null) {
-    $name = $property->name;
-  }
+  $name = $property->name;
   
   ob_start(); ?>
   <div class="form-row">
@@ -90,23 +57,33 @@ function putProperty(DatabaseEntityProperty $property, $name = null) {
   <?php return ob_get_clean();
 }
 
-function putExternal(DatabaseEntityProperty $property, $name, $index, array $availableOptions, array $intermediateData) {
-  ob_start(); ?>
-  <div class="form-row">
-    <label for="<?= $name ?>"><?= $property->displayName ?></label>
-    <div class="col">
-      <select name="<?= $name ?>">
-        <?php foreach($availableOptions as $optionIndex => $option): ?>
-          <option value="<?= $optionIndex ?>" <?= $intermediateData[$index][$property->name] == $optionIndex ? "selected" : "" ?>> <!-- TODO: Zkontrolovat jestli dává smysl... -->
-            <?= $option ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-  </div> 
-  <?php return ob_get_clean();
-}
-
+/**
+ * Vygeneruje textový řetězec, který je zakódovaný JSON, který v sobě obsahuje informace
+ * o dané intermediate property (její selecty a hodnoty daných selectů).
+ * Příklad:
+ * [
+ *  {
+ *   "name": "subject_id",
+ *   "displayName": "Předmět",
+ *   "type": "select",
+ *   "available": [
+ *     {
+ *       "value": 1,
+ *       "display": "Číslicová Technika"
+ *     },
+ *     {
+ *       "value": 2,
+ *       "display": "Servis PC"
+ *     },
+ *     ...
+ *   ]
+ *  },
+ *  ...
+ * ] 
+ * 
+ * @param mixed $args přeposlané $args z hlavního scope (form.php)
+ * @param mixed $intProp daná intermediate property
+ */
 function genIntProps($args, $intProp) {
   $semantics = [];
   
