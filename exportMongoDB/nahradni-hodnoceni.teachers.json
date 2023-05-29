@@ -1,0 +1,96 @@
+[{
+  "_id": {
+    "$oid": "647458ea83bfb0221b8f1ca6"
+  },
+  "name": "Miroslav",
+  "surname": "Zapletal",
+  "prefix": "Ing.",
+  "sufix": "",
+  "suitability": {},
+  "available": true,
+  "_class": "cz.rozek.jan.mc_donald.models.Teacher"
+},
+{
+  "_id": {
+    "$oid": "6474591183bfb0221b8f1ca7"
+  },
+  "name": "Petr",
+  "surname": "Šeda",
+  "prefix": "PeadDr.",
+  "sufix": "",
+  "suitability": {},
+  "available": true,
+  "_class": "cz.rozek.jan.mc_donald.models.Teacher"
+},
+{
+  "_id": {
+    "$oid": "6474592683bfb0221b8f1ca8"
+  },
+  "name": "Jana",
+  "surname": "Reslová",
+  "prefix": "RNDr.",
+  "sufix": "",
+  "suitability": {},
+  "available": true,
+  "_class": "cz.rozek.jan.mc_donald.models.Teacher"
+},
+{
+  "_id": {
+    "$oid": "6474593a83bfb0221b8f1ca9"
+  },
+  "name": "Libor",
+  "surname": "Bajer",
+  "prefix": "Ing.",
+  "sufix": "",
+  "suitability": {},
+  "available": true,
+  "_class": "cz.rozek.jan.mc_donald.models.Teacher"
+},
+{
+  "_id": {
+    "$oid": "6474594383bfb0221b8f1caa"
+  },
+  "name": "Jiří",
+  "surname": "Rudolf",
+  "prefix": "Ing.",
+  "sufix": "",
+  "suitability": {},
+  "available": true,
+  "_class": "cz.rozek.jan.mc_donald.models.Teacher"
+},
+{
+  "_id": {
+    "$oid": "6474594f83bfb0221b8f1cab"
+  },
+  "name": "Česlav",
+  "surname": "Kverek",
+  "prefix": "Mgr.",
+  "sufix": "",
+  "suitability": {},
+  "available": true,
+  "_class": "cz.rozek.jan.mc_donald.models.Teacher"
+},
+{
+  "_id": {
+    "$oid": "6474596283bfb0221b8f1cac"
+  },
+  "name": "Alena",
+  "surname": "Kvasničková",
+  "prefix": "Mgr.",
+  "sufix": "",
+  "suitability": {},
+  "available": true,
+  "_class": "cz.rozek.jan.mc_donald.models.Teacher"
+},
+{
+  "_id": {
+    "$oid": "6474597283bfb0221b8f1cad"
+  },
+  "name": "Ladislav",
+  "surname": "Štěpánek",
+  "prefix": "Ing.",
+  "sufix": "MBA",
+  "suitability": {},
+  "available": true,
+  "_class": "cz.rozek.jan.mc_donald.models.Teacher"
+}]

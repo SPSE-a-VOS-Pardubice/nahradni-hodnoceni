@@ -1,0 +1,38 @@
+[
+  {
+    "_id": {
+      "$oid": "647456d183bfb0221b8f1c9a"
+    },
+    "label": "A000",
+    "traits": {},
+    "available": true,
+    "_class": "cz.rozek.jan.mc_donald.models.Classroom"
+  },
+  {
+    "_id": {
+      "$oid": "647456d983bfb0221b8f1c9b"
+    },
+    "label": "B069",
+    "traits": {},
+    "available": true,
+    "_class": "cz.rozek.jan.mc_donald.models.Classroom"
+  },
+  {
+    "_id": {
+      "$oid": "647456de83bfb0221b8f1c9c"
+    },
+    "label": "C128",
+    "traits": {},
+    "available": true,
+    "_class": "cz.rozek.jan.mc_donald.models.Classroom"
+  },
+  {
+    "_id": {
+      "$oid": "647456e483bfb0221b8f1c9d"
+    },
+    "label": "D420",
+    "traits": {},
+    "available": true,
+    "_class": "cz.rozek.jan.mc_donald.models.Classroom"
+  }
+]
