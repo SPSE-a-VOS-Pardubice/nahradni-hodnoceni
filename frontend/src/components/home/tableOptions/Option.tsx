@@ -1,4 +1,6 @@
+import React from 'react'
 import './Option.css'
+
 import { useEffect, useState } from 'react'
 
 const Option = (props) => {

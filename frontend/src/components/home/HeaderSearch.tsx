@@ -1,3 +1,4 @@
+import React from 'react'
 import './HeaderSearch.css'
 
 const HeaderSearch = () => {

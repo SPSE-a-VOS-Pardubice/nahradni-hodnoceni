@@ -1,4 +1,6 @@
+import React from 'react'
 import './TableOptions.css'
+
 import Option from './tableOptions/Option'
 
 
@@ -97,9 +99,9 @@ const TableOptions = () => {
     return (
         <>
             <div className="table_options_part">
-                <div class="view_form">
+                <div className="view_form">
                     <Option btnName={"finished"} label={"Dokončené"} options={finishedOptions} >
-                        <label for="finished">Zobrazit:</label>
+                        <label htmlFor="finished">Zobrazit:</label>
                     </Option>
 
                     <Option btnName={"nh_oz"} label={"Náhradní hodnocení"} options={nh_ozOptions} />
@@ -114,7 +116,7 @@ const TableOptions = () => {
 
                 <div className="order_by_form">
                     <Option btnName={'sort_className'} label={'Třídy'} options={orderOptions} >
-                        <label for="order_by">Seřadit podle:</label>
+                        <label htmlFor="order_by">Seřadit podle:</label>
                     </Option>
                 </div>
             </div>

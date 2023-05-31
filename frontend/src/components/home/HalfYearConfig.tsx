@@ -1,3 +1,4 @@
+import React from 'react'
 import './HalfYearConfig.css'
 
 const HalfYearConfig = () => {

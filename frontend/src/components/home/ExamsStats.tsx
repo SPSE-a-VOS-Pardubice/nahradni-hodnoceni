@@ -1,3 +1,4 @@
+import React from 'react'
 import './ExamsStats.css'
 
 const ExamsStats = () => {

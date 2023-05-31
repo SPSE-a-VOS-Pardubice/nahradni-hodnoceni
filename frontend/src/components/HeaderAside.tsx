@@ -1,26 +1,14 @@
 import { useEffect, useState } from 'react'
 import './HeaderAside.css'
+import React from 'react'
 
 const HeaderAside = (props) => {
 
-    const [button, setButton] = useState(<></>)
-    const [useButton, setUseButton] = useState(false)
+    const [button, setButton] = useState(false)
 
     useEffect(() => {
-        setUseButton(props.useButton)
+        setButton(props.useButton)
     }, [])
-
-    useEffect(() => {
-        if (useButton) {
-            setButton(
-                <button className="log_out_btn">
-                    <a href="/login">
-                        <i className="fa-solid fa-arrow-right-from-bracket"></i>
-                    </a>
-                </button>
-            )
-        }
-    }, [useButton])
 
     return (
         <aside className="header_aside">
@@ -34,7 +22,13 @@ const HeaderAside = (props) => {
                     src="https://wp-themes.com/wp-content/themes/zeever/assets/img/man-person-people-hair-photography-summer-1177664-pxhere.com.webp"
                     alt="Profil Mgr. František Věcek" />
                 <p>Mgr. František Věcek</p>
-                {button}
+                {button && (
+                    <button className="log_out_btn">
+                        <a href="/login">
+                            <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                        </a>
+                    </button>
+                )}
             </div>
         </aside>
     )

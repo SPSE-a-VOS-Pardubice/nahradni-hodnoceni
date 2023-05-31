@@ -1,7 +1,9 @@
+import React from 'react'
+import './Home.css'
+
 import ExamsStats from '../components/home/ExamsStats'
 import HalfYearConfig from '../components/home/HalfYearConfig'
 import HeaderAside from '../components/HeaderAside'
-import './Home.css'
 import HeaderSearch from '../components/home/HeaderSearch'
 import TableOptions from '../components/home/TableOptions'
 import DashBoard from '../components/home/DashBoard'
