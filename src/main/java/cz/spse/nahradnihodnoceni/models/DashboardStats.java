@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class DashboardInfo {
+public class DashboardStats {
     private int totalNH;
     private int finishedNH;
 

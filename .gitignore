@@ -38,3 +38,4 @@ out/
 ### Docs ###
 /docs/UML/*.png
 /docs/UML/*.svg
+src/main/resources/application.properties
