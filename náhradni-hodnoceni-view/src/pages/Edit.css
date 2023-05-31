@@ -1,0 +1,69 @@
+:root {
+    --color-black: #151515;
+    --color-vivid-gray: #636363;
+    --color-luminous-gray: #7c8487;
+    --color-light-gray: #9C9C9C;
+    --color-vivid-blue: #479cff;
+    --color-vivid-purple: #315eff;
+    --color-luminous-purple: #7d82fe;
+    --color-luminous-green: #10eb59;
+    --color-luminous-red: #ff0000;
+    --color-white: #fff;
+    --transition-short: 0.35s;
+    --transition-long: 0.65s;
+  }
+  
+  .edit_main {
+    position: relative;
+    width: 100%;
+    height: 80vh;
+  }
+  
+  .edit_pop_up {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    padding: 2em;
+    border-radius: 20px;
+    border: 5px solid var(--color-vivid-blue);
+    background-color: var(--color-white);
+  }
+  
+  .edit_pop_up.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .edit_row_form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  form input:not(input[type="submit"], input[type="checkbox"]),
+  form select {
+    width: 100%;
+    height: 45px;
+    padding-inline: 1em;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    background-color: var(--color-white);
+  }
+  
+  form .form_row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  form #submit {
+    cursor: pointer;
+    width: 100%;
+    height: 45px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    color: var(--color-white);
+    background-color: var(--color-vivid-blue);
+  }

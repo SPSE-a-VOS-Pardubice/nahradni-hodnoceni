@@ -1,0 +1,71 @@
+:root {
+    --color-black: #151515;
+    --color-vivid-gray: #636363;
+    --color-luminous-gray: #7c8487;
+    --color-vivid-blue: #479cff;
+    --color-vivid-purple: #315eff;
+    --color-luminous-purple: #7d82fe;
+    --color-luminous-green: #10eb59;
+    --color-luminous-red: #ff0000;
+    --color-white: #fff;
+    --transition-short: 0.35s;
+    --transition-long: 0.65s;
+  }
+  
+  .graph_options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 1.5em;
+  }
+  
+  .graph_btn i {
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    width: 35px;
+    height: 35px;
+    line-height: 30px;
+    color: var(--color-vivid-blue);
+    border: 2px solid var(--color-vivid-blue);
+    border-radius: 2.5px;
+    background-color: var(--color-white);
+  }
+  
+  .info_part {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+  }
+  
+  .graph_line {
+    font-weight: 600;
+    line-height: 30px;
+    height: 35px;
+    padding-inline: 10px;
+    color: var(--color-vivid-blue);
+    border-radius: 2.5px;
+    border: 2px solid var(--color-vivid-blue);
+    background-color: var(--color-white);
+  }
+  
+  .graph_line i {
+    color: var(--color-vivid-blue);
+  }
+  
+  #red_btn i {
+    color: var(--color-luminous-red);
+    border: 2px solid var(--color-luminous-red);
+  }
+  
+  #green_btn i {
+    color: var(--color-luminous-green);
+    border: 2px solid var(--color-luminous-green);
+  }
+  
+  #oz_btn {
+    color: var(--color-white);
+    background-color: var(--color-vivid-blue);
+  }
+  
+  
