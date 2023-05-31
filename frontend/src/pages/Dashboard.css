@@ -13,11 +13,11 @@
     --transition-long: 0.65s;
   }
   
-  .header_main {
+  .app_main {
     display: flex;
     flex-direction: column;
     gap: 1em;
-    padding: 2em 5% 1em 5%;
+    padding: 2em 0 1em;
   }
   
   .app_main_info_part {

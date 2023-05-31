@@ -10,10 +10,7 @@ import cz.spse.nahradnihodnoceni.models.data.Subject;
 import cz.spse.nahradnihodnoceni.repositories.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/1/dashboard")
@@ -21,11 +18,13 @@ public class DashboardController {
     @Autowired
     private ExamRepository examRepository;
 
+    @CrossOrigin // TODO only for development
     @GetMapping(value = "/stats", produces = MediaType.APPLICATION_JSON_VALUE)
     public DashboardStats dashboard() {
         return new DashboardStats(256, 120, 52, 10, 69, 42, 128);
     }
 
+    @CrossOrigin // TODO only for development
     @GetMapping(value = "/exams", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Exam> filteredExams(@RequestParam(required = false) String status, @RequestParam(required = false) String type, @RequestParam(required = false) String successful, @RequestParam(required = false) String mark, @RequestParam(required = false) String form) {
 

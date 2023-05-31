@@ -1,8 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import './DashBoard'
+import './Dashboard.css'
 
-const DashBoard = () => {
+const DashboardComponent = () => {
 
     const [rows, setRows] = useState([])
 
@@ -56,4 +56,4 @@ const DashBoard = () => {
     )
 }
 
-export default DashBoard
+export default DashboardComponent

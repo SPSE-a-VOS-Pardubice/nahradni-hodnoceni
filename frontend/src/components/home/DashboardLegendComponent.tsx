@@ -1,7 +1,7 @@
 import React from 'react'
-import './HalfYearConfig.css'
+import './DashboardLegend.css'
 
-const HalfYearConfig = () => {
+const DashboardLegendComponent = () => {
     return (
         <div className="half_year_config_part">
             <button className="select" name="half_year_config_select" id="half_year_config_select">
@@ -31,4 +31,4 @@ const HalfYearConfig = () => {
     )
 }
 
-export default HalfYearConfig
+export default DashboardLegendComponent

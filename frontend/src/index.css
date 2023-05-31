@@ -49,7 +49,7 @@ button {
   background-color: transparent;
 }
 
-.header_aside {
+.header_component {
   display: flex;
   justify-content: space-between;
   padding: 1em 5%;

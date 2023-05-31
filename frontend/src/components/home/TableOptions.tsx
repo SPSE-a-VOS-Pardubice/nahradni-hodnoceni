@@ -97,31 +97,28 @@ const orderOptions = [
 const TableOptions = () => {
 
     return (
-        <>
-            <div className="table_options_part">
-                <div className="view_form">
-                    <Option btnName={"finished"} label={"Dokončené"} options={finishedOptions} >
-                        <label htmlFor="finished">Zobrazit:</label>
-                    </Option>
+        <div className="table_options_part">
+            <div className="view_form">
+                <Option btnName={"finished"} label={"Dokončené"} options={finishedOptions} >
+                    <label htmlFor="finished">Zobrazit:</label>
+                </Option>
 
-                    <Option btnName={"nh_oz"} label={"Náhradní hodnocení"} options={nh_ozOptions} />
-                    <Option btnName={"success"} label={"Úspěšně"} options={successOptions} />
-                    <Option btnName={"marks"} label={"Známky"} options={marksOptions} />
-                    <Option btnName={"form"} label={"Formulář"} options={formOptions} />
+                <Option btnName={"nh_oz"} label={"Náhradní hodnocení"} options={nh_ozOptions} />
+                <Option btnName={"success"} label={"Úspěšně"} options={successOptions} />
+                <Option btnName={"marks"} label={"Známky"} options={marksOptions} />
+                <Option btnName={"form"} label={"Formulář"} options={formOptions} />
 
-                    <div id="view_delete_btn" className="form_row">
-                        <i className="fa-solid fa-x"></i>
-                    </div>
-                </div>
-
-                <div className="order_by_form">
-                    <Option btnName={'sort_className'} label={'Třídy'} options={orderOptions} >
-                        <label htmlFor="order_by">Seřadit podle:</label>
-                    </Option>
+                <div id="view_delete_btn" className="form_row">
+                    <i className="fa-solid fa-x"></i>
                 </div>
             </div>
-        </>
 
+            <div className="order_by_form">
+                <Option btnName={'sort_className'} label={'Třídy'} options={orderOptions} >
+                    <label htmlFor="order_by">Seřadit podle:</label>
+                </Option>
+            </div>
+        </div>
     )
 }
 
