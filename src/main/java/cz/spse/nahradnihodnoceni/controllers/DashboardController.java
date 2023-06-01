@@ -3,12 +3,12 @@ package cz.spse.nahradnihodnoceni.controllers;
 import java.util.List;
 
 import cz.spse.nahradnihodnoceni.models.DashboardStats;
-import cz.spse.nahradnihodnoceni.models.data.Classroom;
 import cz.spse.nahradnihodnoceni.models.data.Exam;
-import cz.spse.nahradnihodnoceni.models.data.Student;
-import cz.spse.nahradnihodnoceni.models.data.Subject;
 import cz.spse.nahradnihodnoceni.repositories.ExamRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +25,11 @@ public class DashboardController {
     }
 
     @CrossOrigin // TODO only for development
-    @GetMapping(value = "/exams", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Exam> filteredExams(@RequestParam(required = false) String status, @RequestParam(required = false) String type, @RequestParam(required = false) String successful, @RequestParam(required = false) String mark, @RequestParam(required = false) String form) {
+    @GetMapping(value = "/exams/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Exam> filteredExams(@RequestParam(required = false) Integer status, @RequestParam(required = false) Integer type, @RequestParam(required = false) Integer successful, @RequestParam(required = false) Integer mark, @RequestParam(required = false) Integer form, @PathVariable(name = "page") Integer page) {
 
-        return examRepository.findByStatusTypeSuccessfulMark(status, type, successful, mark);
+        Pageable pageable = PageRequest.of(page, 20, Sort.unsorted());
+
+        return examRepository.findByStatusTypeSuccessfulMark(status, type, successful, mark, pageable);
     }
 }

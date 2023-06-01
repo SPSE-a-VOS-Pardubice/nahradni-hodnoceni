@@ -16,7 +16,7 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private boolean available;
+    private boolean available = true;
 
     private String name;
 
