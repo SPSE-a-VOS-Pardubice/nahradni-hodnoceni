@@ -1,11 +1,11 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Entity
 @AllArgsConstructor
@@ -36,7 +36,8 @@ public class Exam {
     @ManyToOne
     private Teacher examiner;
 
-    private LocalDateTime time;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date time;
 
     private String originalMark;
 

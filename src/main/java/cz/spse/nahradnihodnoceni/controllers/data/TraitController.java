@@ -1,5 +1,6 @@
-package cz.spse.nahradnihodnoceni.controllers;
+package cz.spse.nahradnihodnoceni.controllers.data;
 
+import cz.spse.nahradnihodnoceni.controllers.DataController;
 import cz.spse.nahradnihodnoceni.models.data.Trait;
 import cz.spse.nahradnihodnoceni.repositories.TraitRepository;
 import org.springframework.web.bind.annotation.RequestMapping;

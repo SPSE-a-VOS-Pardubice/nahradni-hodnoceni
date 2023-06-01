@@ -1,4 +1,4 @@
-package cz.spse.nahradnihodnoceni.controllers;
+package cz.spse.nahradnihodnoceni.controllers.data;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;

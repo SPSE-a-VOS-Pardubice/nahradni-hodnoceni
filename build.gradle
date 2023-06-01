@@ -27,6 +27,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	implementation 'com.opencsv:opencsv:5.7.1'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate6:2.15.2'
 }
 
 tasks.named('test') {

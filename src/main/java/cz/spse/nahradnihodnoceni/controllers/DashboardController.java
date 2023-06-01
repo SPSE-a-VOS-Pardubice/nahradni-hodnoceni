@@ -1,13 +1,12 @@
 package cz.spse.nahradnihodnoceni.controllers;
 
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.spse.nahradnihodnoceni.helpers.MapperHelper;
 import cz.spse.nahradnihodnoceni.models.DashboardStats;
-import cz.spse.nahradnihodnoceni.models.data.Exam;
 import cz.spse.nahradnihodnoceni.repositories.ExamRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -18,18 +17,23 @@ public class DashboardController {
     @Autowired
     private ExamRepository examRepository;
 
+    private final ObjectMapper mapper = MapperHelper.createMapper();
+
     @CrossOrigin // TODO only for development
     @GetMapping(value = "/stats", produces = MediaType.APPLICATION_JSON_VALUE)
-    public DashboardStats dashboard() {
-        return new DashboardStats(256, 120, 52, 10, 69, 42, 128);
+    public String dashboard() throws JsonProcessingException {
+        var entity = new DashboardStats(256, 120, 52, 10, 69, 42, 128);
+        return mapper.writeValueAsString(entity);
     }
 
     @CrossOrigin // TODO only for development
     @GetMapping(value = "/exams/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Exam> filteredExams(@RequestParam(required = false) Integer status, @RequestParam(required = false) Integer type, @RequestParam(required = false) Integer successful, @RequestParam(required = false) Integer mark, @RequestParam(required = false) Integer form, @PathVariable(name = "page") Integer page) {
+    public String filteredExams(@RequestParam(required = false) Integer status, @RequestParam(required = false) Integer type, @RequestParam(required = false) Integer successful, @RequestParam(required = false) Integer mark, @RequestParam(required = false) Integer form, @PathVariable(name = "page") Integer page) throws JsonProcessingException {
 
-        Pageable pageable = PageRequest.of(page, 20, Sort.unsorted());
+        // TODO check page >= 0
 
-        return examRepository.findByStatusTypeSuccessfulMark(status, type, successful, mark, pageable);
+        var pageable = PageRequest.of(page, 2, Sort.unsorted()); // TODO change page size to ~20
+        var entity = examRepository.findByStatusTypeSuccessfulMark(status, type, successful, mark, pageable);
+        return mapper.writeValueAsString(entity);
     }
 }
