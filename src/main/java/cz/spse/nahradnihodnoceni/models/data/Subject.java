@@ -1,11 +1,11 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
-import java.util.Set;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -18,9 +18,11 @@ public class Subject {
 
     private boolean available = true;
 
+    @Column(nullable = false)
     private String name;
 
-    private String abbereviation;
+    @Column(nullable = false)
+    private String abbreviation;
 
     @OneToMany(mappedBy="subject")
     private Set<Trait> traits;

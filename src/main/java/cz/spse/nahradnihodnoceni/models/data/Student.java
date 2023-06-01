@@ -16,8 +16,10 @@ public class Student {
 
     private boolean available = true;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String surname;
 
     @ManyToOne

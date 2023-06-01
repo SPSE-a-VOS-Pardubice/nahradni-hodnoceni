@@ -18,6 +18,7 @@ public class _Class {
 
     private int year;
 
+    @Column(nullable = false)
     private String label;
 
     @ManyToOne

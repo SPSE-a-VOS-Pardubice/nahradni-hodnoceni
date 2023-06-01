@@ -1,31 +1,21 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import './Dashboard.css'
+import './DashboardTable.css'
+import DashboardTableItemComponent from './DashboardTableItemComponent'
+import Exam from '../../models/Exam'
+import { fetchExams } from '../../ApiClient'
 
-const DashboardComponent = () => {
-
-    const [rows, setRows] = useState([])
-
-    useEffect(() => {
-        // TODO až bude api
-        /*
-        fetch('asasddas')
-        .then(res => {
-            if (res.status === 200) 
-                return res.json()
-            else return []
-        })
-        .then(data => {
-            setRows(data.map(row => row))
-        })
-        */
-    })
-
+const DashboardTableComponent = (props: {
+    exams: Exam[],
+    onExamUpdate: (newExam: Exam) => void
+}) => {
     return (
         <>
             <table className="dashboard">
                 <tbody>
-                    {rows}
+                    {props.exams.map((exam, i) => (
+                        <DashboardTableItemComponent key={i} exam={exam} onExamUpdate={props.onExamUpdate} />
+                    ))}
                 </tbody>
             </table>
 
@@ -56,4 +46,4 @@ const DashboardComponent = () => {
     )
 }
 
-export default DashboardComponent
+export default DashboardTableComponent

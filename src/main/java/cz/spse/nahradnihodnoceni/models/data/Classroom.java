@@ -1,11 +1,11 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
-import java.util.Set;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class Classroom {
 
     private boolean available = true;
 
-    @Column(unique=true)
+    @Column(nullable = false, unique = true)
     private String label;
 
     @OneToMany(mappedBy="classroom")

@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.spse.nahradnihodnoceni.helpers.MapperHelper;
 import cz.spse.nahradnihodnoceni.models.DashboardStats;
 import cz.spse.nahradnihodnoceni.repositories.ExamRepository;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -44,7 +41,7 @@ public class DashboardController {
 
         // TODO check page >= 0
 
-        var pageable = PageRequest.of(page, 2, Sort.unsorted()); // TODO change page size to ~20
+        var pageable = PageRequest.of(page, 20, Sort.unsorted()); // TODO change page size to ~20
         var entity = examRepository.findByStatusTypeSuccessfulMark(status, type, successful, mark, pageable);
         return mapper.writeValueAsString(entity);
     }

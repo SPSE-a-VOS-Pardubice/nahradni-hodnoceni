@@ -18,10 +18,10 @@ public class Exam {
 
     private boolean available = true;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Student student;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Subject subject;
 
     @ManyToOne
@@ -33,12 +33,13 @@ public class Exam {
     @ManyToOne
     private Teacher class_teacher;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Teacher examiner;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;
 
+    @Column(nullable = false)
     private String originalMark;
 
     private String finalMark;

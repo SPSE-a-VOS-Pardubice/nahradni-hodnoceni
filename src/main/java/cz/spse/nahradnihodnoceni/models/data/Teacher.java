@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,16 +19,16 @@ public class Teacher {
 
     private boolean available = true;
 
-    @NonNull
+    @Column(nullable = false)
     private String name;
 
-    @NonNull
+    @Column(nullable = false)
     private String surname;
 
-    @NonNull
+    @Column(nullable = false)
     private String prefix;
 
-    @NonNull
+    @Column(nullable = false)
     private String suffix;
 
     @OneToMany(mappedBy="teacher", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

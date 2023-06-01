@@ -197,6 +197,7 @@
   .table_options_part {
     display: flex;
     justify-content: space-between;
+    padding-top: 2em;
   }
   
   .view_form {

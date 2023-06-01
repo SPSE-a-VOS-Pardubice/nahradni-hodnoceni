@@ -15,11 +15,12 @@ public class TeacherSuitability {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id; // TODO
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Subject subject;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Teacher teacher;
 
-    private int suitability;
+    @Column(nullable = false)
+    private int suitability = 0;
 }
