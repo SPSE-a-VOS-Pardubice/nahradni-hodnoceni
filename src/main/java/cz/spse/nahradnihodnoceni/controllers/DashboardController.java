@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.spse.nahradnihodnoceni.helpers.MapperHelper;
 import cz.spse.nahradnihodnoceni.models.DashboardStats;
 import cz.spse.nahradnihodnoceni.repositories.ExamRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,7 +25,16 @@ public class DashboardController {
     @CrossOrigin // TODO only for development
     @GetMapping(value = "/stats", produces = MediaType.APPLICATION_JSON_VALUE)
     public String dashboard() throws JsonProcessingException {
-        var entity = new DashboardStats(256, 120, 52, 10, 69, 42, 128);
+        var entity = new DashboardStats(
+                examRepository.findAllNH().size(),
+                examRepository.findAllFinishedNH().size(),
+                examRepository.findAllOZ().size(),
+                examRepository.findAllFinishedOZ().size(),
+                examRepository.findAllSuccesedExams().size(),
+                examRepository.findAllFailedExams().size(),
+                examRepository.findAllUnmarkedExams().size()
+            );
+
         return mapper.writeValueAsString(entity);
     }
 
