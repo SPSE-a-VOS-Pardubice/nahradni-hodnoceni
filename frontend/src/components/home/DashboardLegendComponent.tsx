@@ -14,7 +14,7 @@ const DashboardLegendComponent = () => {
             </button>
 
             <section className="app_colors_meaning col p-0">
-                <article id="succeed" className="color_meaning_art">
+                <article id="succeeded" className="color_meaning_art">
                     <p>Úspěšně</p>
                     <div className="color_rect"></div>
                 </article>
