@@ -157,7 +157,7 @@ function getResultClassByMark(mark: string | null) {
         case "2":
         case "3":
         case "4":
-            return "succeed";
+            return "succeeded";
         
         case "5":
             return "failed";

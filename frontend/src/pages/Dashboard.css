@@ -103,7 +103,7 @@
     border-radius: 2.5px;
   }
   
-  #succeed .color_rect  {
+  #succeeded .color_rect  {
     background-color: var(--color-luminous-green);
     border: 2px solid var(--color-luminous-green);
   }
@@ -137,7 +137,7 @@
     height: 100%;
   }
   
-  .progress_succeed {
+  .progress_succeeded {
     background-color: var(--color-luminous-green);
   }
   
@@ -383,7 +383,7 @@
     visibility: visible;
   }
   
-  .dashboard .result #succeed {
+  .dashboard .result #succeeded {
     border: 1px solid var(--color-luminous-green);
     background-color: var(--color-luminous-green);
   }

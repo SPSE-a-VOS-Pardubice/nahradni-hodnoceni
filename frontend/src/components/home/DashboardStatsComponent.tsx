@@ -34,7 +34,7 @@ const DashboardStatsComponent = (props: {
             </div>
             <div className="progress_bar_part">
                 <div className="progress_bar">
-                    <div className="progress_succeed" style={{"flex": props.stats?.succeeded}}></div>
+                    <div className="progress_succeeded" style={{"flex": props.stats?.succeeded}}></div>
                     <div className="progress_failed" style={{"flex": props.stats?.failed}}></div>
                     <div className="progress_unmarked" style={{"flex": props.stats?.unmarked}}></div>
                 </div>
