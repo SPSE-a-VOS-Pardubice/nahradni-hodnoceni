@@ -12,6 +12,9 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 public class Exam {
+
+    public static final String[] marks = {"1","2","3","4","5","N"};
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
