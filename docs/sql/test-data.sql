@@ -7,12 +7,13 @@ INSERT INTO `teacher` (`available`, `id`, `name`, `prefix`, `suffix`, `surname`)
 INSERT INTO `subject` (`available`, `id`, `abbreviation`, `name`) VALUES (b'1', '1', 'M', 'Matematika');
 INSERT INTO `subject` (`available`, `id`, `abbreviation`, `name`) VALUES (b'1', '2', 'PG', 'Programování');
 INSERT INTO `subject` (`available`, `id`, `abbreviation`, `name`) VALUES (b'1', '3', 'ČJ', 'Český jazyk');
+INSERT INTO `subject` (`available`, `id`, `abbreviation`, `name`) VALUES (b'1', '4', 'IN', 'Informatika');
 
 INSERT INTO `_class` (`id`, `available`, `label`, `year`, `teacher_id`) VALUES ('1', b'1', 'D', '2021', NULL);
 
 INSERT INTO `student` (`available`, `_class_id`, `id`, `name`, `surname`) VALUES (b'1', '1', '1', 'Vojtěch', 'Fošnár');
-INSERT INTO `student` (`available`, `_class_id`, `id`, `name`, `surname`) VALUES (b'1', NULL, '2', 'Andrej', 'Novák');
-INSERT INTO `student` (`available`, `_class_id`, `id`, `name`, `surname`) VALUES (b'1', NULL, '3', 'Vítek', 'Vávra');
+INSERT INTO `student` (`available`, `_class_id`, `id`, `name`, `surname`) VALUES (b'1', '1', '2', 'Andrej', 'Novák');
+INSERT INTO `student` (`available`, `_class_id`, `id`, `name`, `surname`) VALUES (b'1', '1', '3', 'Vítek', 'Vávra');
 
 INSERT INTO `classroom` (`id`, `available`, `label`) VALUES ('1', b'1', 'BAZ');
 

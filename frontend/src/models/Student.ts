@@ -6,5 +6,5 @@ export default interface Student {
     
     name: string;
     surname: string;
-    _class: _Class | null;
+    _class: _Class;
 }

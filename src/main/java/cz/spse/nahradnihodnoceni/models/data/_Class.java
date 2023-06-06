@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,8 +23,4 @@ public class _Class {
 
     @ManyToOne
     private Teacher teacher;
-
-    public int countYear() {
-        return  Math.max(1, LocalDate.now().getYear() - getYear());
-    }
 }

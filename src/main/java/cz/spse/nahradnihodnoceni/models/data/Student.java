@@ -22,6 +22,6 @@ public class Student {
     @Column(nullable = false)
     private String surname;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private _Class _class;
 }

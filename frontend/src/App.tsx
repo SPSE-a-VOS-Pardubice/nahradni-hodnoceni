@@ -18,8 +18,6 @@ function App() {
   const messages = {
     "exam.type.5.short": "OZ",
     "exam.type.N.short": "NH",
-    
-    "class.unknown": "neznámá třída",
 
     "time.unknown": "čas nezadán",
 

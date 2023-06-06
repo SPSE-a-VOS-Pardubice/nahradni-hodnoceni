@@ -131,13 +131,10 @@ const DashboardTableItemComponent = (props: {
 }
 
 const FormattedClass = (props: {
-    _class: _Class | null
+    _class: _Class
 }) => {
     const selectedPeriod = useContext(SelectedPeriod);
-
-    return props._class === null ?
-        (<FormattedMessage id='class.unknown' />) :
-        (<>{selectedPeriod.year - props._class.year}.{props._class.label}</>)
+    return (<>{selectedPeriod.year - props._class.year}.{props._class.label}</>)
 }
 
 const FormattedMark = (props: {
