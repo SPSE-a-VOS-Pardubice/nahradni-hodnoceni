@@ -4,6 +4,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import cz.spse.nahradnihodnoceni.models.ImportEntry;
 import cz.spse.nahradnihodnoceni.models.data.*;
+import cz.spse.nahradnihodnoceni.models.responses.FailedUploadResponse;
 import cz.spse.nahradnihodnoceni.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class ImportController {
@@ -34,7 +34,7 @@ public class ImportController {
     private ExamRepository examRepository;
 
     @PostMapping("/api/1/upload")
-    public List<ImportEntry> uploadCSVFile(@RequestParam("file") MultipartFile file) throws Exception {
+    public FailedUploadResponse uploadCSVFile(@RequestParam("file") MultipartFile file) throws Exception {
 
         var currentYear = LocalDate.now().getYear();
 
@@ -54,6 +54,37 @@ public class ImportController {
                 .build();
         List<ImportEntry> entries = csvToBean.parse();
 
+        Map<String, Subject> subjects = new HashMap<>();
+        Map<String, Teacher> teachers = new HashMap<>();
+
+        Set<String> missingSubjects = new HashSet<>();
+        Set<String> missingExaminers = new HashSet<>();
+
+        // přednačteme předměty a zkoušející, abychom zkontrolovali, že žádní v DB nechybí
+        for (ImportEntry entry: entries) {
+            var subjectAbbreviation = entry.getSubjectAbbreviation();
+            if (!missingSubjects.contains(subjectAbbreviation) && !subjects.containsKey(subjectAbbreviation)) {
+                Subject subject = subjectRepository.findByAbbreviation(subjectAbbreviation);
+                if (subject == null)
+                    missingSubjects.add(subjectAbbreviation);
+                else
+                    subjects.put(subjectAbbreviation, subject);
+            }
+
+            var examinerSurname = entry.getExaminerSurname();
+            if (!missingExaminers.contains(examinerSurname) && !teachers.containsKey(examinerSurname)) {
+                Teacher examiner = teacherRepository.findBySurname(examinerSurname);
+                if (examiner == null)
+                    missingExaminers.add(examinerSurname);
+                else
+                    teachers.put(examinerSurname, examiner);
+            }
+        }
+
+        if (!missingSubjects.isEmpty() || !missingExaminers.isEmpty()) {
+            return new FailedUploadResponse(missingSubjects, missingExaminers);
+        }
+
         for (ImportEntry entry: entries) {
 
             _Class _class = classRepository.find(
@@ -67,11 +98,11 @@ public class ImportController {
                 classRepository.save(_class);
             }
 
-            Subject subject = subjectRepository.findByAbbreviation(entry.getSubjectAbbreviation());
+            var subject = subjects.get(entry.getSubjectAbbreviation());
             if (subject == null)
                 continue;
 
-            Teacher examiner = teacherRepository.findBySurname(entry.getExaminerSurname());
+            var examiner = teachers.get(entry.getExaminerSurname());
             if (examiner == null)
                 continue;
 
@@ -100,7 +131,7 @@ public class ImportController {
             examRepository.save(exam);
         }
 
-        return entries;
+        return null;
     }
 
     private int calculateYear(int partialYear, int relativeTo) {
