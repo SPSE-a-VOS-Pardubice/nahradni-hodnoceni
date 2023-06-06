@@ -1,9 +1,6 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
 import './DashboardTable.css'
 import DashboardTableItemComponent from './DashboardTableItemComponent'
 import Exam from '../../models/Exam'
-import { fetchExams } from '../../ApiClient'
 
 const DashboardTableComponent = (props: {
     exams: Exam[],

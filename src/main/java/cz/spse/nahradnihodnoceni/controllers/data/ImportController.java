@@ -36,7 +36,7 @@ public class ImportController {
     @Autowired
     private ExamRepository examRepository;
 
-    @PostMapping("/upload-csv-file")
+    @PostMapping("/api/1/upload")
     public List<ImportEntry> uploadCSVFile(@RequestParam("file") MultipartFile file) throws IOException {
 
         // validate file
@@ -57,14 +57,16 @@ public class ImportController {
         List<ImportEntry> entries = csvToBean.parse();
 
         // load data from DB and mapping them, for easy access
-        Map<String, _Class> classes = loadEntities((_Class c) -> c.countYear() + "" + c.getLabel(), classRepository);
-        Map<String, Subject> subjects = loadEntities((Subject s) -> s.getAbbreviation(), subjectRepository);
-        Map<String, Teacher> teachers = loadEntities((Teacher t) -> t.getSurname(), teacherRepository);
+        Map<String, _Class> classes = loadEntities((_Class c) -> c.countYear() + c.getLabel(), classRepository);
+        Map<String, Subject> subjects = loadEntities(Subject::getAbbreviation, subjectRepository);
+        Map<String, Teacher> teachers = loadEntities(Teacher::getSurname, teacherRepository);
         Map<String, Student> students = loadEntities((Student s) -> String.format("%s%s%s",
                         s.get_class().countYear() + s.get_class().getLabel(),
                         s.getSurname(),
-                        s.getName())
-                , studentRepository);
+                        s.getName()
+                ),
+                studentRepository
+        );
 
         // creating exams
         for (ImportEntry entry: entries) {
@@ -74,7 +76,7 @@ public class ImportController {
             Teacher t = teachers.get(entry.getZkousejici());
 
             // validate
-                if (c != null && subj != null && t != null && Set.of(Exam.marks).contains(entry.getZnamka())) {
+            if (c != null && subj != null && t != null && Set.of(Exam.marks).contains(entry.getZnamka())) {
                 // searching student
                 Student s = students.get(entry.getTrida() + entry.getPrijmeni() + entry.getJmeno());
 

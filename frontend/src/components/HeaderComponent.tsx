@@ -1,6 +1,6 @@
 import './Header.css'
 
-const HeaderComponent = (props) => {
+const HeaderComponent = () => {
 
     return (
         <header className="header_component">

@@ -7,8 +7,6 @@ import cz.spse.nahradnihodnoceni.models.DashboardStats;
 import cz.spse.nahradnihodnoceni.repositories.ExamRepository;
 import cz.spse.nahradnihodnoceni.repositories.ExamRepositoryOther;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -42,17 +40,17 @@ public class DashboardController {
 
     @CrossOrigin // TODO only for development
     @GetMapping(value = "/exams/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String filteredExams(@RequestParam(defaultValue = "") String status, @RequestParam(defaultValue = "") String type, @RequestParam(defaultValue = "") String successful, @RequestParam(required = false) String mark, @RequestParam(required = false) String form, @PathVariable(name = "page") Integer page) throws JsonProcessingException {
+    public String filteredExams(@RequestParam(defaultValue = "") String status, @RequestParam(defaultValue = "") String type, @RequestParam(defaultValue = "") String success, @RequestParam(defaultValue = "") String mark, @RequestParam(defaultValue = "") String form, @RequestParam(defaultValue = "") String sortBy, @RequestParam(defaultValue = "false") String reverse, @PathVariable() Integer page) throws JsonProcessingException {
 
-        // TODO check page >= 0
+        // TODO add paging
 
-        var pageable = PageRequest.of(page, 20, Sort.unsorted()); // TODO change page size to ~20
         var entity = examRepositoryOther.findFiltered(
                 getStatusFilter(status),
                 getTypeFilter(type),
-                getSuccessFilter(successful),
+                getSuccessFilter(success),
                 mark,
-                pageable
+                getSort(sortBy),
+                getBoolean(reverse)
         );
         return mapper.writeValueAsString(entity);
     }
@@ -65,18 +63,36 @@ public class DashboardController {
         };
     }
 
-    private @Nullable ExamRepositoryOther.FILTER_TYPE getTypeFilter(String status) {
-        return switch (status) {
+    private @Nullable ExamRepositoryOther.FILTER_TYPE getTypeFilter(String type) {
+        return switch (type) {
             case "nahradni_hodnoceni" -> ExamRepositoryOther.FILTER_TYPE.NAHRADNI_HODNOCENI;
             case "opravna_zkouska" -> ExamRepositoryOther.FILTER_TYPE.OPRAVNA_ZKOUSKA;
             default -> null;
         };
     }
 
-    private @Nullable ExamRepositoryOther.FILTER_SUCCESS getSuccessFilter(String status) {
-        return switch (status) {
+    private @Nullable ExamRepositoryOther.FILTER_SUCCESS getSuccessFilter(String success) {
+        return switch (success) {
             case "successful" -> ExamRepositoryOther.FILTER_SUCCESS.SUCCESSFUL;
             case "failed" -> ExamRepositoryOther.FILTER_SUCCESS.FAILED;
+            default -> null;
+        };
+    }
+
+    private @Nullable ExamRepositoryOther.SORT_BY getSort(String sort) {
+        return switch (sort) {
+            case "student" -> ExamRepositoryOther.SORT_BY.STUDENT;
+            case "teacher" -> ExamRepositoryOther.SORT_BY.TEACHER;
+            case "class" -> ExamRepositoryOther.SORT_BY.CLASS;
+            case "mark" -> ExamRepositoryOther.SORT_BY.MARK;
+            default -> null;
+        };
+    }
+
+    private @Nullable Boolean getBoolean(String bool) {
+        return switch (bool) {
+            case "1", "true" -> Boolean.TRUE;
+            case "0", "false" -> Boolean.FALSE;
             default -> null;
         };
     }

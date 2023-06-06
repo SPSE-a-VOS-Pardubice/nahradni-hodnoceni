@@ -16,19 +16,39 @@ function App() {
   // TODO zde se postarat o authentikaci
 
   const messages = {
-    "exam.type.5.short":  "OZ",
-    "exam.type.N.short":  "NH",
-    "class.unknown":      "neznámá třída",
-    "time.unknown":       "čas nezadán",
+    "exam.type.5.short": "OZ",
+    "exam.type.N.short": "NH",
+    
+    "class.unknown": "neznámá třída",
+
+    "time.unknown": "čas nezadán",
+
     "classroom.short":    "uč.",
     "classroom.unknown":  "nezadána",
+
     "mark.new.unknown":   "nezadána",
     "mark.1":             "Výborné",
     "mark.2":             "Chvalitebné",
     "mark.3":             "Dobré",
     "mark.4":             "Dostačující",
     "mark.5":             "Nedostačující",
-    "mark.remove":        "Nehodnotit"
+    "mark.remove":        "Nehodnotit",
+
+    "filter.status.finished":         "Dokončené",
+    "filter.status.unfinished":       "Nedokončené",
+    "filter.type.nahradni_hodnoceni": "Náhradní hodnocení (NH)",
+    "filter.type.opravna_zkouska":    "Opravné zkoušky (OZ)",
+    "filter.success.successful":      "Úspěšně",
+    "filter.success.failed":          "Neúspěšně",
+
+    "sort.student":         "Žáka (A-Z)",
+    "sort.student.reverse": "Žáka (Z-A)",
+    "sort.teacher":         "Učitele (A-Z)",
+    "sort.teacher.reverse": "Učitele (Z-A)",
+    "sort.class":           "Třídy (1. - 4.)",
+    "sort.class.reverse":   "Třídy (4. - 1.)",
+    "sort.mark":            "Známky (1 - 5)",
+    "sort.mark.reverse":    "Známky (5 - 1)"
   }
 
   return (

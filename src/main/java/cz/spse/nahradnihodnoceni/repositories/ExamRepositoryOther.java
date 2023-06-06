@@ -3,7 +3,7 @@ package cz.spse.nahradnihodnoceni.repositories;
 import cz.spse.nahradnihodnoceni.models.data.Exam;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class ExamRepositoryOther {
     @PersistenceContext
     private EntityManager em;
 
-    public List<Exam> findFiltered(FILTER_STATUS status, FILTER_TYPE type, FILTER_SUCCESS success, String mark, Pageable pageable) {
+    public List<Exam> findFiltered(@Nullable FILTER_STATUS status, @Nullable FILTER_TYPE type, @Nullable FILTER_SUCCESS success, @Nullable String mark, @Nullable SORT_BY sortBy, @Nullable Boolean reversed) {
         var qb = em.getCriteriaBuilder();
         var query = qb.createQuery(Exam.class);
         var root = query.from(Exam.class);
@@ -46,6 +46,22 @@ public class ExamRepositoryOther {
             }
         }
 
+//        if (mark != null) {
+//
+//        }
+
+        // TODO
+        if (sortBy != null) {
+            var model = switch (sortBy) {
+                case STUDENT -> root.get("student").get("surname");
+                case TEACHER -> root.get("examiner").get("surname");
+                case CLASS -> root.get("student").get("_class").get("year");
+                case MARK -> root.get("finalMark");
+            };
+            var order = reversed == Boolean.TRUE ? qb.desc(model) : qb.asc(model);
+            query.orderBy(order);
+        }
+
         return em.createQuery(query).getResultList();
     }
 
@@ -62,5 +78,12 @@ public class ExamRepositoryOther {
     public enum FILTER_SUCCESS {
         SUCCESSFUL,
         FAILED
+    }
+
+    public enum SORT_BY {
+        STUDENT,
+        TEACHER,
+        CLASS,
+        MARK
     }
 }

@@ -2,18 +2,20 @@ import React, { useEffect, useState } from 'react'
 import './Dashboard.css'
 
 import DashboardStatsComponent from '../components/home/DashboardStatsComponent'
-import TableOptions from '../components/home/TableOptions'
+import FilterOptionsComponent from '../components/home/FilterOptionsComponent'
 import DashboardTableComponent from '../components/home/DashboardTableComponent'
 import DashboardSearchComponent from '../components/home/DashboardSearchComponent'
 import { fetchDashboardStats, fetchExams } from '../ApiClient'
 import Exam from '../models/Exam'
 import DashboardStats from '../models/DashboardStats'
+import FilterParams from '../models/FilterParams'
 
 const DashboardPage = () => {
 
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [page, setPage] = useState<number>(0);
     const [exams, setExams] = useState<Exam[]>([]);
+    const [filterParams, setFilterParams] = useState(new FilterParams());
 
     useEffect(() => {
         (async () => {
@@ -23,10 +25,10 @@ const DashboardPage = () => {
 
     useEffect(() => {
         (async () => {
-            const exams = await fetchExams(page);
+            const exams = await fetchExams(filterParams, page);
             setExams(exams);
         })();
-    }, [page]);
+    }, [page, filterParams]);
 
     function onExamUpdate(newExam: Exam) {
         const newExams = Object.assign([], exams);
@@ -50,7 +52,7 @@ const DashboardPage = () => {
                 <p>Zobrazeno 136 záznamů</p>
             </div> */}
 
-            <TableOptions />
+            <FilterOptionsComponent params={filterParams} setParams={setFilterParams} />
             <DashboardTableComponent exams={exams} onExamUpdate={onExamUpdate} />
         </>
     )
