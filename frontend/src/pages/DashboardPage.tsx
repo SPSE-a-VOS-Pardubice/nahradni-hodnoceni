@@ -16,6 +16,7 @@ const DashboardPage = () => {
     const [page, setPage] = useState<number>(0);
     const [exams, setExams] = useState<Exam[]>([]);
     const [filterParams, setFilterParams] = useState(new FilterParams());
+    const [importOpen, setImportOpen] = useState<boolean>(false);
 
     useEffect(() => {
         (async () => {
@@ -26,6 +27,8 @@ const DashboardPage = () => {
     useEffect(() => {
         (async () => {
             const exams = await fetchExams(filterParams, page);
+            if (exams.length === 0)
+                setImportOpen(true);
             setExams(exams);
         })();
     }, [page, filterParams]);
@@ -55,7 +58,7 @@ const DashboardPage = () => {
             <FilterOptions params={filterParams} setParams={setFilterParams} />
             <DashboardTable exams={exams} onExamUpdate={onExamUpdate} />
 
-            <Import open={false} onFinish={console.log} />
+            <Import open={importOpen} onFinish={() => setImportOpen(false)} />
         </>
     )
 }

@@ -21,7 +21,15 @@ const Import = (props: {
         setFile(data);
     }
 
-
+    async function finalUpload() {
+        if (file === null)
+            return;
+        
+        const mi = await uploadCsvFile(file);
+        setMissingImport(mi);
+        if (mi === "")
+            setTimeout(props.onFinish, 0);
+    };
     
     useEffect(() => {
         if (file === null) {
@@ -47,13 +55,17 @@ const Import = (props: {
                 {
                     text: "OK",
                     onClick: async () => {
+                        const subjectNameEl = (document.getElementById("subject_name")! as HTMLInputElement);
+
                         await uploadData(
                             {
-                                name: (document.getElementById("subject_name")! as HTMLInputElement).value,
+                                name: subjectNameEl.value,
                                 abbreviation: subjectAbbreviation
                             } as Subject,
                             "subject"
                         )
+
+                        subjectNameEl.value = "";
 
                         const mi = Object.assign({}, missingImport);
                         mi.missingSubjects.shift();
@@ -80,21 +92,29 @@ const Import = (props: {
                 {
                     text: "OK",
                     onClick: async () => {
+                        const examinerPrefixEl = (document.getElementById("import_examiner_prefix")! as HTMLInputElement);
+                        const examinerNameEl = (document.getElementById("import_examiner_name")! as HTMLInputElement);
+                        const examinerSuffixEl = (document.getElementById("import_examiner_suffix")! as HTMLInputElement);
+
                         await uploadData(
                             {
-                                prefix: (document.getElementById("import_examiner_prefix")! as HTMLInputElement).value,
-                                name: (document.getElementById("import_examiner_name")! as HTMLInputElement).value,
+                                prefix: examinerPrefixEl.value,
+                                name: examinerNameEl.value,
                                 surname: examinerSurname,
-                                suffix: (document.getElementById("import_examiner_suffix")! as HTMLInputElement).value,
+                                suffix: examinerSuffixEl.value,
                             } as Teacher,
                             "teacher"
                         )
+
+                        examinerPrefixEl.value = "";
+                        examinerNameEl.value = "";
+                        examinerSuffixEl.value = "";
 
                         const mi = Object.assign({}, missingImport);
                         mi.missingExaminers.shift();
                         setMissingImport(mi);
                         if (mi.missingExaminers.length === 0)
-                            setTimeout(props.onFinish, 0);
+                            await finalUpload();
                     }
                 }
             ]}>
