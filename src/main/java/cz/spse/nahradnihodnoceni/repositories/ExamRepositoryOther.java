@@ -69,6 +69,8 @@ public class ExamRepositoryOther {
              * Predicate eventDescPredicate = builder.like(root.get("eventDescription"), "%" + searchText + "%");
              */
 
+            // todo
+
             Predicate studentSurnamePredicate = qb.like(root.get("student").get("surname"), "%" + text + "%");
 
             Predicate subjectNamePredicate = qb.like(root.get("subject").get("name"), "%" + text + "%");
