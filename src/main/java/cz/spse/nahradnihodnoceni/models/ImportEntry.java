@@ -39,7 +39,7 @@ public class ImportEntry {
     private String[] splitClass() throws Exception {
         var components = _class.split("\\.");
         if (components.length != 2)
-            throw new Exception(String.format("tvoje maminka zapoměla že třída má rok a označení: %s", _class));
+            throw new Exception(String.format("tvoje maminka zapomněla že třída má rok a označení: %s", _class));
         return components;
     }
 }
