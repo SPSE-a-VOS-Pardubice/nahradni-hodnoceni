@@ -1,5 +1,5 @@
 
-export default interface DashboardStats {
+export default interface DashboardStatsData {
     totalNH: number;
     finishedNH: number;
 

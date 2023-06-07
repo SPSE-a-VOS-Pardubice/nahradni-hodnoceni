@@ -1,8 +1,5 @@
-import React from 'react'
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
-import GForm from "./pages/GForm";
 import HeaderComponent from './components/HeaderComponent';
 import { IntlProvider } from 'react-intl';
 // import Create from "./pages/Create";
@@ -46,7 +43,10 @@ function App() {
     "sort.class":           "Třídy (1. - 4.)",
     "sort.class.reverse":   "Třídy (4. - 1.)",
     "sort.mark":            "Známky (1 - 5)",
-    "sort.mark.reverse":    "Známky (5 - 1)"
+    "sort.mark.reverse":    "Známky (5 - 1)",
+
+    "import.drop":      "klikněte pro vybrání souboru, nebo ho sem přetáhněte",
+    "import.uploading": "probíhá nahrávání"
   }
 
   return (
@@ -57,9 +57,9 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route index element={ <DashboardPage /> } />
-            <Route path='/data/:coll/:id' element={ <GForm /> } />
-            {
-            /* <Route path='/addExamp' element={ <Create /> } />
+
+            {/* <Route path='/data/:coll/:id' element={ <GForm /> } />
+            <Route path='/addExamp' element={ <Create /> } />
             <Route path='/editExamp' element={ <Edit /> } />
             <Route path='/graf' element={ <Graf /> } />
             <Route path='/login' element={ <Login /> } />

@@ -1,8 +1,8 @@
 import './DashboardTable.css'
-import DashboardTableItemComponent from './DashboardTableItemComponent'
-import Exam from '../../models/Exam'
+import DashboardTableItem from './DashboardTableItemComponent'
+import Exam from '../../models/data/Exam'
 
-const DashboardTableComponent = (props: {
+const DashboardTable = (props: {
     exams: Exam[],
     onExamUpdate: (newExam: Exam) => void
 }) => {
@@ -11,7 +11,7 @@ const DashboardTableComponent = (props: {
             <table className="dashboard">
                 <tbody>
                     {props.exams.map((exam, i) => (
-                        <DashboardTableItemComponent key={i} exam={exam} onExamUpdate={props.onExamUpdate} />
+                        <DashboardTableItem key={i} exam={exam} onExamUpdate={props.onExamUpdate} />
                     ))}
                 </tbody>
             </table>
@@ -43,4 +43,4 @@ const DashboardTableComponent = (props: {
     )
 }
 
-export default DashboardTableComponent
+export default DashboardTable

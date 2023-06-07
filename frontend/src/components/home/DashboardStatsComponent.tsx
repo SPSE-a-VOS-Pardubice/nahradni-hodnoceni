@@ -1,9 +1,9 @@
 import './DashboardStats.css'
 import DashboardLegendComponent from './DashboardLegendComponent'
-import DashboardStats from '../../models/DashboardStats';
+import DashboardStatsData from '../../models/DashboardStatsData';
 
-const DashboardStatsComponent = (props: {
-    stats: DashboardStats | null
+const DashboardStats = (props: {
+    stats: DashboardStatsData | null
 }) => {
 
     let finished = null;
@@ -21,10 +21,10 @@ const DashboardStatsComponent = (props: {
                             <>{/* TODO zobrazit nejakou formu nacitani / erroru ? */}</>
                         ) : (
                             <>
-                                <DashboardSingleStatComponent name='Dokončeno' value={`${finished!.toFixed(0)}%`} />
-                                <DashboardSingleStatComponent name='Dokončeno NH' value={`${props.stats.finishedNH}/${props.stats.totalNH}`} />
-                                <DashboardSingleStatComponent name='Dokončeno OZ' value={`${props.stats.finishedOZ}/${props.stats.totalOZ}`} />
-                                <DashboardSingleStatComponent name='Žáků prospělo' value={props.stats.succeeded.toString()} />
+                                <DashboardSingleStat name='Dokončeno' value={`${finished!.toFixed(0)}%`} />
+                                <DashboardSingleStat name='Dokončeno NH' value={`${props.stats.finishedNH}/${props.stats.totalNH}`} />
+                                <DashboardSingleStat name='Dokončeno OZ' value={`${props.stats.finishedOZ}/${props.stats.totalOZ}`} />
+                                <DashboardSingleStat name='Žáků prospělo' value={props.stats.succeeded.toString()} />
                             </>
                         )}
                     </section>
@@ -49,7 +49,7 @@ const DashboardStatsComponent = (props: {
     )
 }
 
-const DashboardSingleStatComponent = (props: {
+const DashboardSingleStat = (props: {
     value: string,
     name: string
 }) => {
@@ -62,4 +62,4 @@ const DashboardSingleStatComponent = (props: {
     );
 }
 
-export default DashboardStatsComponent
+export default DashboardStats

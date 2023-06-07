@@ -435,6 +435,7 @@
     transform: translate(-50%, -50%);
     transition: var(--transition-short);
     z-index: 2;
+    min-width: 200px;
   }
   
   .popup.active {

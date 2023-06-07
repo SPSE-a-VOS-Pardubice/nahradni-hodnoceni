@@ -47,7 +47,7 @@ const markOptions = {
 //     }
 // ]
 
-const FilterOptionsComponent = (props: {
+const FilterOptions = (props: {
     params: FilterParams,
     setParams: (newParams: FilterParams) => void
 }) => {
@@ -93,4 +93,4 @@ const FilterOptionsComponent = (props: {
     )
 }
 
-export default FilterOptionsComponent
+export default FilterOptions

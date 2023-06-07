@@ -1,12 +1,12 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import './DashboardTableItem.css'
-import Exam from '../../models/Exam'
+import Exam from '../../models/data/Exam'
 import SelectedPeriod from '../../contexts/SelectedPeriod'
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl'
-import _Class from '../../models/_Class'
+import _Class from '../../models/data/_Class'
 import { uploadExam } from '../../ApiClient'
 
-const DashboardTableItemComponent = (props: {
+const DashboardTableItem = (props: {
     exam: Exam,
     onExamUpdate: (newExam: Exam) => void
 }) => {
@@ -164,4 +164,4 @@ function getResultClassByMark(mark: string | null) {
     }
 }
 
-export default DashboardTableItemComponent
+export default DashboardTableItem

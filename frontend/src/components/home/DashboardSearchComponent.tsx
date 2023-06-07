@@ -1,7 +1,7 @@
 import React from 'react'
 import './DashboardSearch.css'
 
-const DashboardSearchComponent = (props: {
+const DashboardSearch = (props: {
     onSubmit: (text: string) => void
 }) => {
 
@@ -25,4 +25,4 @@ const DashboardSearchComponent = (props: {
     )
 }
 
-export default DashboardSearchComponent
+export default DashboardSearch
