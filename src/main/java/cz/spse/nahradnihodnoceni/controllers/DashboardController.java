@@ -40,7 +40,7 @@ public class DashboardController {
 
     @CrossOrigin // TODO only for development
     @GetMapping(value = "/exams/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String filteredExams(@RequestParam(defaultValue = "") String status, @RequestParam(defaultValue = "") String type, @RequestParam(defaultValue = "") String success, @RequestParam(defaultValue = "") String mark, @RequestParam(defaultValue = "") String form, @RequestParam(defaultValue = "") String sortBy, @RequestParam(defaultValue = "false") String reverse, @PathVariable() Integer page) throws JsonProcessingException {
+    public String filteredExams(@RequestParam(defaultValue = "") String status, @RequestParam(defaultValue = "") String type, @RequestParam(defaultValue = "") String success, @RequestParam(defaultValue = "") String mark, @RequestParam(defaultValue = "") String form, @RequestParam(defaultValue = "") String sortBy, @RequestParam(defaultValue = "false") String reverse, @PathVariable() Integer page, @RequestParam(defaultValue = "") String text) throws JsonProcessingException {
 
         // TODO add paging
 
@@ -50,7 +50,8 @@ public class DashboardController {
                 getSuccessFilter(success),
                 mark,
                 getSort(sortBy),
-                getBoolean(reverse)
+                getBoolean(reverse),
+                text
         );
         return mapper.writeValueAsString(entity);
     }
