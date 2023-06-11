@@ -64,13 +64,6 @@ public class ExamRepositoryOther {
         }
 
         if (!text.isEmpty()) {
-            /**
-             * Predicate eventNamePredicate = builder.like(root.get("eventName"), "%" + searchText + "%");
-             * Predicate eventDescPredicate = builder.like(root.get("eventDescription"), "%" + searchText + "%");
-             */
-
-            // todo
-
             Predicate studentSurnamePredicate = qb.like(root.get("student").get("surname"), "%" + text + "%");
 
             Predicate subjectNamePredicate = qb.like(root.get("subject").get("name"), "%" + text + "%");
@@ -78,15 +71,22 @@ public class ExamRepositoryOther {
 
             Predicate classroomLabelPredicate = qb.like(root.get("classroom").get("label"), "%" + text + "%");
 
-            Predicate chairmanSurnamePredicate = qb.like(root.get("chairman").get("surname"), "%" + text + "%");
-            Predicate class_teacherSurnamePredicate = qb.like(root.get("class_teacher").get("surname"), "%" + text + "%");
+            //Predicate chairmanSurnamePredicate = qb.like(root.get("chairman").get("surname"), "%" + text + "%");
+            //Predicate class_teacherSurnamePredicate = qb.like(root.get("class_teacher").get("surname"), "%" + text + "%");
             Predicate examinerSurnamePredicate = qb.like(root.get("examiner").get("surname"), "%" + text + "%");
 
-            Predicate timePredicate = qb.like(root.get("time"), "%" + text + "%");
+            //Predicate timePredicate = qb.like(root.get("time"), "%" + text + "%");
 
-            Predicate searchPredicate = qb.or(studentSurnamePredicate, subjectNamePredicate, subjectAbbreviationPredicate, classroomLabelPredicate, chairmanSurnamePredicate, class_teacherSurnamePredicate, examinerSurnamePredicate, timePredicate);
+            Predicate searchPredicate = qb.or(studentSurnamePredicate,
+                                            subjectNamePredicate,
+                                            subjectAbbreviationPredicate,
+                                            classroomLabelPredicate,
+                                            //chairmanSurnamePredicate//,
+                                            //class_teacherSurnamePredicate,
+                                            examinerSurnamePredicate//,
+                                            //timePredicate
+                    );
             query.where(searchPredicate);
-
         }
 
         return em.createQuery(query).getResultList();
