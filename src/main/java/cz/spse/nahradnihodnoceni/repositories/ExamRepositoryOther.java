@@ -69,7 +69,7 @@ public class ExamRepositoryOther {
             Predicate subjectNamePredicate = qb.like(root.get("subject").get("name"), "%" + text + "%");
             Predicate subjectAbbreviationPredicate = qb.like(root.get("subject").get("abbreviation"), "%" + text + "%");
 
-            Predicate classroomLabelPredicate = qb.like(root.get("classroom").get("label"), "%" + text + "%");
+            //Predicate classroomLabelPredicate = qb.like(root.get("classroom").get("label"), "%" + text + "%");
 
             //Predicate chairmanSurnamePredicate = qb.like(root.get("chairman").get("surname"), "%" + text + "%");
             //Predicate class_teacherSurnamePredicate = qb.like(root.get("class_teacher").get("surname"), "%" + text + "%");
@@ -80,7 +80,7 @@ public class ExamRepositoryOther {
             Predicate searchPredicate = qb.or(studentSurnamePredicate,
                                             subjectNamePredicate,
                                             subjectAbbreviationPredicate,
-                                            classroomLabelPredicate,
+                                            //classroomLabelPredicate,
                                             //chairmanSurnamePredicate//,
                                             //class_teacherSurnamePredicate,
                                             examinerSurnamePredicate//,
