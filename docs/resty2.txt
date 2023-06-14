@@ -1,0 +1,13 @@
+inport - import učitelů, předmětů, tříd?  []
+vyhledávání - při filtrování []
+edit/delete nezobrazovat (zoborazovat po najetí?) []
+zobrazování nepotřebných tlačítek - když už je to oznámkovaný, nená to třeba []
+generátor []
+u učeben řešit židov a karlovinu []
+u předmětů jsou zkratky unikátní []
+rozjetí dalších zkoušek po kliknutí, ne po najetí []
+mít možnost spojovat zkoušky do skupin (podle studenta) []
+detail člověka - jeho zkoušky -  []
+poslat frontend za Věckem []
+
+
