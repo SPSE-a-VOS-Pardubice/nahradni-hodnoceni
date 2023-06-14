@@ -1,10 +1,9 @@
-import React from 'react'
-import './GForm.css'
+import './GForm.css';
 
 const GForm = () => {
-    return (
+  return (
         <></>
-    )
-}
+  );
+};
 
-export default GForm
+export default GForm;

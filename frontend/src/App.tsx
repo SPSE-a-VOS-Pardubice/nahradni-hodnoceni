@@ -1,7 +1,7 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import DashboardPage from "./pages/DashboardPage";
+import {IntlProvider} from 'react-intl';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Header from './components/Header';
-import { IntlProvider } from 'react-intl';
+import DashboardPage from './pages/DashboardPage';
 // import Create from "./pages/Create";
 // import Edit from "./pages/Edit";
 // import Graf from "./pages/Graf";
@@ -9,45 +9,43 @@ import { IntlProvider } from 'react-intl';
 // import New_Pass from "./pages/New_Pass";
 
 function App() {
-  
-  // TODO zde se postarat o authentikaci
 
   const messages = {
-    "exam.type.5.short": "OZ",
-    "exam.type.N.short": "NH",
+    'exam.type.5.short': 'OZ',
+    'exam.type.N.short': 'NH',
 
-    "time.unknown": "čas nezadán",
+    'time.unknown': 'čas nezadán',
 
-    "classroom.short":    "uč.",
-    "classroom.unknown":  "nezadána",
+    'classroom.short': 'uč.',
+    'classroom.unknown': 'nezadána',
 
-    "mark.new.unknown":   "nezadána",
-    "mark.1":             "Výborné",
-    "mark.2":             "Chvalitebné",
-    "mark.3":             "Dobré",
-    "mark.4":             "Dostačující",
-    "mark.5":             "Nedostačující",
-    "mark.remove":        "Nehodnotit",
+    'mark.new.unknown': 'nezadána',
+    'mark.1': 'Výborné',
+    'mark.2': 'Chvalitebné',
+    'mark.3': 'Dobré',
+    'mark.4': 'Dostačující',
+    'mark.5': 'Nedostačující',
+    'mark.remove': 'Nehodnotit',
 
-    "filter.status.finished":         "Dokončené",
-    "filter.status.unfinished":       "Nedokončené",
-    "filter.type.nahradni_hodnoceni": "Náhradní hodnocení (NH)",
-    "filter.type.opravna_zkouska":    "Opravné zkoušky (OZ)",
-    "filter.success.successful":      "Úspěšně",
-    "filter.success.failed":          "Neúspěšně",
+    'filter.status.finished': 'Dokončené',
+    'filter.status.unfinished': 'Nedokončené',
+    'filter.type.nahradni_hodnoceni': 'Náhradní hodnocení (NH)',
+    'filter.type.opravna_zkouska': 'Opravné zkoušky (OZ)',
+    'filter.success.successful': 'Úspěšně',
+    'filter.success.failed': 'Neúspěšně',
 
-    "sort.student":         "Žáka (A-Z)",
-    "sort.student.reverse": "Žáka (Z-A)",
-    "sort.teacher":         "Učitele (A-Z)",
-    "sort.teacher.reverse": "Učitele (Z-A)",
-    "sort.class":           "Třídy (1. - 4.)",
-    "sort.class.reverse":   "Třídy (4. - 1.)",
-    "sort.mark":            "Známky (1 - 5)",
-    "sort.mark.reverse":    "Známky (5 - 1)",
+    'sort.student': 'Žáka (A-Z)',
+    'sort.student.reverse': 'Žáka (Z-A)',
+    'sort.teacher': 'Učitele (A-Z)',
+    'sort.teacher.reverse': 'Učitele (Z-A)',
+    'sort.class': 'Třídy (1. - 4.)',
+    'sort.class.reverse': 'Třídy (4. - 1.)',
+    'sort.mark': 'Známky (1 - 5)',
+    'sort.mark.reverse': 'Známky (5 - 1)',
 
-    "import.drop":      "klikněte pro vybrání souboru, nebo ho sem přetáhněte",
-    "import.uploading": "probíhá nahrávání"
-  }
+    'import.drop': 'klikněte pro vybrání souboru, nebo ho sem přetáhněte',
+    'import.uploading': 'probíhá nahrávání',
+  };
 
   return (
     <IntlProvider messages={messages} locale="cs" defaultLocale="cs">
