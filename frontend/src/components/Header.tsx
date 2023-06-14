@@ -1,8 +1,7 @@
-import './Header.css'
+import './Header.css';
 
 const Header = () => {
-
-    return (
+  return (
         <header className="header_component">
             <div className="logo">
                 <img src="/img/spse_Logo.png" alt="Logo SPŠE a VOŠ Pardubice" />
@@ -21,7 +20,7 @@ const Header = () => {
                 </button>
             </div>
         </header>
-    )
-}
+  );
+};
 
-export default Header
+export default Header;

@@ -1,10 +1,12 @@
-import Teacher from "./Teacher";
+import Teacher from './Teacher';
 
-export default interface _Class {
+interface _Class {
     id: number;
     available: boolean;
-    
+
     year: number;
     label: string;
     teacher: Teacher | null;
 }
+
+export default _Class;

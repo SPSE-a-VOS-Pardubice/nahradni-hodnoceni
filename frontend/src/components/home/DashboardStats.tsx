@@ -1,16 +1,29 @@
-import './DashboardStats.css'
-import DashboardLegend from './DashboardLegend'
 import DashboardStatsData from '../../models/DashboardStatsData';
+import './DashboardStats.css';
+
+import DashboardLegend from './DashboardLegend';
+
+const DashboardSingleStat = (props: {
+    value: string,
+    name: string
+}) => {
+
+  return (
+        <article className="app_main_data_art">
+            <h2>{props.value}</h2>
+            <h3>{props.name}</h3>
+        </article>
+  );
+};
 
 const DashboardStats = (props: {
     stats: DashboardStatsData | null
 }) => {
 
-    let finished = null;
-    if (props.stats !== null)
-        finished = (props.stats.finishedNH + props.stats.finishedOZ) / (props.stats.totalNH + props.stats.totalOZ) * 100;
+  let finished = null;
+  if (props.stats !== null) { finished = (props.stats.finishedNH + props.stats.finishedOZ) / (props.stats.totalNH + props.stats.totalOZ) * 100; }
 
-    return (
+  return (
         <div className="app_main">
             <div className="app_main_info_part">
                 <div className="app_data_part">
@@ -21,10 +34,10 @@ const DashboardStats = (props: {
                             <>{/* TODO zobrazit nejakou formu nacitani / erroru ? */}</>
                         ) : (
                             <>
-                                <DashboardSingleStat name='Dokončeno' value={`${finished!.toFixed(0)}%`} />
-                                <DashboardSingleStat name='Dokončeno NH' value={`${props.stats.finishedNH}/${props.stats.totalNH}`} />
-                                <DashboardSingleStat name='Dokončeno OZ' value={`${props.stats.finishedOZ}/${props.stats.totalOZ}`} />
-                                <DashboardSingleStat name='Žáků prospělo' value={props.stats.succeeded.toString()} />
+                                <DashboardSingleStat name="Dokončeno" value={`${finished!.toFixed(0)}%`} />
+                                <DashboardSingleStat name="Dokončeno NH" value={`${props.stats.finishedNH}/${props.stats.totalNH}`} />
+                                <DashboardSingleStat name="Dokončeno OZ" value={`${props.stats.finishedOZ}/${props.stats.totalOZ}`} />
+                                <DashboardSingleStat name="Žáků prospělo" value={props.stats.succeeded.toString()} />
                             </>
                         )}
                     </section>
@@ -34,9 +47,9 @@ const DashboardStats = (props: {
             </div>
             <div className="progress_bar_part">
                 <div className="progress_bar">
-                    <div className="progress_succeeded" style={{"flex": props.stats?.succeeded}}></div>
-                    <div className="progress_failed" style={{"flex": props.stats?.failed}}></div>
-                    <div className="progress_unmarked" style={{"flex": props.stats?.unmarked}}></div>
+                    <div className="progress_succeeded" style={{flex: props.stats?.succeeded}}></div>
+                    <div className="progress_failed" style={{flex: props.stats?.failed}}></div>
+                    <div className="progress_unmarked" style={{flex: props.stats?.unmarked}}></div>
                 </div>
 
                 <button id="progress_graph_btn">
@@ -46,20 +59,7 @@ const DashboardStats = (props: {
                 </button>
             </div>
         </div>
-    )
-}
+  );
+};
 
-const DashboardSingleStat = (props: {
-    value: string,
-    name: string
-}) => {
-
-    return (
-        <article className="app_main_data_art">
-            <h2>{props.value}</h2>
-            <h3>{props.name}</h3>
-        </article>
-    );
-}
-
-export default DashboardStats
+export default DashboardStats;

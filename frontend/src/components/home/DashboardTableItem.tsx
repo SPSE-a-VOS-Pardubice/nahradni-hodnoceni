@@ -1,27 +1,62 @@
-import { useContext } from 'react'
-import './DashboardTableItem.css'
-import Exam from '../../models/data/Exam'
-import SelectedPeriod from '../../contexts/SelectedPeriod'
-import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl'
-import _Class from '../../models/data/_Class'
-import { uploadData } from '../../ApiClient'
+import {useContext} from 'react';
+import {FormattedDate, FormattedMessage, FormattedTime} from 'react-intl';
+import {uploadData} from '../../ApiClient';
+import SelectedPeriod from '../../contexts/SelectedPeriod';
+import Exam from '../../models/data/Exam';
+import _Class from '../../models/data/_Class';
+import './DashboardTableItem.css';
+
+const FormattedClass = (props: {
+    _class: _Class
+}) => {
+  const selectedPeriod = useContext(SelectedPeriod);
+  return (<>{selectedPeriod.year - props._class.year}.{props._class.label}</>);
+};
+
+const FormattedMark = (props: {
+    mark: string | null
+}) => {
+  return props.mark === null
+        ? (<FormattedMessage id="mark.new.unknown" />)
+        : (<>{props.mark} - <FormattedMessage id={`mark.${props.mark}`} /></>);
+};
+
+function getResultClassByMark(mark: string | null) {
+  switch (mark) {
+    case null:
+      return 'unmarked';
+
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+      return 'succeeded';
+
+    case '5':
+      return 'failed';
+
+    default:
+      throw new Error(`neznámá známka "${mark}"`);
+  }
+}
 
 const DashboardTableItem = (props: {
     exam: Exam,
+    // eslint-disable-next-line no-unused-vars
     onExamUpdate: (newExam: Exam) => void
 }) => {
 
-    async function setMark(value: string | null) {
-        let newExam = Object.assign({}, props.exam);
-        newExam.finalMark = value;
-        newExam = await uploadData(newExam, "exam");
-        setTimeout(props.onExamUpdate, 0, newExam);
-    }
+  async function setMark(value: string | null) {
+    let newExam = {...props.exam};
+    newExam.finalMark = value;
+    newExam = await uploadData(newExam, 'exam');
+    setTimeout(props.onExamUpdate, 0, newExam);
+  }
 
-    return (
+  return (
         <tr className="dashboard_row">
             <td className="result">
-                <span id={getResultClassByMark(props.exam.finalMark)} className="result_data"><FormattedMessage id={props.exam.originalMark === "5" ? "exam.type.5.short" : "exam.type.N.short"} /></span>
+                <span id={getResultClassByMark(props.exam.finalMark)} className="result_data"><FormattedMessage id={props.exam.originalMark === '5' ? 'exam.type.5.short' : 'exam.type.N.short'} /></span>
             </td>
             <td className="student_and_class">
                 <span className="student_name main_data">{props.exam.student.name} {props.exam.student.surname}</span><br />
@@ -88,7 +123,7 @@ const DashboardTableItem = (props: {
                 <span className="teacher_name sub_data">{props.exam.examiner.prefix} {props.exam.examiner.name} {props.exam.examiner.surname} {props.exam.examiner.suffix}</span>
             </td>
             <td className="date_school_room">
-                <span className="date main_data">{props.exam.time === null ? (<FormattedMessage id='time.unknown' />) : ((<FormattedDate value={props.exam.time} />))}</span><br />
+                <span className="date main_data">{props.exam.time === null ? (<FormattedMessage id="time.unknown" />) : ((<FormattedDate value={props.exam.time} />))}</span><br />
                 <span className="time_room_data sub_data"><span className="time sub_data">{props.exam.time !== null && (<FormattedTime value={props.exam.time} />)}</span> <span className="school_room sub_data"><FormattedMessage id="classroom.short" /> {props.exam.classroom === null ? (<FormattedMessage id="classroom.unknown" />) : (props.exam.classroom.label)}</span></span>
             </td>
             <td className="new_mark">
@@ -99,10 +134,10 @@ const DashboardTableItem = (props: {
                 <button className="select" name="mark_student" id="mark_student">
                     <span>Oznámkovat<i className="fa-solid fa-angle-down"></i></span>
                     <div className="dropdown">
-                        {["1", "2", "3", "4", "5"].map(mark => (
-                            <option key={mark} value={mark} onClick={_ => setMark(mark)}><FormattedMark mark={mark} /></option>
+                        {['1', '2', '3', '4', '5'].map(mark => (
+                            <option key={mark} value={mark} onClick={() => setMark(mark)}><FormattedMark mark={mark} /></option>
                         ))}
-                        <option value="cancel" onClick={_ => setMark(null)}><FormattedMessage id="mark.remove" /></option>
+                        <option value="cancel" onClick={() => setMark(null)}><FormattedMessage id="mark.remove" /></option>
                     </div>
                 </button>
             </td>
@@ -127,41 +162,7 @@ const DashboardTableItem = (props: {
                 </div>
             </td>
         </tr>
-    )
-}
+  );
+};
 
-const FormattedClass = (props: {
-    _class: _Class
-}) => {
-    const selectedPeriod = useContext(SelectedPeriod);
-    return (<>{selectedPeriod.year - props._class.year}.{props._class.label}</>)
-}
-
-const FormattedMark = (props: {
-    mark: string | null
-}) => {
-    return props.mark === null ?
-        (<FormattedMessage id='mark.new.unknown' />) :
-        (<>{props.mark} - <FormattedMessage id={`mark.${props.mark}`} /></>)
-}
-
-function getResultClassByMark(mark: string | null) {
-    switch (mark) {
-        case null:
-            return "unmarked";
-
-        case "1":
-        case "2":
-        case "3":
-        case "4":
-            return "succeeded";
-        
-        case "5":
-            return "failed";
-    
-        default:
-            throw new Error(`neznámá známka "${mark}"`);
-    }
-}
-
-export default DashboardTableItem
+export default DashboardTableItem;

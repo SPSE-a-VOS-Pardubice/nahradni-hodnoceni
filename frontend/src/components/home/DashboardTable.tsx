@@ -1,12 +1,13 @@
-import './DashboardTable.css'
-import DashboardTableItem from './DashboardTableItem'
-import Exam from '../../models/data/Exam'
+import Exam from '../../models/data/Exam';
+import './DashboardTable.css';
+import DashboardTableItem from './DashboardTableItem';
 
 const DashboardTable = (props: {
     exams: Exam[],
+    // eslint-disable-next-line no-unused-vars
     onExamUpdate: (newExam: Exam) => void
 }) => {
-    return (
+  return (
         <>
             <table className="dashboard">
                 <tbody>
@@ -40,7 +41,7 @@ const DashboardTable = (props: {
                 </div>
             </div>
         </>
-    )
-}
+  );
+};
 
-export default DashboardTable
+export default DashboardTable;

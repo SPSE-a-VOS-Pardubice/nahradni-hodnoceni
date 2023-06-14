@@ -1,7 +1,7 @@
-import { createContext } from 'react';
+import {createContext} from 'react';
 
 const SelectedPeriod = createContext({
-    "year": 2023
+  year: 2023,
 });
 
 export default SelectedPeriod;

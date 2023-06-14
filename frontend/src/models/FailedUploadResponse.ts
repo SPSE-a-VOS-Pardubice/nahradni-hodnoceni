@@ -1,5 +1,7 @@
 
-export default interface FailedUploadResponse {
+interface FailedUploadResponse {
     missingSubjects: string[]
     missingExaminers: string[]
 }
+
+export default FailedUploadResponse;

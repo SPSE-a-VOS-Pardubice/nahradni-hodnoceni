@@ -1,8 +1,7 @@
-import React from 'react'
-import './DashboardLegend.css'
+import './DashboardLegend.css';
 
 const DashboardLegend = () => {
-    return (
+  return (
         <div className="half_year_config_part">
             <button className="select" name="half_year_config_select" id="half_year_config_select">
                 <span>2022/2023 - 1. pololetí<i className="fa-solid fa-angle-down"></i></span>
@@ -28,7 +27,7 @@ const DashboardLegend = () => {
                 </article>
             </section>
         </div>
-    )
-}
+  );
+};
 
-export default DashboardLegend
+export default DashboardLegend;
