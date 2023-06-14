@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
-import HeaderComponent from './components/HeaderComponent';
+import Header from './components/Header';
 import { IntlProvider } from 'react-intl';
 // import Create from "./pages/Create";
 // import Edit from "./pages/Edit";
@@ -51,7 +51,7 @@ function App() {
 
   return (
     <IntlProvider messages={messages} locale="cs" defaultLocale="cs">
-      <HeaderComponent />
+      <Header />
 
       <main>
         <BrowserRouter>

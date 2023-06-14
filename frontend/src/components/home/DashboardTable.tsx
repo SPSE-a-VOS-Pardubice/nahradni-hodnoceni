@@ -1,5 +1,5 @@
 import './DashboardTable.css'
-import DashboardTableItem from './DashboardTableItemComponent'
+import DashboardTableItem from './DashboardTableItem'
 import Exam from '../../models/data/Exam'
 
 const DashboardTable = (props: {

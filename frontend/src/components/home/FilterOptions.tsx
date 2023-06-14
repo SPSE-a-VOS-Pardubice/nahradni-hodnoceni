@@ -1,9 +1,8 @@
-import React from 'react'
 import './FilterOptions.css'
 
-import FilterOption from './FilterOptionComponent'
+import FilterOption from './FilterOption'
 import FilterParams, { sortByOptions } from '../../models/FilterParams'
-import SortOption from './SortOptionComponent'
+import SortOption from './SortOption'
 
 function propsToMapWithPrefix(prefix: string, props: string[]) {
     return Object.fromEntries(

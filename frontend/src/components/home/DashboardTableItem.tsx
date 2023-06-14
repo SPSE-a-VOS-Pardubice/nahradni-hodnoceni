@@ -4,7 +4,7 @@ import Exam from '../../models/data/Exam'
 import SelectedPeriod from '../../contexts/SelectedPeriod'
 import { FormattedDate, FormattedMessage, FormattedTime } from 'react-intl'
 import _Class from '../../models/data/_Class'
-import { uploadExam } from '../../ApiClient'
+import { uploadData } from '../../ApiClient'
 
 const DashboardTableItem = (props: {
     exam: Exam,
@@ -14,7 +14,7 @@ const DashboardTableItem = (props: {
     async function setMark(value: string | null) {
         let newExam = Object.assign({}, props.exam);
         newExam.finalMark = value;
-        newExam = await uploadExam(newExam);
+        newExam = await uploadData(newExam, "exam");
         setTimeout(props.onExamUpdate, 0, newExam);
     }
 

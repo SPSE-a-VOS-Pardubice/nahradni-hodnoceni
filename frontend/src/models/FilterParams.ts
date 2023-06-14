@@ -8,4 +8,5 @@ export default class FilterParams {
     mark?: "1" | "2" | "3" | "4" | "5"
     sortBy?: sortByOptions
     reverse?: boolean
+    text?: string
 }

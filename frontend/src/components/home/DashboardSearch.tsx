@@ -10,7 +10,7 @@ const DashboardSearch = (props: {
         event.stopPropagation();
 
         // Tohle by se v Reactu dělat nemělo ale je to nejideálnější řešení pokud víme,
-        // že komponent DashboardSearchComponent bude na stránce vždy jen jeden
+        // že komponent DashboardSearch bude na stránce vždy jen jeden
         const element = document.getElementById("header_search")! as HTMLInputElement;
 
         setTimeout(props.onSubmit, 0, element.value);

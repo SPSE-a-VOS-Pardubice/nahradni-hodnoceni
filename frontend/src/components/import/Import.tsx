@@ -1,5 +1,5 @@
 import { FormattedMessage } from "react-intl";
-import Popup from "../PopupComponent";
+import Popup from "../Popup";
 import ImportDropzone from "./ImportDropzone";
 import { useEffect } from "react";
 import Subject from "../../models/data/Subject";
@@ -12,7 +12,6 @@ const Import = (props: {
     phase: ImportPhase,
     setPhase: (phase: ImportPhase) => void
 }) => {
-    
     useEffect(() => {
         if (props.phase.phase === "2_UPLOADING") {
             uploadCsvFile(props.phase.data).then(response => {
@@ -54,8 +53,6 @@ const Import = (props: {
         }
 
     }, [props.phase]);
-
-
 
 
 

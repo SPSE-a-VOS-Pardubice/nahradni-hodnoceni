@@ -1,5 +1,5 @@
 import './DashboardStats.css'
-import DashboardLegendComponent from './DashboardLegendComponent'
+import DashboardLegend from './DashboardLegend'
 import DashboardStatsData from '../../models/DashboardStatsData';
 
 const DashboardStats = (props: {
@@ -30,7 +30,7 @@ const DashboardStats = (props: {
                     </section>
                 </div>
 
-                <DashboardLegendComponent />
+                <DashboardLegend />
             </div>
             <div className="progress_bar_part">
                 <div className="progress_bar">

@@ -24,13 +24,6 @@ export async function fetchExams(params: FilterParams): Promise<Exam[]> {
   return (await axios.get(BASE_URL + DASHBOARD_PATH + `/exams/${page}`, { params })).data;
 }
 
-/**
- * @deprecated `uploadData(exam, "exam")`
- */
-export async function uploadExam(exam: Exam): Promise<Exam> {
-  return (await axios.post(BASE_URL + DATA_URL + `/exam`, exam)).data;
-}
-
 export async function uploadData<T extends _Class | Classroom | Exam | Student | Subject | Teacher>(data: T, type: "class" | "classroom" | "exam" | "student" | "subject" | "teacher"): Promise<T> {
   return (await axios.post(BASE_URL + DATA_URL + `/${type}`, data)).data;
 }

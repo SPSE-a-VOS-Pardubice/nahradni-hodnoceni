@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import './Dashboard.css'
 
-import DashboardStats from '../components/home/DashboardStatsComponent'
-import FilterOptions from '../components/home/FilterOptionsComponent'
-import DashboardTable from '../components/home/DashboardTableComponent'
+import DashboardStats from '../components/home/DashboardStats'
+import FilterOptions from '../components/home/FilterOptions'
+import DashboardTable from '../components/home/DashboardTable'
 import { fetchDashboardStats, fetchExams } from '../ApiClient'
 import Exam from '../models/data/Exam'
 import DashboardStatsData from '../models/DashboardStatsData'
 import FilterParams from '../models/FilterParams'
 import Import from '../components/import/Import'
 import { ImportPhase } from '../models/ImportPhase'
+import DashboardSearch from '../components/home/DashboardSearch'
 
 const DashboardPage = () => {
 
@@ -45,17 +46,19 @@ const DashboardPage = () => {
     }
 
     function handleSearch(text: string) {
-        console.log(`User searched for: ${text}`);
+        const newFilterParams = Object.assign({}, filterParams);
+        newFilterParams.text = text;
+        setTimeout(setFilterParams, 0, newFilterParams);
     }
 
     return (
         <>
             <DashboardStats stats={stats} />
-            {/* <DashboardSearch onSubmit={handleSearch} /> */}
+            <DashboardSearch onSubmit={handleSearch} />
 
-            {/* <div className="num_of_records_part">
-                <p>Zobrazeno 136 záznamů</p>
-            </div> */}
+            <div className="num_of_records_part">
+                <p>Zobrazeno {exams.length} záznamů</p>
+            </div>
 
             <FilterOptions params={filterParams} setParams={setFilterParams} />
             <DashboardTable exams={exams} onExamUpdate={onExamUpdate} />
