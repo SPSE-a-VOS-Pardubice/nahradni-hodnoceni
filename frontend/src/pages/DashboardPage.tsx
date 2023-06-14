@@ -9,14 +9,16 @@ import Exam from '../models/data/Exam'
 import DashboardStatsData from '../models/DashboardStatsData'
 import FilterParams from '../models/FilterParams'
 import Import from '../components/import/Import'
+import { ImportPhase } from '../models/ImportPhase'
 
 const DashboardPage = () => {
 
     const [stats, setStats] = useState<DashboardStatsData | null>(null);
-    const [page, setPage] = useState<number>(0);
     const [exams, setExams] = useState<Exam[]>([]);
     const [filterParams, setFilterParams] = useState(new FilterParams());
-    const [importOpen, setImportOpen] = useState<boolean>(false);
+    const [importPhase, setImportPhase] = useState<ImportPhase>({
+        phase: "1_UPLOAD"
+    });
 
     useEffect(() => {
         (async () => {
@@ -25,13 +27,13 @@ const DashboardPage = () => {
     }, [exams]);
 
     useEffect(() => {
-        (async () => {
-            const exams = await fetchExams(filterParams, page);
-            if (exams.length === 0)
-                setImportOpen(true);
-            setExams(exams);
-        })();
-    }, [page, filterParams]);
+        fetchExams(filterParams).then(setExams);
+    }, [filterParams]);
+
+    useEffect(() => {
+        if (importPhase.phase === "5_SUCCESS")
+            fetchExams(filterParams).then(setExams);
+    }, [importPhase]);
 
     function onExamUpdate(newExam: Exam) {
         const newExams = Object.assign([], exams);
@@ -58,7 +60,7 @@ const DashboardPage = () => {
             <FilterOptions params={filterParams} setParams={setFilterParams} />
             <DashboardTable exams={exams} onExamUpdate={onExamUpdate} />
 
-            <Import open={importOpen} onFinish={() => setImportOpen(false)} />
+            <Import phase={importPhase} setPhase={setImportPhase} />
         </>
     )
 }

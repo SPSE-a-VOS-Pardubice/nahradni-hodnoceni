@@ -19,7 +19,8 @@ export async function fetchDashboardStats(): Promise<DashboardStatsData> {
   return (await axios.get(BASE_URL + DASHBOARD_PATH + "/stats")).data;
 }
 
-export async function fetchExams(params: FilterParams, page: number): Promise<Exam[]> {
+export async function fetchExams(params: FilterParams): Promise<Exam[]> {
+  const page = 0; // TODO
   return (await axios.get(BASE_URL + DASHBOARD_PATH + `/exams/${page}`, { params })).data;
 }
 
