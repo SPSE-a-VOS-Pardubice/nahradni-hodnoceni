@@ -28,11 +28,11 @@ const DashboardPage = () => {
   }, [exams]);
 
   useEffect(() => {
-    fetchExams(filterParams).then(setExams);
+    fetchExams(filterParams).then(exams => grouping(exams)).then(setExams);
   }, [filterParams]);
 
   useEffect(() => {
-    if (importPhase.phase === '5_SUCCESS') { fetchExams(filterParams).then(setExams); }
+    if (importPhase.phase === '5_SUCCESS') { fetchExams(filterParams).then(exams => grouping(exams)).then(setExams); }
   }, [importPhase]);
 
   function onExamUpdate(newExam: Exam) {
@@ -41,7 +41,7 @@ const DashboardPage = () => {
             exams.find((exam) => exam.id === newExam.id)!,
             newExam,
         );
-    setExams(newExams);
+    setExams(grouping(newExams));
   }
 
   function handleSearch(text: string) {
@@ -49,6 +49,15 @@ const DashboardPage = () => {
     newFilterParams.text = text;
     setTimeout(setFilterParams, 0, newFilterParams);
   }
+
+  function grouping(exams: Exam[]) {
+    return exams.sort((a,b) => {
+        return (a.student._class.year - b.student._class.year) * 1000 +
+                (a.student._class.label.localeCompare(b.student._class.label)) * 100 + 
+                (a.student.surname.localeCompare(b.student.surname)) * 10 + 
+                (a.student.name.localeCompare(b.student.name));
+      })
+    }
 
   return (
         <>
