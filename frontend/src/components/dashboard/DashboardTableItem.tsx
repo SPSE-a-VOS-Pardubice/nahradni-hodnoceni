@@ -6,13 +6,13 @@ import './DashboardTableItem.css';
 import {PeriodContext} from '../../contexts/PeriodContext';
 import {isExamNH, updateExam} from '../../services/ExamService';
 import {ExamsContext} from '../../contexts/ExamsContext';
+import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 
 const FormattedClass = (props: {
     _class: _Class
 }) => {
-  const periodContext = useContext(PeriodContext);
-  const period = periodContext.data;
-  return (<>{period.year - props._class.year}.{props._class.label}</>);
+  const period = useContext(PeriodContext).data;
+  return (<>{formatClassRelativeToPeriod(props._class, period)}</>);
 };
 
 const FormattedMark = (props: {
