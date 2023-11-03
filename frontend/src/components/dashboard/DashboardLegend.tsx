@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import './DashboardLegend.css';
 import {Period, PeriodContext} from '../../contexts/PeriodContext';
 import StatusWrapper from '../../models/StatusWrapper';
@@ -6,7 +6,8 @@ import {fetchOldestYear} from '../../services/APIService';
 import {getCurrentPeriod} from '../../services/ExamService';
 
 const formatPeriod = (period: Period) => {
-  return `${period.year}/${period.year + 1} - ${period.period}. pololetí`; // TODO use intl instead
+  // TODO use intl instead
+  return `${period.year}/${period.year + 1} - ${period.period}. pololetí`;
 };
 
 const arrayRange = (start: number, stop: number) => Array.from(

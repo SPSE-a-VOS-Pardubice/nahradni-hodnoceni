@@ -1,4 +1,5 @@
 import React, {createContext, useState} from 'react';
+import {getCurrentPeriod} from '../services/ExamService';
 
 export type Period = {
   year: number,
@@ -18,10 +19,7 @@ export const PeriodContext = createContext<PeriodContextType>(undefined);
 export const PeriodContextProvider = (props: {
   children: React.ReactNode
 }) => {
-  const [data, setData] = useState<Period>({
-    year: 2022,
-    period: 2,
-  });
+  const [data, setData] = useState<Period>(getCurrentPeriod());
 
   return (
     <PeriodContext.Provider value={{data, setData}}>{props.children}</PeriodContext.Provider>

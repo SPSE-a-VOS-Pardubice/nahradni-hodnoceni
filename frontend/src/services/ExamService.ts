@@ -1,7 +1,7 @@
 import Exam from '../models/data/Exam';
 import {uploadData} from './APIService';
 import {ExamsContextType} from '../contexts/ExamsContext';
-import { Period } from '../contexts/PeriodContext';
+import {Period} from '../contexts/PeriodContext';
 
 export function isExamNH(exam: Exam) {
   return exam.originalMark === 'N';
