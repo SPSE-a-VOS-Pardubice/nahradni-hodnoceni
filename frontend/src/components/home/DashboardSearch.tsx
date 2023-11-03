@@ -17,11 +17,11 @@ const DashboardSearch = () => {
   }
 
   return (
-        <form className="header_search_part" onSubmit={handleSubmit}>
-            <input type="search" name="header_search" id="header_search"
-                placeholder="Vyhledávejte podle třídy, žáka nebo učitele" />
-            <button type="submit" className="primar_btn">Vyhledat</button>
-        </form>
+    <form className="header_search_part" onSubmit={handleSubmit}>
+      <input type="search" name="header_search" id="header_search"
+        placeholder="Vyhledávejte podle třídy, žáka nebo učitele" />
+      <button type="submit" className="primar_btn">Vyhledat</button>
+    </form>
   );
 };
 
