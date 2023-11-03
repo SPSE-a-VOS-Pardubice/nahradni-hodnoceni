@@ -42,6 +42,7 @@ function applyFilter(examDisplayRestrictions: ExamDisplayRestrictions, exams: Ex
   });
 }
 
+// https://stackoverflow.com/a/37511463/14693511
 function normalizeToken(token: string): string {
   return token
     .normalize('NFD')
