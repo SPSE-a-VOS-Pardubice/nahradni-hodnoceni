@@ -9,25 +9,12 @@ import org.springframework.data.repository.query.QueryByExampleExecutor;
 import java.util.List;
 
 public interface ExamRepository extends CrudRepository<Exam, Long>, ListPagingAndSortingRepository<Exam, Long>, QueryByExampleExecutor<Exam> {
-    @Query("SELECT e FROM Exam e WHERE e.originalMark = 'N'")
-    List<Exam> findAllNH();
+    @Query(value = "SELECT * FROM exam WHERE MONTH(exam.time) BETWEEN 1 AND 5 AND YEAR(exam.time) = ?", nativeQuery = true)
+    List<Exam> getForFirstPeriod(int year);
 
-    @Query("SELECT e FROM Exam e WHERE e.originalMark = '5'")
-    List<Exam> findAllOZ();
+    @Query(value = "SELECT * FROM exam WHERE MONTH(exam.time) BETWEEN 6 AND 9 AND YEAR(exam.time) = ?", nativeQuery = true)
+    List<Exam> getForSecondPeriod(int year);
 
-    @Query("SELECT e FROM Exam e WHERE e.originalMark = 'N' AND e.finalMark IS NOT NULL")
-    List<Exam> findAllFinishedNH();
-
-    @Query("SELECT e FROM Exam e WHERE e.originalMark = '5' AND e.finalMark IS NOT NULL")
-    List<Exam> findAllFinishedOZ();
-
-    @Query("SELECT e FROM Exam e WHERE e.finalMark in ('1', '2', '3', '4')")
-    List<Exam> findAllSuccesedExams();
-
-    @Query("SELECT e FROM Exam e WHERE e.finalMark in ('5', 'N')")
-    List<Exam> findAllFailedExams();
-
-    @Query("SELECT e FROM Exam e WHERE e.finalMark IS NULL")
-    List<Exam> findAllUnmarkedExams();
+    @Query(value = "SELECT YEAR(exam.time) FROM exam WHERE exam.time IS NOT NULL ORDER BY exam.time ASC LIMIT 1", nativeQuery = true)
+    Integer getOldestExamYear();
 }
-

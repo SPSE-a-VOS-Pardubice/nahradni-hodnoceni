@@ -9,5 +9,3 @@ rozjetí dalších zkoušek po kliknutí, ne po najetí []
 mít možnost spojovat zkoušky do skupin (podle studenta) []
 detail člověka - jeho zkoušky -  []
 poslat frontend za Věckem []
-
-

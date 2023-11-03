@@ -9,8 +9,10 @@
     --color-luminous-green: #10eb59;
     --color-luminous-red: #ff0000;
     --color-white: #fff;
-    --transition-short: 0.35s;
-    --transition-long: 0.65s;
+    --transition-short: 0;
+    --transition-long: 0;
+    /* --transition-short: 0.35s;
+    --transition-long: 0.65s; */
   }
   
   .app_main {
