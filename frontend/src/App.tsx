@@ -1,7 +1,10 @@
 import {IntlProvider} from 'react-intl';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Header from './components/Header';
-import DashboardPage from './pages/DashboardPage';
+import DashboardPage from './pages/Dashboard';
+import { ExamsContextProvider } from './contexts/ExamsContext';
+import { PeriodContextProvider } from './contexts/PeriodContext';
+import ImportPage from './pages/ImportPage';
 // import Create from "./pages/Create";
 // import Edit from "./pages/Edit";
 // import Graf from "./pages/Graf";
@@ -11,8 +14,8 @@ import DashboardPage from './pages/DashboardPage';
 function App() {
 
   const messages = {
-    'exam.type.5.short': 'OZ',
-    'exam.type.N.short': 'NH',
+    'exam.type.NH.short': 'NH',
+    'exam.type.OZ.short': 'OZ',
 
     'time.unknown': 'čas nezadán',
 
@@ -49,23 +52,27 @@ function App() {
 
   return (
     <IntlProvider messages={messages} locale="cs" defaultLocale="cs">
-      <Header />
+      <PeriodContextProvider>
+        <ExamsContextProvider>
+          <Header />
+          <main>
+            <BrowserRouter>
+              <Routes>
+                <Route index element={ <DashboardPage /> } />
+                <Route path="/import" element={ <ImportPage /> } />
 
-      <main>
-        <BrowserRouter>
-          <Routes>
-            <Route index element={ <DashboardPage /> } />
-
-            {/* <Route path='/data/:coll/:id' element={ <GForm /> } />
-            <Route path='/addExamp' element={ <Create /> } />
-            <Route path='/editExamp' element={ <Edit /> } />
-            <Route path='/graf' element={ <Graf /> } />
-            <Route path='/login' element={ <Login /> } />
-            <Route path='/new_pass' element={ <New_Pass /> } /> */
-            }
-          </Routes>
-        </BrowserRouter>
-      </main>
+                {/* <Route path='/data/:coll/:id' element={ <GForm /> } />
+                <Route path='/addExamp' element={ <Create /> } />
+                <Route path='/editExamp' element={ <Edit /> } />
+                <Route path='/graf' element={ <Graf /> } />
+                <Route path='/login' element={ <Login /> } />
+                <Route path='/new_pass' element={ <New_Pass /> } /> */
+                }
+              </Routes>
+            </BrowserRouter>
+          </main>
+        </ExamsContextProvider>
+      </PeriodContextProvider>
     </IntlProvider>
   );
 }
