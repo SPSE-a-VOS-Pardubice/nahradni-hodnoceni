@@ -7,8 +7,8 @@ import {ExamDisplayRestrictions} from '../../models/ExamDisplayRestrictions';
 import {isExamNH} from '../../services/ExamService';
 import Exam from '../../models/data/Exam';
 import FilterOptions from './FilterOptions';
-import { Period, PeriodContext } from '../../contexts/PeriodContext';
-import { formatClassRelativeToPeriod } from '../../services/_ClassService';
+import {Period, PeriodContext} from '../../contexts/PeriodContext';
+import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 
 function applyFilter(examDisplayRestrictions: ExamDisplayRestrictions, exams: Exam[]) {
   return exams.filter(exam => {
@@ -50,6 +50,8 @@ function normalizeToken(token: string): string {
     .toLowerCase();
 }
 
+const daysOfWeek = ['nedele', 'pondeli', 'utery', 'streda', 'ctvrtek', 'patek', 'sobota'];
+
 function applySearch(period: Period, examDisplayRestrictions: ExamDisplayRestrictions, exams: Exam[]): Exam[] {
   if (examDisplayRestrictions.searchFor === '') {
     return exams;
@@ -67,13 +69,33 @@ function applySearch(period: Period, examDisplayRestrictions: ExamDisplayRestric
         if (normalizeToken(exam.student.surname).includes(token)) {
           return true;
         }
+
+        if (normalizeToken(exam.examiner.name).includes(token)) {
+          return true;
+        }
+        if (normalizeToken(exam.examiner.surname).includes(token)) {
+          return true;
+        }
+
         if (normalizeToken(formatClassRelativeToPeriod(exam.student._class, period)).includes(token)) {
+          return true;
+        }
+        if (normalizeToken(formatClassRelativeToPeriod(exam.student._class, period, false)).includes(token)) {
           return true;
         }
         if (exam.classroom && normalizeToken(exam.classroom.label).includes(token)) {
           return true;
         }
-        // TODO search by date and time
+
+        if (exam.time) {
+          const date = new Date(exam.time);
+          if (date.getDate().toString() === token) {
+            return true;
+          }
+          if (daysOfWeek[date.getDay()].includes(token)) {
+            return true;
+          }
+        }
 
         return false;
       },
