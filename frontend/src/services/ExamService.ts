@@ -13,12 +13,12 @@ export function isExamNH(exam: Exam) {
  * @param newExam
  */
 export async function updateExam(examsContext: ExamsContextType, newExam: Exam) {
-    // update data on the server
+  // update data on the server
   await uploadData(newExam, 'exam');
 
-    // update data locally
+  // update data locally
   const newExams = structuredClone(examsContext.data)
-        .map(exam => exam.id === newExam.id ? newExam : exam);
+    .map(exam => exam.id === newExam.id ? newExam : exam);
   setTimeout(examsContext.setData, 0, newExams);
 }
 

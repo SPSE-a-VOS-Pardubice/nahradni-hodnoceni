@@ -1,10 +1,10 @@
 
 interface Classroom {
-    id: number;
-    available: boolean;
+  id: number;
+  available: boolean;
 
-    label: string;
-    // traits: ...
+  label: string;
+  // traits: ...
 }
 
 export default Classroom;

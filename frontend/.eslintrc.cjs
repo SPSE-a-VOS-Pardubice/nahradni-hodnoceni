@@ -8,8 +8,14 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {ecmaVersion: 'latest', sourceType: 'module'},
-  plugins: ['react-refresh'],
+  plugins: [
+    'react-refresh',
+    '@stylistic/js',
+  ],
   rules: {
     'react-refresh/only-export-components': 'warn',
+    'no-console': ['error', {allow: ['warn', 'error']}],
+    'indent-legacy': 'off',
+    '@stylistic/js/indent': ['error', 2],
   },
 };

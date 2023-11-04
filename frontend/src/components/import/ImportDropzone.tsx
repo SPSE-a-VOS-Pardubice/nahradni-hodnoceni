@@ -23,10 +23,10 @@ const ImportDropzone = (props: {
   const {getRootProps, getInputProps} = useDropzone({onDrop});
 
   return (
-        <div {...getRootProps()}>
-            <input {...getInputProps()} />
-            {props.children}
-        </div>
+    <div {...getRootProps()}>
+      <input {...getInputProps()} />
+      {props.children}
+    </div>
   );
 };
 

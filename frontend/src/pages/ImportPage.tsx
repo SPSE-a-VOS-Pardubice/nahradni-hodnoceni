@@ -113,24 +113,23 @@ const ImportPage = () => {
 
     return (
       <div>
-          <h3>
-            Prosím vyplňte chybějící údaje pro učitele s příjmením:{' '}
-            {examinerSurname}
-          </h3>
-          <br />
-          <br />
-          <label htmlFor="import_examiner_prefix">Prefix</label>
-          <input id="import_examiner_prefix" type="text"></input>
-          <br />
-          <br />
-          <label htmlFor="import_examiner_name">Křestní jméno</label>
-          <input id="import_examiner_name" type="text"></input>
-          <br />
-          <br />
-          <label htmlFor="import_examiner_suffix">Suffix</label>
-          <input id="import_examiner_suffix" type="text"></input>
-          <button onClick={handleSubmit}>OK</button>
-        </div>
+        <h3>
+          Prosím vyplňte chybějící údaje pro učitele s příjmením: {examinerSurname}
+        </h3>
+        <br />
+        <br />
+        <label htmlFor="import_examiner_prefix">Prefix</label>
+        <input id="import_examiner_prefix" type="text"></input>
+        <br />
+        <br />
+        <label htmlFor="import_examiner_name">Křestní jméno</label>
+        <input id="import_examiner_name" type="text"></input>
+        <br />
+        <br />
+        <label htmlFor="import_examiner_suffix">Suffix</label>
+        <input id="import_examiner_suffix" type="text"></input>
+        <button onClick={handleSubmit}>OK</button>
+      </div>
     );
   }
 

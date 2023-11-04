@@ -6,6 +6,7 @@ import StatusWrapper from '../models/StatusWrapper';
 
 export type ExamsContextType = {
   data: Exam[],
+  // eslint-disable-next-line no-unused-vars
   setData: (newData: Exam[]) => void
 };
 
@@ -26,18 +27,18 @@ export const ExamsContextProvider = (props: {
 
   let providerValue: StatusWrapper<ExamsContextType>;
   switch (statusWrappingData.id) {
-    case 'FETCHING':
-      providerValue = {id: 'FETCHING'};
-      break;
-    case 'SUCCESS':
-      providerValue = {id: 'SUCCESS', content: {
-        data: statusWrappingData.content,
-        setData: (newData) => setStatusWrappingData({id: 'SUCCESS', content: newData}),
-      }};
-      break;
-    case 'FAILED':
-      providerValue = {id: 'FAILED', message: statusWrappingData.message};
-      break;
+  case 'FETCHING':
+    providerValue = {id: 'FETCHING'};
+    break;
+  case 'SUCCESS':
+    providerValue = {id: 'SUCCESS', content: {
+      data: statusWrappingData.content,
+      setData: (newData) => setStatusWrappingData({id: 'SUCCESS', content: newData}),
+    }};
+    break;
+  case 'FAILED':
+    providerValue = {id: 'FAILED', message: statusWrappingData.message};
+    break;
   }
 
   return (

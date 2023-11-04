@@ -29,43 +29,43 @@ const DashboardLegend = () => {
   let buttonContent;
   let options;
   switch (statusWrappedOldestYear.id) {
-    case 'FETCHING':
-      buttonContent = (
-        <>načítání</>
-      );
-      options = (<></>);
-      break;
-    case 'SUCCESS':
-      buttonContent = (
-        <>{formatPeriod(currentPeriod)}</>
-      );
-      options = (
-        <>
-          {arrayRange(
-            (statusWrappedOldestYear.content || 2000) * 2,
-            (getCurrentPeriod().year * 2) + (getCurrentPeriod().period - 1),
-          ).map(year => {
-            const period = {year: Math.floor(year / 2), period: (year % 2) + 1} as Period;
-            return (
-              <option onClick={() => setCurrentPeriod(period)} key={JSON.stringify(period)}>{formatPeriod(period)}</option>
-            );
-          })}
-        </>
-      );
-      break;
-    case 'FAILED':
-      buttonContent = (
-        <>něco se pokazilo</>
-      );
-      options = (<></>);
-      break;
+  case 'FETCHING':
+    buttonContent = (
+      <>načítání</>
+    );
+    options = (<></>);
+    break;
+  case 'SUCCESS':
+    buttonContent = (
+      <>{formatPeriod(currentPeriod)}</>
+    );
+    options = (
+      <>
+        {arrayRange(
+          (statusWrappedOldestYear.content || 2000) * 2,
+          (getCurrentPeriod().year * 2) + (getCurrentPeriod().period - 1),
+        ).map(year => {
+          const period = {year: Math.floor(year / 2), period: (year % 2) + 1} as Period;
+          return (
+            <option onClick={() => setCurrentPeriod(period)} key={JSON.stringify(period)}>{formatPeriod(period)}</option>
+          );
+        })}
+      </>
+    );
+    break;
+  case 'FAILED':
+    buttonContent = (
+      <>něco se pokazilo</>
+    );
+    options = (<></>);
+    break;
   }
 
   return (
     <div className="half_year_config_part">
       <button className="select" name="half_year_config_select" id="half_year_config_select">
-      <span>{buttonContent}<i className="fa-solid fa-angle-down"></i></span>
-          <div className="dropdown">{options}</div>
+        <span>{buttonContent}<i className="fa-solid fa-angle-down"></i></span>
+        <div className="dropdown">{options}</div>
       </button>
 
       <section className="app_colors_meaning col p-0">

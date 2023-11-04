@@ -139,13 +139,13 @@ const DashboardTable = () => {
   } else {
     let predicate;
     switch (examDisplayRestrictions.groupBy) {
-      case 'examiner':
-      case 'student':
-        predicate = (exam: Exam) => exam[examDisplayRestrictions.groupBy as 'examiner' | 'student'].id;
-        break;
-      case 'student._class':
-        predicate = (exam: Exam) => exam.student._class.id;
-        break;
+    case 'examiner':
+    case 'student':
+      predicate = (exam: Exam) => exam[examDisplayRestrictions.groupBy as 'examiner' | 'student'].id;
+      break;
+    case 'student._class':
+      predicate = (exam: Exam) => exam.student._class.id;
+      break;
     }
 
     // TODO add polyfill for Object.groupBy

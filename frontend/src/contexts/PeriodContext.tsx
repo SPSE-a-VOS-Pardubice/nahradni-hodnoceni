@@ -8,6 +8,7 @@ export type Period = {
 
 export type PeriodContextType = {
   data: Period,
+  // eslint-disable-next-line no-unused-vars
   setData: (newData: Period) => void
 };
 

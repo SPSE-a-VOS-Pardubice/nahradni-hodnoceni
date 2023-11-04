@@ -7,7 +7,7 @@ import {PeriodContext} from '../../contexts/PeriodContext';
 import {isExamNH, updateExam} from '../../services/ExamService';
 import {ExamsContext} from '../../contexts/ExamsContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
-import { formatTeacher } from '../../services/TeacherService';
+import {formatTeacher} from '../../services/TeacherService';
 
 const FormattedClass = (props: {
     _class: _Class
@@ -20,26 +20,26 @@ const FormattedMark = (props: {
     mark: string | null
 }) => {
   return props.mark === null
-        ? (<FormattedMessage id="mark.new.unknown" />)
-        : (<>{props.mark} - <FormattedMessage id={`mark.${props.mark}`} /></>);
+    ? (<FormattedMessage id="mark.new.unknown" />)
+    : (<>{props.mark} - <FormattedMessage id={`mark.${props.mark}`} /></>);
 };
 
 function getResultClassByMark(mark: string | null) {
   switch (mark) {
-    case null:
-      return 'unmarked';
+  case null:
+    return 'unmarked';
 
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-      return 'succeeded';
+  case '1':
+  case '2':
+  case '3':
+  case '4':
+    return 'succeeded';
 
-    case '5':
-      return 'failed';
+  case '5':
+    return 'failed';
 
-    default:
-      throw new Error(`neznámá známka "${mark}"`);
+  default:
+    throw new Error(`neznámá známka "${mark}"`);
   }
 }
 

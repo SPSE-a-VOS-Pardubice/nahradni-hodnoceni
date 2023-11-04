@@ -4,18 +4,18 @@ import Subject from './Subject';
 import Teacher from './Teacher';
 
 interface Exam {
-    id: number;
-    available: boolean;
+  id: number;
+  available: boolean;
 
-    student: Student;
-    subject: Subject;
-    classroom: Classroom | null;
-    chairman: Teacher | null;
-    class_teacher: Teacher | null;
-    examiner: Teacher;
-    time: number | null; // TODO
-    originalMark: string;
-    finalMark: string | null;
+  student: Student;
+  subject: Subject;
+  classroom: Classroom | null;
+  chairman: Teacher | null;
+  class_teacher: Teacher | null;
+  examiner: Teacher;
+  time: number | null;
+  originalMark: string;
+  finalMark: string | null;
 }
 
 export default Exam;
