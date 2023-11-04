@@ -50,6 +50,7 @@ const DashboardTableItem = (props: {
   const period = useContext(PeriodContext).data;
   const examsContext = useContext(ExamsContext);
   const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
+  const [buttonsOverride, setButtonsOverride] = useState<'dateAndLocation' | 'mark' | null>(null);
 
   // existence of exams is already checked in DashboardPage
   if (examsContext.id !== 'SUCCESS') {
@@ -73,33 +74,53 @@ const DashboardTableItem = (props: {
       return;
     }
 
+    // TODO check for conflicts
+
     const newExam = structuredClone(props.exam);
     newExam.time = value;
     await updateExam(examsContext.content, newExam);
   }
 
+  const isDateAndLocationRelevant = (props.exam.time === null);
+  const isMarkRelevant = (props.exam.time !== null) && (props.exam.finalMark === null);
+
   let relevantButtons;
-  if (props.exam.time === null) {
+  if (isDateAndLocationRelevant || buttonsOverride === 'dateAndLocation') {
     // TODO check if selected value is in range
     const examYear = period.year + 1;
     const examMinMonth = period.period === 1 ? '00' : '06';
     const examMaxMonth = period.period === 1 ? '05' : '11';
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const newSelectedTimestamp = Number.isNaN(event.target.valueAsNumber) || event.target.valueAsNumber === null ? null : event.target.valueAsNumber;
-      setSelectedTimestamp(newSelectedTimestamp);
+      if (event.target.valueAsDate === null) {
+        setSelectedTimestamp(null);
+        return;
+      }
+
+      const date = event.target.valueAsDate;
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+      setSelectedTimestamp(date.getTime());
     };
+
+    let defaultValue;
+    if (props.exam.time !== null) {
+      // https://stackoverflow.com/a/61082536/14693511
+      const date = new Date(props.exam.time);
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+      defaultValue = date.toISOString().slice(0, 16);
+    }
 
     relevantButtons = (
       <>
         <td className="dashboard_table_item_datetime_container">
-          <input type="datetime-local" defaultValue={Date.now()} onChange={handleChange} min={`${examYear}-${examMinMonth}-01T00:00`} max={`${examYear}-${examMaxMonth}-01T00:00`}></input>
+          <input type="datetime-local" defaultValue={defaultValue} onChange={handleChange} min={`${examYear}-${examMinMonth}-01T00:00`} max={`${examYear}-${examMaxMonth}-01T00:00`}></input>
           <button
             onClick={() => setTime(selectedTimestamp)}
+            disabled={props.exam.time === selectedTimestamp}
             className={classNames(
               'dashboard_table_item_datetime_submit fa_button',
               {
-              // eslint-disable-next-line camelcase
+                // eslint-disable-next-line camelcase
                 fa_button_highlight: props.exam.time !== selectedTimestamp,
               },
             )}>
@@ -109,7 +130,7 @@ const DashboardTableItem = (props: {
         <td></td>
       </>
     );
-  } else if (props.exam.time !== null && props.exam.finalMark === null) {
+  } else if (isMarkRelevant || buttonsOverride === 'mark') {
     relevantButtons = (
       <>
         <td>
@@ -167,15 +188,23 @@ const DashboardTableItem = (props: {
         <span className="new_mark_value sub_data"><FormattedMark mark={props.exam.finalMark} /></span>
       </td>
       {relevantButtons}
-      <td>
-        <div className="edit_options">
-          <span className="fa_button">
-            <i className="fa-solid fa-pen-to-square"></i>
-          </span>
-          <span className="fa_button">
-            <i className="fa-solid fa-trash"></i>
-          </span>
-        </div>
+      <td className="dashboard_table_item_menu">
+        {buttonsOverride === null
+          ? (
+            <button className="select">
+              <span>Seznam akcí</span>
+              <div className="dropdown">
+                {!isDateAndLocationRelevant && <option onClick={() => setButtonsOverride('dateAndLocation')}>Nastavit datum</option>}
+                {!isMarkRelevant && <option onClick={() => setButtonsOverride('mark')}>Změnit známku</option>}
+              </div>
+            </button>
+          )
+          : (
+            <button className="fa_button">
+              <i className="fa-solid fa-xmark" onClick={() => setButtonsOverride(null)}></i>
+            </button>
+          )
+        }
       </td>
     </tr>
   );
