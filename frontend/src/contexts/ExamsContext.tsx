@@ -18,8 +18,6 @@ export const ExamsContextProvider = (props: {
   const periodContext = useContext(PeriodContext);
   const [statusWrappingData, setStatusWrappingData] = useState<StatusWrapper<Exam[]>>({id: 'FETCHING'});
 
-  console.log(statusWrappingData);
-
   useEffect(() => {
     setStatusWrappingData({id: 'FETCHING'});
     fetchExams(periodContext.data)
