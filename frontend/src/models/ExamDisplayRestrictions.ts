@@ -1,5 +1,6 @@
 
-export type DataOptions = 'student' | 'teacher' | 'class' | 'mark';
+export type SortByOptions = 'student' | 'teacher' | 'class' | 'mark';
+export type GroupByOptions = 'student' | 'examiner' | 'student._class';
 
 export class Filter {
   status?: 'finished' | 'unfinished';
@@ -11,7 +12,7 @@ export class Filter {
 export class ExamDisplayRestrictions {
   filter = new Filter();
   searchFor = '';
-  sortBy?: DataOptions;
-  groupBy?: DataOptions;
+  sortBy?: SortByOptions;
+  groupBy?: GroupByOptions;
   reverse?: boolean;
 }

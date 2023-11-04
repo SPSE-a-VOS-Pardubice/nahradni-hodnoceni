@@ -1,6 +1,6 @@
 import {FormattedMessage} from 'react-intl';
 import './Option.css';
-import {DataOptions} from '../../models/ExamDisplayRestrictions';
+import {SortByOptions} from '../../models/ExamDisplayRestrictions';
 
 // const orderOptions = propsToMapWithPrefix("", [
 //     "sort.student",
@@ -13,12 +13,12 @@ import {DataOptions} from '../../models/ExamDisplayRestrictions';
 //     "sort.mark.reverse"
 // ]);
 
-function toId(sortBy?: DataOptions, reverse?: boolean): string {
+function toId(sortBy?: SortByOptions, reverse?: boolean): string {
   return reverse === true ? `sort.${sortBy}.reverse` : `sort.${sortBy}`;
 }
 
 const orderOptions = new Map(
-  (['student', 'teacher', 'class', 'mark'] as DataOptions[])
+  (['student', 'teacher', 'class', 'mark'] as SortByOptions[])
       .flatMap(sortBy => [
         [toId(sortBy), {sortBy: sortBy, reverse: false}],
         [toId(sortBy, true), {sortBy: sortBy, reverse: true}],
@@ -27,10 +27,10 @@ const orderOptions = new Map(
 
 const SortOption = (props: {
     label: string,
-    sortBy?: DataOptions,
+    sortBy?: SortByOptions,
     reverse?: boolean,
     // eslint-disable-next-line no-unused-vars
-    onChange?: (sortBy?: DataOptions, reverse?: boolean) => void
+    onChange?: (sortBy?: SortByOptions, reverse?: boolean) => void
 }) => {
   return (
     <button className={'select' + (props.sortBy === undefined ? '' : ' selected')}>

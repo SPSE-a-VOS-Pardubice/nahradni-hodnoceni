@@ -7,6 +7,7 @@ import {PeriodContext} from '../../contexts/PeriodContext';
 import {isExamNH, updateExam} from '../../services/ExamService';
 import {ExamsContext} from '../../contexts/ExamsContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
+import { formatTeacher } from '../../services/TeacherService';
 
 const FormattedClass = (props: {
     _class: _Class
@@ -129,7 +130,7 @@ const DashboardTableItem = (props: {
       </td>
       <td className="subject_teacher">
         <span className="subject main_data">({props.exam.subject.abbreviation}) {props.exam.subject.name}</span><br />
-        <span className="teacher_name sub_data">{props.exam.examiner.prefix} {props.exam.examiner.name} {props.exam.examiner.surname} {props.exam.examiner.suffix}</span>
+        <span className="teacher_name sub_data">{formatTeacher(props.exam.examiner)}</span>
       </td>
       <td className="date_school_room">
         <span className="date main_data">{props.exam.time === null ? (<FormattedMessage id="time.unknown" />) : ((<FormattedDate value={props.exam.time} />))}</span><br />

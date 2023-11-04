@@ -9,6 +9,8 @@ import Exam from '../../models/data/Exam';
 import FilterOptions from './FilterOptions';
 import {Period, PeriodContext} from '../../contexts/PeriodContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
+import {formatTeacher} from '../../services/TeacherService';
+import {formatStudent} from '../../services/StudentService';
 
 function applyFilter(examDisplayRestrictions: ExamDisplayRestrictions, exams: Exam[]) {
   return exams.filter(exam => {
@@ -58,7 +60,6 @@ function applySearch(period: Period, examDisplayRestrictions: ExamDisplayRestric
   }
 
   const tokens = examDisplayRestrictions.searchFor.split(' ').map(normalizeToken);
-  console.log('searching for tokens:', tokens);
 
   return exams.filter(
     exam => tokens.every(
@@ -100,7 +101,7 @@ function applySearch(period: Period, examDisplayRestrictions: ExamDisplayRestric
         return false;
       },
     ),
-);
+  );
 }
 
 const DashboardTable = () => {
@@ -122,6 +123,10 @@ const DashboardTable = () => {
 
   let renderedExams;
   if (examDisplayRestrictions.groupBy === undefined) {
+    const newExamDisplayRestrictions = structuredClone(examDisplayRestrictions);
+    newExamDisplayRestrictions.groupBy = 'examiner';
+    setExamDisplayRestrictions(newExamDisplayRestrictions);
+
     renderedExams = (
       <table className="dashboard">
         <tbody>
@@ -132,10 +137,60 @@ const DashboardTable = () => {
       </table>
     );
   } else {
-    // TODO group by
+    let predicate;
+    switch (examDisplayRestrictions.groupBy) {
+      case 'examiner':
+      case 'student':
+        predicate = (exam: Exam) => exam[examDisplayRestrictions.groupBy as 'examiner' | 'student'].id;
+        break;
+      case 'student._class':
+        predicate = (exam: Exam) => exam.student._class.id;
+        break;
+    }
+
+    // TODO add polyfill for Object.groupBy
+    const groupedExams = Object.groupBy(exams, predicate) as {[id: number]: Exam[]};
+
     renderedExams = (
       <ul>
+        {Object.entries(groupedExams).map(entry => {
+          const [groupId, groupExams] = entry;
 
+          // TODO add group specific metadata
+          let groupElement;
+          if (examDisplayRestrictions.groupBy === 'examiner') {
+            groupElement = (
+              <div>
+                <h3>{formatTeacher(groupExams[0].examiner)}</h3>
+              </div>
+            );
+          } else if (examDisplayRestrictions.groupBy === 'student') {
+            groupElement = (
+              <div>
+                <h3>{formatStudent(groupExams[0].student)}</h3>
+              </div>
+            );
+          } else if (examDisplayRestrictions.groupBy === 'student._class') {
+            groupElement = (
+              <div>
+                <h3>{formatClassRelativeToPeriod(groupExams[0].student._class, period)}</h3>
+              </div>
+            );
+          }
+
+          return (
+            <li key={groupId}>
+              {groupElement}
+              <table className="dashboard">
+                <tbody>
+                  {groupExams.map((exam, i) => (
+                    <DashboardTableItem key={i} exam={exam} />
+                  ))}
+                </tbody>
+              </table>
+            </li>
+          );
+        })}
       </ul>
     );
   }

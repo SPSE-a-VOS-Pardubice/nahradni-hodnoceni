@@ -2,7 +2,7 @@ import './FilterOptions.css';
 
 import FilterOption from './FilterOption';
 import SortOption from './SortOption';
-import {DataOptions, ExamDisplayRestrictions, Filter} from '../../models/ExamDisplayRestrictions';
+import {SortByOptions, ExamDisplayRestrictions, Filter} from '../../models/ExamDisplayRestrictions';
 
 function propsToMapWithPrefix(prefix: string, props: string[]) {
   return Object.fromEntries(
@@ -66,7 +66,7 @@ const FilterOptions = (props: {
     props.setRestrictions(newRestrictions);
   }
 
-  function setSortBy(sortBy?: DataOptions, reverse?: boolean) {
+  function setSortBy(sortBy?: SortByOptions, reverse?: boolean) {
     const newRestrictions = structuredClone(props.restrictions);
     newRestrictions.sortBy = sortBy;
     newRestrictions.reverse = reverse;
