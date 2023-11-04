@@ -28,7 +28,7 @@ public class ImportEntry {
     @CsvBindByPosition(position = 5)
     private String examinerSurname;
 
-    public int getClassPartialYear() throws Exception {
+    public int getClassRelativeYear() throws Exception {
         return Integer.parseInt(this.splitClass()[0]);
     }
 
@@ -39,7 +39,7 @@ public class ImportEntry {
     private String[] splitClass() throws Exception {
         var components = _class.split("\\.");
         if (components.length != 2)
-            throw new Exception(String.format("tvoje maminka zapomněla že třída má rok a označení: %s", _class));
+            throw new Exception(String.format("failed to split the class name: %s", _class));
         return components;
     }
 }

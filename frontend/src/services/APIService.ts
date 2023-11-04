@@ -7,6 +7,7 @@ import Subject from '../models/data/Subject';
 import Teacher from '../models/data/Teacher';
 import _Class from '../models/data/_Class';
 import {Period} from '../contexts/PeriodContext';
+import {PeriodRange} from '../models/PeriodRange';
 
 const BASE_URL = 'http://localhost:8080';
 
@@ -19,8 +20,8 @@ export async function fetchExams(period: Period): Promise<Exam[]> {
   return (await axios.get(url)).data;
 }
 
-export async function fetchOldestYear(): Promise<number | null> {
-  const url = BASE_URL + DASHBOARD_PATH + `/exams/oldest-year`;
+export async function fetchPeriodRange(): Promise<PeriodRange | null> {
+  const url = BASE_URL + DASHBOARD_PATH + `/exams/period-range`;
   return (await axios.get(url)).data;
 }
 

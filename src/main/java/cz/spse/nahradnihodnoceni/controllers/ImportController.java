@@ -32,14 +32,14 @@ public class ImportController {
     @Autowired
     private ExamRepository examRepository;
 
-    private int calculateYear(int partialYear, int relativeTo) {
+    private int calculateAbsoluteYear(int partialYear, int relativeTo) {
         return Math.max(1, relativeTo - partialYear);
     }
 
     @PostMapping("/api/1/upload")
     public FailedUploadResponse uploadCSVFile(@RequestParam("file") MultipartFile file) throws Exception {
 
-        var currentYear = LocalDate.now().getYear();
+        var currentDate = LocalDate.now();
 
         // validate file
         if (file.isEmpty()) {
@@ -91,12 +91,12 @@ public class ImportController {
         for (ImportEntry entry: entries) {
 
             _Class _class = classRepository.find(
-                    calculateYear(entry.getClassPartialYear(), currentYear),
+                    calculateAbsoluteYear(entry.getClassRelativeYear(), currentDate.getYear()),
                     entry.getClassLabel()
             );
             if (_class == null) {
                 _class = new _Class();
-                _class.setYear(calculateYear(entry.getClassPartialYear(), currentYear));
+                _class.setYear(calculateAbsoluteYear(entry.getClassRelativeYear(), currentDate.getYear()));
                 _class.setLabel(entry.getClassLabel());
                 classRepository.save(_class);
             }
@@ -115,7 +115,7 @@ public class ImportController {
             Student student = studentRepository.findByNameAndClass(
                     entry.getStudentName(),
                     entry.getStudentSurname(),
-                    calculateYear(entry.getClassPartialYear(), currentYear),
+                    calculateAbsoluteYear(entry.getClassRelativeYear(), currentDate.getYear()),
                     entry.getClassLabel()
             );
             if (student == null) {
@@ -131,6 +131,8 @@ public class ImportController {
             exam.setExaminer(examiner);
             exam.setStudent(student);
             exam.setOriginalMark(entry.getMark());
+            exam.setYear(currentDate.getYear() - 1);
+            exam.setPeriod(currentDate.getMonthValue() < 6 ? 1 : 2);
             examRepository.save(exam);
         }
 

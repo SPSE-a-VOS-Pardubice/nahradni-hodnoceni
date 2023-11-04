@@ -1,5 +1,5 @@
 import React, {createContext, useState} from 'react';
-import {getCurrentPeriod} from '../services/ExamService';
+import {getCurrentPeriod} from '../services/PeriodService';
 
 export type Period = {
   year: number,

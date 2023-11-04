@@ -9,12 +9,12 @@ import org.springframework.data.repository.query.QueryByExampleExecutor;
 import java.util.List;
 
 public interface ExamRepository extends CrudRepository<Exam, Long>, ListPagingAndSortingRepository<Exam, Long>, QueryByExampleExecutor<Exam> {
-    @Query(value = "SELECT * FROM exam WHERE MONTH(exam.time) BETWEEN 1 AND 5 AND YEAR(exam.time) = ?", nativeQuery = true)
-    List<Exam> getForFirstPeriod(int year);
+    @Query(value = "SELECT * FROM exam WHERE exam.year = ? AND exam.period = ?", nativeQuery = true)
+    List<Exam> getForPeriod(int year, int period);
 
-    @Query(value = "SELECT * FROM exam WHERE MONTH(exam.time) BETWEEN 6 AND 9 AND YEAR(exam.time) = ?", nativeQuery = true)
-    List<Exam> getForSecondPeriod(int year);
+    @Query(value = "SELECT * FROM exam ORDER BY exam.year ASC, exam.period ASC LIMIT 1", nativeQuery = true)
+    Exam getOldestExam();
 
-    @Query(value = "SELECT YEAR(exam.time) FROM exam WHERE exam.time IS NOT NULL ORDER BY exam.time ASC LIMIT 1", nativeQuery = true)
-    Integer getOldestExamYear();
+    @Query(value = "SELECT * FROM exam ORDER BY exam.year DESC, exam.period DESC LIMIT 1", nativeQuery = true)
+    Exam getLatestExam();
 }

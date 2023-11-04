@@ -361,30 +361,6 @@
     border-radius: 50px;
   }
   
-  .all_exams {
-    position: absolute;
-    min-width: max-content;
-    left: 0;
-    bottom: 100%;
-    padding: 0.5em;
-    opacity: 0;
-    visibility: hidden;
-    background-color: var(--color-white);
-    border: 3px solid var(--color-vivid-blue);
-    border-radius: 10px;
-    transition: var(--transition-short);
-    z-index: 1;
-  }
-  
-  .all_exams td {
-    padding-inline: 1em;
-  }
-  
-  .dashboard_row > .student_and_class:hover .all_exams {
-    opacity: 1;
-    visibility: visible;
-  }
-  
   .dashboard .result #succeeded {
     border: 1px solid var(--color-luminous-green);
     background-color: var(--color-luminous-green);

@@ -63,70 +63,57 @@ const DashboardTableItem = (props: {
     await updateExam(examsContext.content, newExam);
   }
 
+  let relevantButtons;
+  if (props.exam.time === null) {
+    relevantButtons = (
+      <>
+        <td></td>
+        <td></td>
+      </>
+    );
+  } else if (props.exam.time !== null && props.exam.finalMark === null) {
+    relevantButtons = (
+      <>
+        <td>
+          <button className="select" name="mark_student" id="mark_student">
+            <span>Oznámkovat<i className="fa-solid fa-angle-down"></i></span>
+            <div className="dropdown">
+              {['1', '2', '3', '4', '5'].map(mark => (
+                <option key={mark} value={mark} onClick={() => setMark(mark)}><FormattedMark mark={mark} /></option>
+              ))}
+              <option value="cancel" onClick={() => setMark(null)}><FormattedMessage id="mark.remove" /></option>
+            </div>
+          </button>
+        </td>
+        <td>
+          <button className="select" name="form" id="form">
+            <span>Formulář<i className="fa-solid fa-angle-down"></i></span>
+            <div className="dropdown">
+              <option value="0">Odevzdáno</option>
+              <option value="1">Pošta</option>
+              <option value="2">Neodevzdáno</option>
+            </div>
+          </button>
+        </td>
+      </>
+    );
+  } else {
+    relevantButtons = (
+      <>
+        <td></td>
+        <td></td>
+      </>
+    );
+  }
+
   return (
-    <tr className="dashboard_row">
+    <tr className="dashboard_table_item">
       <td className="result">
         <span id={getResultClassByMark(props.exam.finalMark)} className="result_data"><FormattedMessage id={isExamNH(props.exam) ? 'exam.type.NH.short' : 'exam.type.OZ.short'} /></span>
       </td>
       <td className="student_and_class">
         <span className="student_name main_data">{props.exam.student.name} {props.exam.student.surname}</span><br />
         <span className="student_class sub_data"><FormattedClass _class={props.exam.student._class} /></span>
-        {/* <table className="all_exams">
-            <tr className="exam_row">
-                <td className="result">
-                    <span id="unmarked" className="result_data">NH</span>
-                </td>
-                <td className="student_and_class">
-                    <span className="student_name main_data">Drahokoupil Sebastian</span><br />
-                    <span className="student_class sub_data">1.A</span>
-                </td>
-                <td className="subject_teacher">
-                    <span className="subject main_data">(VT) Výpočetní technika</span><br />
-                    <span className="teacher_name sub_data">Ing. Miroslav Koucký</span>
-                </td>
-                <td className="date_school_room">
-                    <span className="date sub_data">18/02/2023</span><br />
-                    <span className="time_room_data sub_data"><span className="time sub_data">08:55</span> <span className="school_room sub_data">uč. C214</span></span>
-                </td>
-                <td className="edit_delete">
-                    <div className="edit_options">
-                        <span className="edit_option">
-                            <a href="uprava.html"><i className="fa-solid fa-pen-to-square"></i></a>
-                        </span>
-                        <span className="delete_option">
-                            <i className="fa-solid fa-trash"></i>
-                        </span>
-                    </div>
-                </td>
-            </tr>
-            <tr className="exam_row">
-                <td className="result">
-                    <span id="unmarked" className="result_data">OZ</span>
-                </td>
-                <td className="student_and_class">
-                    <span className="student_name main_data">Drahokoupil Sebastian</span><br />
-                    <span className="student_class sub_data">1.A</span>
-                </td>
-                <td className="subject_teacher">
-                    <span className="subject main_data">(MA) Matematika</span><br />
-                    <span className="teacher_name sub_data">Mgr. Milan Michalec</span>
-                </td>
-                <td className="date_school_room">
-                    <span className="date sub_data">Datum nezadáno</span><br />
-                    <span className="time_room_data sub_data"><span className="time sub_data">Čas a</span> <span className="school_room sub_data">Místnost nezadáno</span></span>
-                </td>
-                <td className="edit_delete">
-                    <div className="edit_options">
-                        <span className="edit_option">
-                            <a href="uprava.html"><i className="fa-solid fa-pen-to-square"></i></a>
-                        </span>
-                        <span className="delete_option">
-                            <i className="fa-solid fa-trash"></i>
-                        </span>
-                    </div>
-                </td>
-            </tr>
-        </table> */}
       </td>
       <td className="subject_teacher">
         <span className="subject main_data">({props.exam.subject.abbreviation}) {props.exam.subject.name}</span><br />
@@ -140,27 +127,7 @@ const DashboardTableItem = (props: {
         <span className="new_mark_text main_data">Nová známka</span><br />
         <span className="new_mark_value sub_data"><FormattedMark mark={props.exam.finalMark} /></span>
       </td>
-      <td className="add_mark_select">
-        <button className="select" name="mark_student" id="mark_student">
-          <span>Oznámkovat<i className="fa-solid fa-angle-down"></i></span>
-          <div className="dropdown">
-            {['1', '2', '3', '4', '5'].map(mark => (
-              <option key={mark} value={mark} onClick={() => setMark(mark)}><FormattedMark mark={mark} /></option>
-            ))}
-            <option value="cancel" onClick={() => setMark(null)}><FormattedMessage id="mark.remove" /></option>
-          </div>
-        </button>
-      </td>
-      <td className="form_select">
-        <button className="select" name="form" id="form">
-          <span>Formulář<i className="fa-solid fa-angle-down"></i></span>
-          <div className="dropdown">
-            <option value="0">Odevzdáno</option>
-            <option value="1">Pošta</option>
-            <option value="2">Neodevzdáno</option>
-          </div>
-        </button>
-      </td>
+      {relevantButtons}
       <td className="edit_delete">
         <div className="edit_options">
           <span className="edit_option">

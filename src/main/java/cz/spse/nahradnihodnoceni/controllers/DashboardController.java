@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.spse.nahradnihodnoceni.helpers.MapperHelper;
 import cz.spse.nahradnihodnoceni.repositories.ExamRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +20,39 @@ public class DashboardController {
 
     @CrossOrigin // TODO
     @GetMapping(value = "/exams/{year}/{period}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String filteredExams(@PathVariable int year, @PathVariable String period) throws JsonProcessingException {
-
-        var exams = period.equals("1") ? repository.getForFirstPeriod(year + 1) : repository.getForSecondPeriod(year + 1);
-
+    public String filteredExams(@PathVariable int year, @PathVariable int period) throws JsonProcessingException {
+        var exams = repository.getForPeriod(year, period);
         return mapper.writeValueAsString(exams);
     }
 
     @CrossOrigin
-    @GetMapping(value = "/exams/oldest-year", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String oldestYear() {
-        var year = repository.getOldestExamYear();
-        return year == null ? "null" : String.format("%d", year - 1);
+    @GetMapping(value = "/exams/period-range", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String oldestYear() throws JsonProcessingException {
+        var oldestExam = repository.getOldestExam();
+        var latestExam = repository.getLatestExam();
+
+        if (oldestExam == null || latestExam == null) {
+            return "null";
+        }
+
+        var periodRange = new PeriodRange(
+                new Period(oldestExam.getYear(), oldestExam.getPeriod()),
+                new Period(latestExam.getYear(), latestExam.getPeriod())
+        );
+        return mapper.writeValueAsString(periodRange);
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class PeriodRange {
+        private Period oldest;
+        private Period latest;
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class Period {
+        private int year;
+        private int period;
     }
 }

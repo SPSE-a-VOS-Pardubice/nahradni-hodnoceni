@@ -42,6 +42,9 @@ public class Exam {
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;
 
+    private int year;
+    private int period;
+
     @Column(nullable = false)
     private String originalMark;
 

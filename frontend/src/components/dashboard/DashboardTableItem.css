@@ -1,0 +1,5 @@
+
+.dashboard_table_item {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+}

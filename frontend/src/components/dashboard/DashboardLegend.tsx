@@ -2,8 +2,8 @@ import {useContext, useEffect, useState} from 'react';
 import './DashboardLegend.css';
 import {Period, PeriodContext} from '../../contexts/PeriodContext';
 import StatusWrapper from '../../models/StatusWrapper';
-import {fetchOldestYear} from '../../services/APIService';
-import {getCurrentPeriod} from '../../services/ExamService';
+import {fetchPeriodRange} from '../../services/APIService';
+import {PeriodRange} from '../../models/PeriodRange';
 
 const formatPeriod = (period: Period) => {
   // TODO use intl instead
@@ -17,48 +17,48 @@ const arrayRange = (start: number, stop: number) => Array.from(
 
 const DashboardLegend = () => {
   const {data: currentPeriod, setData: setCurrentPeriod} = useContext(PeriodContext);
-  const [statusWrappedOldestYear, setOldestYear] = useState<StatusWrapper<number | null>>({id: 'FETCHING'});
+  const [statusWrappedPeriodRange, setStatusWrappedPeriodRange] = useState<StatusWrapper<PeriodRange | null>>({id: 'FETCHING'});
 
   useEffect(() => {
-    setOldestYear({id: 'FETCHING'});
-    fetchOldestYear()
-      .then(newData => setOldestYear({id: 'SUCCESS', content: newData}))
-      .catch(reason => setOldestYear({id: 'FAILED', message: reason}));
+    setStatusWrappedPeriodRange({id: 'FETCHING'});
+    fetchPeriodRange()
+      .then(newData => setStatusWrappedPeriodRange({id: 'SUCCESS', content: newData}))
+      .catch(reason => setStatusWrappedPeriodRange({id: 'FAILED', message: reason}));
   }, []);
 
   let buttonContent;
   let options;
-  switch (statusWrappedOldestYear.id) {
-  case 'FETCHING':
+  if (statusWrappedPeriodRange.id === 'FETCHING') {
     buttonContent = (
       <>načítání</>
     );
     options = (<></>);
-    break;
-  case 'SUCCESS':
+  } else if (statusWrappedPeriodRange.id === 'SUCCESS') {
     buttonContent = (
       <>{formatPeriod(currentPeriod)}</>
     );
+
+    if (statusWrappedPeriodRange.content === null) {
+      return (<></>);
+    }
+
+    const rangeStart = (statusWrappedPeriodRange.content.oldest.year * 2) + (statusWrappedPeriodRange.content.oldest.period - 1);
+    const rangeEnd = (statusWrappedPeriodRange.content.latest.year * 2) + (statusWrappedPeriodRange.content.latest.period - 1);
     options = (
       <>
-        {arrayRange(
-          (statusWrappedOldestYear.content || 2000) * 2,
-          (getCurrentPeriod().year * 2) + (getCurrentPeriod().period - 1),
-        ).map(year => {
-          const period = {year: Math.floor(year / 2), period: (year % 2) + 1} as Period;
+        {arrayRange(rangeStart, rangeEnd).map(i => {
+          const period = {year: Math.floor(i / 2), period: (i % 2) + 1} as Period;
           return (
             <option onClick={() => setCurrentPeriod(period)} key={JSON.stringify(period)}>{formatPeriod(period)}</option>
           );
         })}
       </>
     );
-    break;
-  case 'FAILED':
+  } else if (statusWrappedPeriodRange.id === 'FAILED') {
     buttonContent = (
       <>něco se pokazilo</>
     );
     options = (<></>);
-    break;
   }
 
   return (
