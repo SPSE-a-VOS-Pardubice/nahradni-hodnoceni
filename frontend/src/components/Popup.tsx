@@ -16,7 +16,7 @@ const Popup = (props: {
       closeOnDocumentClick={false}
       closeOnEscape={false}
     >
-      <div className="repair_popup popup active">
+      <div className="popup active">
         <div className="popup_container">
           {props.children}
           <div className="decision_row">

@@ -1,4 +1,4 @@
-import {useContext} from 'react';
+import {ChangeEvent, useContext, useState} from 'react';
 import {FormattedDate, FormattedMessage, FormattedTime} from 'react-intl';
 import Exam from '../../models/data/Exam';
 import _Class from '../../models/data/_Class';
@@ -8,6 +8,7 @@ import {isExamNH, updateExam} from '../../services/ExamService';
 import {ExamsContext} from '../../contexts/ExamsContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 import {formatTeacher} from '../../services/TeacherService';
+import classNames from 'classnames';
 
 const FormattedClass = (props: {
     _class: _Class
@@ -46,7 +47,10 @@ function getResultClassByMark(mark: string | null) {
 const DashboardTableItem = (props: {
     exam: Exam
 }) => {
+  const period = useContext(PeriodContext).data;
   const examsContext = useContext(ExamsContext);
+  const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
+
   // existence of exams is already checked in DashboardPage
   if (examsContext.id !== 'SUCCESS') {
     return <></>;
@@ -63,11 +67,45 @@ const DashboardTableItem = (props: {
     await updateExam(examsContext.content, newExam);
   }
 
+  async function setTime(value: number | null) {
+    if (examsContext.id !== 'SUCCESS') {
+      console.error('exams must be available');
+      return;
+    }
+
+    const newExam = structuredClone(props.exam);
+    newExam.time = value;
+    await updateExam(examsContext.content, newExam);
+  }
+
   let relevantButtons;
   if (props.exam.time === null) {
+    // TODO check if selected value is in range
+    const examYear = period.year + 1;
+    const examMinMonth = period.period === 1 ? '00' : '06';
+    const examMaxMonth = period.period === 1 ? '05' : '11';
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const newSelectedTimestamp = Number.isNaN(event.target.valueAsNumber) || event.target.valueAsNumber === null ? null : event.target.valueAsNumber;
+      setSelectedTimestamp(newSelectedTimestamp);
+    };
+
     relevantButtons = (
       <>
-        <td></td>
+        <td className="dashboard_table_item_datetime_container">
+          <input type="datetime-local" defaultValue={Date.now()} onChange={handleChange} min={`${examYear}-${examMinMonth}-01T00:00`} max={`${examYear}-${examMaxMonth}-01T00:00`}></input>
+          <button
+            onClick={() => setTime(selectedTimestamp)}
+            className={classNames(
+              'dashboard_table_item_datetime_submit fa_button',
+              {
+              // eslint-disable-next-line camelcase
+                fa_button_highlight: props.exam.time !== selectedTimestamp,
+              },
+            )}>
+            <i className="fa-solid fa-pen-to-square"></i>
+          </button>
+        </td>
         <td></td>
       </>
     );
@@ -85,7 +123,8 @@ const DashboardTableItem = (props: {
             </div>
           </button>
         </td>
-        <td>
+        <td></td>
+        {/* <td>
           <button className="select" name="form" id="form">
             <span>Formulář<i className="fa-solid fa-angle-down"></i></span>
             <div className="dropdown">
@@ -94,7 +133,7 @@ const DashboardTableItem = (props: {
               <option value="2">Neodevzdáno</option>
             </div>
           </button>
-        </td>
+        </td> */}
       </>
     );
   } else {
@@ -128,12 +167,12 @@ const DashboardTableItem = (props: {
         <span className="new_mark_value sub_data"><FormattedMark mark={props.exam.finalMark} /></span>
       </td>
       {relevantButtons}
-      <td className="edit_delete">
+      <td>
         <div className="edit_options">
-          <span className="edit_option">
-            <a href="uprava.html"><i className="fa-solid fa-pen-to-square"></i></a>
+          <span className="fa_button">
+            <i className="fa-solid fa-pen-to-square"></i>
           </span>
-          <span className="delete_option">
+          <span className="fa_button">
             <i className="fa-solid fa-trash"></i>
           </span>
         </div>

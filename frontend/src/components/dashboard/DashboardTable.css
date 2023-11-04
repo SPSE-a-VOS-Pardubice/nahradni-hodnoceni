@@ -1,0 +1,18 @@
+
+.dashboard_record_count_container {
+  margin: .25rem 0;
+}
+
+.dasboard_list_group {
+  padding-left: 0;
+  list-style: none;
+}
+
+.dasboard_list_group_header {
+  padding: 1rem 0;
+}
+
+.dashboard_table {
+  width: 100%;
+  border-collapse: collapse;
+}

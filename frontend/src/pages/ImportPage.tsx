@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import './Dashboard.css';
 
 import ImportPhase from '../models/ImportPhase';
@@ -7,15 +7,17 @@ import ImportDropzone from '../components/import/ImportDropzone';
 import {FormattedMessage} from 'react-intl';
 import Teacher from '../models/data/Teacher';
 import Subject from '../models/data/Subject';
+import {PeriodContext} from '../contexts/PeriodContext';
 
 const ImportPage = () => {
+  const period = useContext(PeriodContext).data;
   const [phase, setPhase] = useState<ImportPhase>({
     id: '1_UPLOAD',
   });
 
   useEffect(() => {
     if (phase.id === '2_UPLOADING') {
-      uploadCsvFile(phase.data).then((response) => {
+      uploadCsvFile(phase.data, phase.period).then((response) => {
         if (phase.id !== '2_UPLOADING') {
           throw new Error(
             'Invalid state: import phase changed while uploading data.',
@@ -30,6 +32,7 @@ const ImportPage = () => {
           setPhase({
             id: '3_MISSING_EXAMINERS',
             data: phase.data,
+            period: phase.period,
             missingExaminers: response.missingExaminers,
             missingSubjects: response.missingSubjects,
           });
@@ -40,6 +43,7 @@ const ImportPage = () => {
         setPhase({
           id: '4_MISSING_SUBJECTS',
           data: phase.data,
+          period: phase.period,
           missingExaminers: phase.missingExaminers,
           missingSubjects: phase.missingSubjects,
         });
@@ -49,6 +53,7 @@ const ImportPage = () => {
         setPhase({
           id: '2_UPLOADING',
           data: phase.data,
+          period: phase.period,
         });
       }
     }
@@ -60,6 +65,7 @@ const ImportPage = () => {
       setPhase({
         id: '2_UPLOADING',
         data,
+        period,
       });
     };
 

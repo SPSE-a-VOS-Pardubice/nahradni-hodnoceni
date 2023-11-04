@@ -1,5 +1,94 @@
 
 .dashboard_table_item {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  border-top: 1px solid var(--color-luminous-gray);
+  border-bottom: 1px solid var(--color-luminous-gray);
+  transition: var(--transition-short);
+
+  display: flex;
+  align-items: center;
+}
+
+.dashboard_table_item.selected {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.dashboard_table_item > * {
+  flex: 1;
+  padding-block: 1em;
+}
+
+.dashboard_table_item_datetime_container {
+  display: flex;
+  gap: 10px;
+}
+
+.dashboard_table_item .fa_button i {
+  cursor: pointer;
+  font-size: 0.9em;
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  line-height: 27.5px;
+  color: var(--color-vivid-blue);
+  border-radius: 2.5px;
+  border: 2px solid var(--color-vivid-blue);
+  background-color: var(--color-white);
+}
+
+.dashboard_table_item .fa_button.fa_button_highlight i {
+  color: var(--color-white);
+  background-color: var(--color-vivid-blue);
+}
+
+.dashboard_table_item .fa_button.fa_button_highlight_error i {
+  color: var(--color-white);
+  background-color: var(--color-luminous-red);
+}
+
+.dashboard_table_item .select span {
+  min-width: 125px;
+  color: var(--color-white);
+  background-color: var(--color-vivid-blue);
+
+  cursor: pointer;
+  height: 35px;
+  padding-inline: 1em;
+  border-radius: 2.5px;
+  border: none;
+}
+
+.dashboard_table_item .result span {
+  text-align: center;
+  padding: 10px;
+  border-radius: 50px;
+}
+
+.dashboard_table_item .result #succeeded {
+  border: 1px solid var(--color-luminous-green);
+  background-color: var(--color-luminous-green);
+}
+
+.dashboard_table_item .result #failed {
+  color: var(--color-white);
+  border: 1px solid var(--color-luminous-red);
+  background-color: var(--color-luminous-red);
+}
+
+.dashboard_table_item .result #unmarked {
+  border: 1px solid var(--color-vivid-gray);
+  background-color: var(--color-white);
+}
+
+.dashboard_table_item .sub_data {
+  color: var(--color-vivid-gray);
+}
+
+.dashboard_table_item .edit_options {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard_table_item .undefined {
+  color: var(--color-luminous-gray);
 }

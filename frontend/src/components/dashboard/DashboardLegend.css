@@ -1,0 +1,15 @@
+
+.dashboard_legend {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.dashboard_legend .select span {
+  font-size: 1.1em;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 5px;
+  color: var(--color-white);
+  background-color: var(--color-light-gray);
+}

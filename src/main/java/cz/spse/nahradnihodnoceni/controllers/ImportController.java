@@ -37,14 +37,12 @@ public class ImportController {
     }
 
     @PostMapping("/api/1/upload")
-    public FailedUploadResponse uploadCSVFile(@RequestParam("file") MultipartFile file) throws Exception {
+    public FailedUploadResponse uploadCSVFile(@RequestParam("file") MultipartFile file, @RequestParam int year, @RequestParam int period) throws Exception {
 
-        var currentDate = LocalDate.now();
-
-        // validate file
-        if (file.isEmpty()) {
+        if (period != 1 && period != 2)
+            throw new IllegalArgumentException("period must be either 1 or 2");
+        if (file.isEmpty())
             return null;
-        }
 
         Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
 
@@ -91,12 +89,12 @@ public class ImportController {
         for (ImportEntry entry: entries) {
 
             _Class _class = classRepository.find(
-                    calculateAbsoluteYear(entry.getClassRelativeYear(), currentDate.getYear()),
+                    calculateAbsoluteYear(entry.getClassRelativeYear(), year + 1),
                     entry.getClassLabel()
             );
             if (_class == null) {
                 _class = new _Class();
-                _class.setYear(calculateAbsoluteYear(entry.getClassRelativeYear(), currentDate.getYear()));
+                _class.setYear(calculateAbsoluteYear(entry.getClassRelativeYear(), year + 1));
                 _class.setLabel(entry.getClassLabel());
                 classRepository.save(_class);
             }
@@ -115,7 +113,7 @@ public class ImportController {
             Student student = studentRepository.findByNameAndClass(
                     entry.getStudentName(),
                     entry.getStudentSurname(),
-                    calculateAbsoluteYear(entry.getClassRelativeYear(), currentDate.getYear()),
+                    calculateAbsoluteYear(entry.getClassRelativeYear(), year + 1),
                     entry.getClassLabel()
             );
             if (student == null) {
@@ -131,8 +129,8 @@ public class ImportController {
             exam.setExaminer(examiner);
             exam.setStudent(student);
             exam.setOriginalMark(entry.getMark());
-            exam.setYear(currentDate.getYear() - 1);
-            exam.setPeriod(currentDate.getMonthValue() < 6 ? 1 : 2);
+            exam.setYear(year);
+            exam.setPeriod(period);
             examRepository.save(exam);
         }
 

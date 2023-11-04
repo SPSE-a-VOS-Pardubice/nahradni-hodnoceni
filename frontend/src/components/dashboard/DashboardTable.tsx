@@ -5,12 +5,12 @@ import {ExamsContext} from '../../contexts/ExamsContext';
 import DashboardSearch from './DashboardSearch';
 import {ExamDisplayRestrictions} from '../../models/ExamDisplayRestrictions';
 import {isExamNH} from '../../services/ExamService';
-import Exam from '../../models/data/Exam';
 import FilterOptions from './FilterOptions';
 import {Period, PeriodContext} from '../../contexts/PeriodContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 import {formatTeacher} from '../../services/TeacherService';
 import {formatStudent} from '../../services/StudentService';
+import Exam from '../../models/data/Exam';
 
 function applyFilter(examDisplayRestrictions: ExamDisplayRestrictions, exams: Exam[]) {
   return exams.filter(exam => {
@@ -123,12 +123,14 @@ const DashboardTable = () => {
 
   let renderedExams;
   if (examDisplayRestrictions.groupBy === undefined) {
+
+    // TODO remove, only for groupBy debugging
     const newExamDisplayRestrictions = structuredClone(examDisplayRestrictions);
     newExamDisplayRestrictions.groupBy = 'examiner';
     setExamDisplayRestrictions(newExamDisplayRestrictions);
 
     renderedExams = (
-      <table className="dashboard">
+      <table className="dashboard_table">
         <tbody>
           {exams.map((exam, i) => (
             <DashboardTableItem key={i} exam={exam} />
@@ -152,7 +154,7 @@ const DashboardTable = () => {
     const groupedExams = Object.groupBy(exams, predicate) as {[id: number]: Exam[]};
 
     renderedExams = (
-      <ul>
+      <ul className="dasboard_list_group">
         {Object.entries(groupedExams).map(entry => {
           const [groupId, groupExams] = entry;
 
@@ -160,19 +162,19 @@ const DashboardTable = () => {
           let groupElement;
           if (examDisplayRestrictions.groupBy === 'examiner') {
             groupElement = (
-              <div>
+              <div className="dasboard_list_group_header">
                 <h3>{formatTeacher(groupExams[0].examiner)}</h3>
               </div>
             );
           } else if (examDisplayRestrictions.groupBy === 'student') {
             groupElement = (
-              <div>
+              <div className="dasboard_list_group_header">
                 <h3>{formatStudent(groupExams[0].student)}</h3>
               </div>
             );
           } else if (examDisplayRestrictions.groupBy === 'student._class') {
             groupElement = (
-              <div>
+              <div className="dasboard_list_group_header">
                 <h3>{formatClassRelativeToPeriod(groupExams[0].student._class, period)}</h3>
               </div>
             );
@@ -181,7 +183,7 @@ const DashboardTable = () => {
           return (
             <li key={groupId}>
               {groupElement}
-              <table className="dashboard">
+              <table className="dashboard_table">
                 <tbody>
                   {groupExams.map((exam, i) => (
                     <DashboardTableItem key={i} exam={exam} />
@@ -206,39 +208,11 @@ const DashboardTable = () => {
       <DashboardSearch searchFor={examDisplayRestrictions.searchFor} setSearchFor={setSearchFor} />
       <FilterOptions restrictions={examDisplayRestrictions} setRestrictions={setExamDisplayRestrictions} />
 
-      <div className="num_of_records_part">
+      <div className="dashboard_record_count_container">
         <p>Zobrazeno {exams.length} záznamů</p>
       </div>
 
       {renderedExams}
-
-      <div className="delete_popup popup">
-        <div className="popup_container">
-          <p>
-            Opravdu si přejete smazat náhradní hodnocení{' '}
-            <span className="student_name"></span>
-          </p>
-          <div className="decision_row">
-            <button id="yes_delete">ANO</button>
-            <button id="no_delete">NE</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="repair_popup popup">
-        <div className="popup_container">
-          <p>
-            Chcete vytvořit opravnou zkoušku pro{' '}
-            <span className="student_name"></span>
-          </p>
-          <div className="decision_row">
-            <button id="yes_repair">
-              <a href="/editExamp">ANO</a>
-            </button>
-            <button id="no_repair">NE</button>
-          </div>
-        </div>
-      </div>
     </>
   );
 };

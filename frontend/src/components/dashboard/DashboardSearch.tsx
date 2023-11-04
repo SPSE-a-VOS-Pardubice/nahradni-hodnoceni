@@ -19,7 +19,7 @@ const DashboardSearch = (props: {
   return (
     <form className="header_search_part" onSubmit={handleSubmit}>
       <input onChange={handleSubmit} type="search" name="header_search" id="header_search" placeholder="Vyhledávejte podle třídy, žáka nebo učitele" />
-      <button type="submit" className="primar_btn">Vyhledat</button>
+      <button type="submit" className="universal_button primary">Vyhledat</button>
     </form>
   );
 };

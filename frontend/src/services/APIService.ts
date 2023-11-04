@@ -29,9 +29,11 @@ export async function uploadData<T extends _Class | Classroom | Exam | Student |
   return (await axios.post(BASE_URL + DATA_URL + `/${type}`, data)).data;
 }
 
-export async function uploadCsvFile(data: ArrayBuffer): Promise<'' | FailedUploadResponse> {
+export async function uploadCsvFile(data: ArrayBuffer, period: Period): Promise<'' | FailedUploadResponse> {
   const formData = new FormData();
   formData.append('file', new Blob([data]));
 
-  return (await axios.post(BASE_URL + UPLOAD_URL, formData)).data;
+  return (await axios.post(BASE_URL + UPLOAD_URL, formData, {
+    params: period,
+  })).data;
 }
