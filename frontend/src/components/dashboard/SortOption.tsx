@@ -2,23 +2,12 @@ import {FormattedMessage} from 'react-intl';
 import './Option.css';
 import {SortByOptions} from '../../models/ExamDisplayRestrictions';
 
-// const orderOptions = propsToMapWithPrefix("", [
-//     "sort.student",
-//     "sort.student.reverse",
-//     "sort.teacher",
-//     "sort.teacher.reverse",
-//     "sort.class",
-//     "sort.class.reverse",
-//     "sort.mark",
-//     "sort.mark.reverse"
-// ]);
-
 function toId(sortBy?: SortByOptions, reverse?: boolean): string {
   return reverse === true ? `sort.${sortBy}.reverse` : `sort.${sortBy}`;
 }
 
 const orderOptions = new Map(
-  (['student', 'teacher', 'class', 'mark'] as SortByOptions[])
+  (['student', 'examiner', 'student._class', 'mark'] as SortByOptions[])
     .flatMap(sortBy => [
       [toId(sortBy), {sortBy: sortBy, reverse: false}],
       [toId(sortBy, true), {sortBy: sortBy, reverse: true}],

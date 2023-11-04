@@ -39,10 +39,10 @@ function App() {
 
     'sort.student': 'Žáka (A-Z)',
     'sort.student.reverse': 'Žáka (Z-A)',
-    'sort.teacher': 'Učitele (A-Z)',
-    'sort.teacher.reverse': 'Učitele (Z-A)',
-    'sort.class': 'Třídy (1. - 4.)',
-    'sort.class.reverse': 'Třídy (4. - 1.)',
+    'sort.examiner': 'Zkoušejícího (A-Z)',
+    'sort.examiner.reverse': 'Zkoušejícího (Z-A)',
+    'sort.student._class': 'Třídy (1. - 4.)',
+    'sort.student._class.reverse': 'Třídy (4. - 1.)',
     'sort.mark': 'Známky (1 - 5)',
     'sort.mark.reverse': 'Známky (5 - 1)',
 

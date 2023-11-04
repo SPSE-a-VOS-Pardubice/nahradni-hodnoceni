@@ -3,6 +3,8 @@ import Student from './Student';
 import Subject from './Subject';
 import Teacher from './Teacher';
 
+export type FinalMarkType = '1' | '2' | '3' | '4' | '5' | null;
+
 interface Exam {
   id: number;
   available: boolean;
@@ -14,8 +16,8 @@ interface Exam {
   class_teacher: Teacher | null;
   examiner: Teacher;
   time: number | null;
-  originalMark: string;
-  finalMark: string | null;
+  originalMark: '5' | 'N';
+  finalMark: FinalMarkType;
 }
 
 export default Exam;

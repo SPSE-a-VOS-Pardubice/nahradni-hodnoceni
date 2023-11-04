@@ -1,6 +1,6 @@
 
-export type SortByOptions = 'student' | 'teacher' | 'class' | 'mark';
 export type GroupByOptions = 'student' | 'examiner' | 'student._class';
+export type SortByOptions = GroupByOptions | 'mark';
 
 export class Filter {
   status?: 'finished' | 'unfinished';

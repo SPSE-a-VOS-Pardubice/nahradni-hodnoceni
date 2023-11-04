@@ -10,7 +10,7 @@ import {Period, PeriodContext} from '../../contexts/PeriodContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 import {formatTeacher} from '../../services/TeacherService';
 import {formatStudent} from '../../services/StudentService';
-import Exam from '../../models/data/Exam';
+import Exam, {FinalMarkType} from '../../models/data/Exam';
 
 function applyFilter(examDisplayRestrictions: ExamDisplayRestrictions, exams: Exam[]) {
   return exams.filter(exam => {
@@ -104,6 +104,13 @@ function applySearch(period: Period, examDisplayRestrictions: ExamDisplayRestric
   );
 }
 
+function getFinalMarkSortValue(finalMark: FinalMarkType): number {
+  if (finalMark === null) {
+    return 6;
+  }
+  return Number(finalMark);
+}
+
 const DashboardTable = () => {
   const examsContext = useContext(ExamsContext);
   const period = useContext(PeriodContext).data;
@@ -118,8 +125,23 @@ const DashboardTable = () => {
 
   exams = applyFilter(examDisplayRestrictions, exams);
   exams = applySearch(period, examDisplayRestrictions, exams);
-  // TODO sort
-  // TODO reverse
+
+  let sortPredicate;
+  if (examDisplayRestrictions.sortBy === 'student._class') {
+    sortPredicate = (exam1: Exam, exam2: Exam) => formatClassRelativeToPeriod(exam1.student._class, period, false).localeCompare(formatClassRelativeToPeriod(exam2.student._class, period, false));
+  } else if (examDisplayRestrictions.sortBy === 'mark') {
+    sortPredicate = (exam1: Exam, exam2: Exam) => getFinalMarkSortValue(exam1.finalMark) - getFinalMarkSortValue(exam2.finalMark);
+  } else if (examDisplayRestrictions.sortBy === 'student') {
+    sortPredicate = (exam1: Exam, exam2: Exam) => formatStudent(exam1.student).localeCompare(formatStudent(exam2.student));
+  } else if (examDisplayRestrictions.sortBy === 'examiner') {
+    sortPredicate = (exam1: Exam, exam2: Exam) => formatTeacher(exam1.examiner).localeCompare(formatTeacher(exam2.examiner));
+  }
+  if (sortPredicate !== null) {
+    exams.sort(sortPredicate);
+  }
+  if (examDisplayRestrictions.reverse) {
+    exams.reverse();
+  }
 
   let renderedExams;
   if (examDisplayRestrictions.groupBy === undefined) {

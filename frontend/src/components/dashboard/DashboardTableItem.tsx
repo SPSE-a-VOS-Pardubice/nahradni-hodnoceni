@@ -1,6 +1,6 @@
 import {ChangeEvent, useContext, useEffect, useState} from 'react';
 import {FormattedDate, FormattedMessage, FormattedTime} from 'react-intl';
-import Exam from '../../models/data/Exam';
+import Exam, {FinalMarkType} from '../../models/data/Exam';
 import _Class from '../../models/data/_Class';
 import './DashboardTableItem.css';
 import {PeriodContext} from '../../contexts/PeriodContext';
@@ -63,7 +63,7 @@ const DashboardTableItem = (props: {
     return <></>;
   }
 
-  async function setFinalMark(newFinalMark: string | null) {
+  async function setFinalMark(newFinalMark: FinalMarkType) {
     if (examsContext.id !== 'SUCCESS') {
       console.error('exams must be available');
       return;
@@ -179,8 +179,8 @@ const DashboardTableItem = (props: {
           <button className="select" name="mark_student" id="mark_student">
             <span>Oznámkovat<i className="fa-solid fa-angle-down"></i></span>
             <div className="dropdown">
-              {['1', '2', '3', '4', '5'].map(mark => (
-                <option key={mark} value={mark} onClick={() => setFinalMark(mark)}><FormattedMark mark={mark} /></option>
+              {(['1', '2', '3', '4', '5'] as FinalMarkType[]).map(mark => (
+                <option key={mark} value={mark!} onClick={() => setFinalMark(mark)}><FormattedMark mark={mark} /></option>
               ))}
               <option value="cancel" onClick={() => setFinalMark(null)}><FormattedMessage id="mark.remove" /></option>
             </div>
