@@ -123,12 +123,6 @@ const DashboardTable = () => {
 
   let renderedExams;
   if (examDisplayRestrictions.groupBy === undefined) {
-
-    // TODO remove, only for groupBy debugging
-    const newExamDisplayRestrictions = structuredClone(examDisplayRestrictions);
-    newExamDisplayRestrictions.groupBy = 'examiner';
-    setExamDisplayRestrictions(newExamDisplayRestrictions);
-
     renderedExams = (
       <table className="dashboard_table">
         <tbody>
@@ -169,7 +163,7 @@ const DashboardTable = () => {
           } else if (examDisplayRestrictions.groupBy === 'student') {
             groupElement = (
               <div className="dasboard_list_group_header">
-                <h3>{formatStudent(groupExams[0].student)}</h3>
+                <h3>{formatStudent(groupExams[0].student)} ({formatClassRelativeToPeriod(groupExams[0].student._class, period)})</h3>
               </div>
             );
           } else if (examDisplayRestrictions.groupBy === 'student._class') {

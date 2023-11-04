@@ -2,7 +2,8 @@ import './FilterOptions.css';
 
 import FilterOption from './FilterOption';
 import SortOption from './SortOption';
-import {SortByOptions, ExamDisplayRestrictions, Filter} from '../../models/ExamDisplayRestrictions';
+import {SortByOptions, ExamDisplayRestrictions, Filter, GroupByOptions} from '../../models/ExamDisplayRestrictions';
+import GroupOption from './GroupOption';
 
 function propsToMapWithPrefix(prefix: string, props: string[]) {
   return Object.fromEntries(
@@ -66,6 +67,12 @@ const FilterOptions = (props: {
     props.setRestrictions(newRestrictions);
   }
 
+  function setGroupBy(groupBy?: GroupByOptions) {
+    const newRestrictions = structuredClone(props.restrictions);
+    newRestrictions.groupBy = groupBy;
+    props.setRestrictions(newRestrictions);
+  }
+
   function setSortBy(sortBy?: SortByOptions, reverse?: boolean) {
     const newRestrictions = structuredClone(props.restrictions);
     newRestrictions.sortBy = sortBy;
@@ -90,8 +97,12 @@ const FilterOptions = (props: {
       </div>
 
       <div className="order_by_form">
-        <label htmlFor="order_by">Seřadit podle:</label>
-        <SortOption label="Třídy" sortBy={props.restrictions.sortBy} reverse={props.restrictions.reverse} onChange={setSortBy} />
+        <label htmlFor="order_by">Seskupit:</label>
+        <GroupOption label="Neurčeno" groupBy={props.restrictions.groupBy} onChange={setGroupBy} />
+      </div>
+      <div className="order_by_form">
+        <label htmlFor="order_by">Seřadit:</label>
+        <SortOption label="Neurčeno" sortBy={props.restrictions.sortBy} reverse={props.restrictions.reverse} onChange={setSortBy} />
       </div>
     </div>
   );

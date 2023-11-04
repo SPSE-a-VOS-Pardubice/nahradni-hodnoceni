@@ -46,6 +46,10 @@ function App() {
     'sort.mark': 'Známky (1 - 5)',
     'sort.mark.reverse': 'Známky (5 - 1)',
 
+    'groupBy.student': 'Žáka',
+    'groupBy.examiner': 'Zkoušejícího',
+    'groupBy.student._class': 'Třídy',
+
     'import.drop': 'klikněte pro vybrání souboru, nebo ho sem přetáhněte',
     'import.uploading': 'probíhá nahrávání',
   };

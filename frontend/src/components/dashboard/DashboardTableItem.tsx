@@ -154,7 +154,7 @@ const DashboardTableItem = (props: {
       relevantButtons = (
         <>
           <td className="dashboard_table_item_datetime_container">
-            <input type="datetime-local" defaultValue={defaultValue} onChange={handleChange} min={`${examYear}-${examMinMonth}-01T00:00`} max={`${examYear}-${examMaxMonth}-01T00:00`}></input>
+            <input type="datetime-local" defaultValue={defaultValue} onChange={handleChange} step={3600} min={`${examYear}-${examMinMonth}-01T00:00`} max={`${examYear}-${examMaxMonth}-01T00:00`}></input>
             <button
               onClick={() => setTime(selectedTimestamp)}
               disabled={props.exam.time === selectedTimestamp}
@@ -221,7 +221,7 @@ const DashboardTableItem = (props: {
       </td>
       {relevantButtons}
       <td className="dashboard_table_item_menu">
-        {buttonsOverride === null
+        {!studentTimeConflicts && !teacherTimeConflicts && (buttonsOverride === null)
           ? (
             <button className="select">
               <span>Seznam akcí</span>
