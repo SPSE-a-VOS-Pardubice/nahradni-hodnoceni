@@ -86,7 +86,7 @@ public class BakalariSyncController {
             var name = components[prefixes.size()];
             var surname = components[prefixes.size() + 1];
 
-            var teacher = teacherRepository.findBySurname(surname);
+            var teacher = teacherRepository.findActiveByNameSurname(name, surname);
             if (teacher != null)
                 continue;
 

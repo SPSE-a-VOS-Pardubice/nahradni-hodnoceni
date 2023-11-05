@@ -6,6 +6,8 @@ import cz.spse.nahradnihodnoceni.models.ImportEntry;
 import cz.spse.nahradnihodnoceni.models.data.*;
 import cz.spse.nahradnihodnoceni.models.responses.FailedUploadResponse;
 import cz.spse.nahradnihodnoceni.repositories.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -56,10 +57,10 @@ public class ImportController {
         List<ImportEntry> entries = csvToBean.parse();
 
         Map<String, Subject> subjects = new HashMap<>();
-        Map<String, Teacher> teachers = new HashMap<>();
+        Map<KnownExaminerDetails, Teacher> teachers = new HashMap<>();
 
         Set<String> missingSubjects = new HashSet<>();
-        Set<String> missingExaminers = new HashSet<>();
+        Set<KnownExaminerDetails> missingExaminers = new HashSet<>();
 
         // přednačteme předměty a zkoušející, abychom zkontrolovali, že žádní v DB nechybí
         for (ImportEntry entry: entries) {
@@ -72,13 +73,15 @@ public class ImportController {
                     subjects.put(subjectAbbreviation, subject);
             }
 
+            var examinerName = entry.getExaminerName();
             var examinerSurname = entry.getExaminerSurname();
-            if (!missingExaminers.contains(examinerSurname) && !teachers.containsKey(examinerSurname)) {
-                Teacher examiner = teacherRepository.findBySurname(examinerSurname);
+            var uniqueExaminerKey = new KnownExaminerDetails(examinerName, examinerSurname);
+            if (!missingExaminers.contains(uniqueExaminerKey) && !teachers.containsKey(uniqueExaminerKey)) {
+                Teacher examiner = teacherRepository.findActiveByNameSurname(examinerName, examinerSurname);
                 if (examiner == null)
-                    missingExaminers.add(examinerSurname);
+                    missingExaminers.add(uniqueExaminerKey);
                 else
-                    teachers.put(examinerSurname, examiner);
+                    teachers.put(uniqueExaminerKey, examiner);
             }
         }
 
@@ -103,7 +106,8 @@ public class ImportController {
             if (subject == null)
                 continue;
 
-            var examiner = teachers.get(entry.getExaminerSurname());
+            var uniqueExaminerKey = new KnownExaminerDetails(entry.getExaminerName(), entry.getExaminerSurname());
+            var examiner = teachers.get(uniqueExaminerKey);
             if (examiner == null)
                 continue;
 
@@ -135,5 +139,12 @@ public class ImportController {
         }
 
         return null;
+    }
+
+    @AllArgsConstructor
+    @Data
+    public static class KnownExaminerDetails {
+        private String name;
+        private String surname;
     }
 }

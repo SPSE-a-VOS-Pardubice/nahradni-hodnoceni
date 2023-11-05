@@ -35,7 +35,5 @@ out/
 ### VS Code ###
 .vscode/
 
-### Docs ###
-/docs/UML/*.png
-/docs/UML/*.svg
-src/main/resources/application.properties
+### Project ###
+/test data

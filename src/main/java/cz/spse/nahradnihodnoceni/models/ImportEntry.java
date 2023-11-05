@@ -3,11 +3,12 @@ package cz.spse.nahradnihodnoceni.models;
 import com.opencsv.bean.CsvBindByPosition;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 public class ImportEntry {
 
     @CsvBindByPosition(position = 0)
@@ -26,6 +27,9 @@ public class ImportEntry {
     private String mark;
 
     @CsvBindByPosition(position = 5)
+    private String examinerName;
+
+    @CsvBindByPosition(position = 6)
     private String examinerSurname;
 
     public int getClassRelativeYear() throws Exception {

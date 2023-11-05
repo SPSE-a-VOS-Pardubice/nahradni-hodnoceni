@@ -2,6 +2,7 @@
 interface Teacher {
   id: number;
   available: boolean;
+  archived: boolean;
 
   name: string;
   surname: string;

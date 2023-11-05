@@ -10,7 +10,7 @@ import Subject from '../models/data/Subject';
 import {PeriodContext} from '../contexts/PeriodContext';
 
 const ImportPage = () => {
-  const period = useContext(PeriodContext).data;
+  const {data: period, setData: setPeriod} = useContext(PeriodContext);
   const [phase, setPhase] = useState<ImportPhase>({
     id: '1_UPLOAD',
   });
@@ -70,11 +70,21 @@ const ImportPage = () => {
     };
 
     return (
-      <ImportDropzone onDrop={handleUpload}>
-        <h3>
-          <FormattedMessage id="import.drop" />
-        </h3>
-      </ImportDropzone>
+      <>
+        <button className="select">
+          <span>{period.period}. pololetí</span>
+
+          <div className="dropdown">
+            <option onClick={() => setPeriod({year: period.year, period: 1})}>1</option>
+            <option onClick={() => setPeriod({year: period.year, period: 2})}>2</option>
+          </div>
+        </button>
+        <ImportDropzone onDrop={handleUpload}>
+          <h3>
+            <FormattedMessage id="import.drop" />
+          </h3>
+        </ImportDropzone>
+      </>
     );
   }
 
@@ -85,18 +95,17 @@ const ImportPage = () => {
   }
 
   if (phase.id === '3_MISSING_EXAMINERS') {
-    const examinerSurname = phase.missingExaminers[0];
+    const examinerDetails = phase.missingExaminers[0];
 
     const handleSubmit = async () => {
       const examinerPrefixEl = document.getElementById('import_examiner_prefix') as HTMLInputElement;
-      const examinerNameEl = document.getElementById('import_examiner_name') as HTMLInputElement;
       const examinerSuffixEl = document.getElementById('import_examiner_suffix') as HTMLInputElement;
 
       await uploadData(
         {
+          name: examinerDetails.name,
+          surname: examinerDetails.surname,
           prefix: examinerPrefixEl.value,
-          name: examinerNameEl.value,
-          surname: examinerSurname,
           suffix: examinerSuffixEl.value,
         } as Teacher,
         'teacher',
@@ -109,7 +118,6 @@ const ImportPage = () => {
       }
 
       examinerPrefixEl.value = '';
-      examinerNameEl.value = '';
       examinerSuffixEl.value = '';
 
       const newPhase = {...phase};
@@ -120,16 +128,12 @@ const ImportPage = () => {
     return (
       <div>
         <h3>
-          Prosím vyplňte chybějící údaje pro učitele s příjmením: {examinerSurname}
+          Prosím vyplňte chybějící údaje pro učitele {examinerDetails.name} {examinerDetails.surname}
         </h3>
         <br />
         <br />
         <label htmlFor="import_examiner_prefix">Prefix</label>
         <input id="import_examiner_prefix" type="text"></input>
-        <br />
-        <br />
-        <label htmlFor="import_examiner_name">Křestní jméno</label>
-        <input id="import_examiner_name" type="text"></input>
         <br />
         <br />
         <label htmlFor="import_examiner_suffix">Suffix</label>
@@ -167,7 +171,7 @@ const ImportPage = () => {
     };
 
     return (
-      <div>
+      <form onSubmit={handleData}>
         <h3>
           Prosím vyplňte chybějící údaje pro předmět se zkratkou:{' '}
           {subjectAbbreviation}
@@ -177,7 +181,7 @@ const ImportPage = () => {
         <label htmlFor="subject_name">Název předmětu</label>
         <input id="subject_name" type="text"></input>
         <button onClick={handleData}>OK</button>
-      </div>
+      </form>
     );
   }
 

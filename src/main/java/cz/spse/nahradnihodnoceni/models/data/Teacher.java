@@ -20,6 +20,9 @@ public class Teacher {
     @Builder.Default
     private boolean available = true;
 
+    @Builder.Default
+    private boolean archived = false;
+
     @Column(nullable = false)
     private String name;
 
