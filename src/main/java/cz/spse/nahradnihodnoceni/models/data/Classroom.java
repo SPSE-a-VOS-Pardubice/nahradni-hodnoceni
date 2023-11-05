@@ -1,26 +1,32 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Builder
+@Getter
+@Setter
 public class Classroom {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     private boolean available = true;
+
+    @Builder.Default
+    private boolean archived = false;
 
     @Column(nullable = false, unique = true)
     private String label;
 
-    @OneToMany(mappedBy="classroom")
-    private Set<Trait> traits;
+    @ManyToMany(mappedBy="classrooms")
+    @Builder.Default
+    private Set<Trait> traits = new HashSet<>();
 }

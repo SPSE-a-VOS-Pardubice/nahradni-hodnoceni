@@ -1,24 +1,25 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Builder
+@Getter
+@Setter
 public class Exam {
 
     public static final String[] marks = {"1","2","3","4","5","N"};
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Builder.Default
     private boolean available = true;
 
     @ManyToOne(optional = false)
@@ -34,7 +35,7 @@ public class Exam {
     private Teacher chairman;
 
     @ManyToOne
-    private Teacher class_teacher;
+    private Teacher classTeacher;
 
     @ManyToOne(optional = false)
     private Teacher examiner;

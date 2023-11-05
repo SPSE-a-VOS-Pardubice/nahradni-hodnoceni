@@ -1,26 +1,29 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "subject_id", "teacher_id", "suitability" }) })
+@Builder
+@Getter
+@Setter
 public class TeacherSuitability {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id; // TODO
+    @EmbeddedId
+    TeacherSuitabilityKey id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Subject subject;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
+    @MapsId("teacherId")
+    @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
+    @ManyToOne
+    @MapsId("subjectId")
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
+
     @Column(nullable = false)
+    @Builder.Default
     private int suitability = 0;
 }

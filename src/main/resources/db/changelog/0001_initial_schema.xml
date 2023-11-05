@@ -1,0 +1,275 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="0001_create__Class" author="Vojtěch Fošnár">
+        <createTable tableName="_Class">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="available" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="year" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="label" type="varchar(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="teacher_id" type="int"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="0002_create_Classroom" author="Vojtěch Fošnár">
+        <createTable tableName="Classroom">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="available" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="label" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="0003_create_Exam" author="Vojtěch Fošnár">
+        <createTable tableName="Exam">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="available" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="student_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="classroom_id" type="int"/>
+            <column name="chairman_id" type="int"/>
+            <column name="classTeacher_id" type="int"/>
+            <column name="examiner_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="datetime"/>
+            <column name="year" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="originalMark" type="varchar(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="finalMark" type="varchar(5)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="0004_create_Student" author="Vojtěch Fošnár">
+        <createTable tableName="Student">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="available" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="_class_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="0005_create_Subject" author="Vojtěch Fošnár">
+        <createTable tableName="Subject">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="available" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="abbreviation" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="0006_create_Teacher" author="Vojtěch Fošnár">
+        <createTable tableName="Teacher">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="available" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prefix" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="suffix" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="0007_create_TeacherSuitability" author="Vojtěch Fošnár">
+        <createTable tableName="TeacherSuitability">
+            <column name="teacher_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="available" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="suitability" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="TeacherSuitability"
+                             columnNames="teacher_id, subject_id"
+                             constraintName="c_TeacherSuitability"/>
+    </changeSet>
+    <changeSet id="0008_create_Trait" author="Vojtěch Fošnár">
+        <createTable tableName="Trait">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="available" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="0009_create_Trait_Classroom" author="Vojtěch Fošnár">
+        <createTable tableName="Trait_Classroom">
+            <column name="trait_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="classroom_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="Trait_Classroom"
+                             columnNames="trait_id, classroom_id"
+                             constraintName="c_Trait_Classroom"/>
+    </changeSet>
+    <changeSet id="0010_create_Trait_Subject" author="Vojtěch Fošnár">
+        <createTable tableName="Trait_Subject">
+            <column name="trait_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="Trait_Subject"
+                             columnNames="trait_id, subject_id"
+                             constraintName="c_Trait_Subject"/>
+    </changeSet>
+
+    <changeSet id="0011_add_constraints" author="Vojtěch Fošnár">
+        <addForeignKeyConstraint baseTableName="_Class"
+                                 baseColumnNames="teacher_id"
+                                 referencedTableName="Teacher"
+                                 referencedColumnNames="id"
+                                 constraintName="fk__Class_teacher"/>
+
+        <addForeignKeyConstraint baseTableName="Exam"
+                                 baseColumnNames="student_id"
+                                 referencedTableName="Student"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Exam_student"/>
+        <addForeignKeyConstraint baseTableName="Exam"
+                                 baseColumnNames="subject_id"
+                                 referencedTableName="Subject"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Exam_subject"/>
+        <addForeignKeyConstraint baseTableName="Exam"
+                                 baseColumnNames="classroom_id"
+                                 referencedTableName="Classroom"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Exam_classroom"/>
+        <addForeignKeyConstraint baseTableName="Exam"
+                                 baseColumnNames="chairman_id"
+                                 referencedTableName="Teacher"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Exam_chairman"/>
+        <addForeignKeyConstraint baseTableName="Exam"
+                                 baseColumnNames="classTeacher_id"
+                                 referencedTableName="Teacher"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Exam_classTeacher"/>
+        <addForeignKeyConstraint baseTableName="Exam"
+                                 baseColumnNames="examiner_id"
+                                 referencedTableName="Teacher"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Exam_examiner"/>
+
+        <addForeignKeyConstraint baseTableName="Student"
+                                 baseColumnNames="_class_id"
+                                 referencedTableName="_Class"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Student__class"/>
+
+        <addForeignKeyConstraint baseTableName="TeacherSuitability"
+                                 baseColumnNames="teacher_id"
+                                 referencedTableName="Teacher"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_TeacherSuitability_teacher"/>
+        <addForeignKeyConstraint baseTableName="TeacherSuitability"
+                                 baseColumnNames="subject_id"
+                                 referencedTableName="Subject"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_TeacherSuitability_subject"/>
+
+        <addForeignKeyConstraint baseTableName="Trait_Classroom"
+                                 baseColumnNames="trait_id"
+                                 referencedTableName="Trait"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Trait_Classroom_trait"/>
+        <addForeignKeyConstraint baseTableName="Trait_Classroom"
+                                 baseColumnNames="classroom_id"
+                                 referencedTableName="Classroom"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Trait_Classroom_classroom"/>
+
+        <addForeignKeyConstraint baseTableName="Trait_Subject"
+                                 baseColumnNames="trait_id"
+                                 referencedTableName="Trait"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Trait_Subject_trait"/>
+        <addForeignKeyConstraint baseTableName="Trait_Subject"
+                                 baseColumnNames="subject_id"
+                                 referencedTableName="Subject"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_Trait_Subject_subject"/>
+    </changeSet>
+
+</databaseChangeLog>

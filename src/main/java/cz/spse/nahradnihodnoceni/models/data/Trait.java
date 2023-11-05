@@ -1,26 +1,41 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "classroom_id", "subject_id" }) })
+@Builder
+@Getter
+@Setter
 public class Trait {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Classroom classroom;
+    @ManyToMany()
+    @JoinTable(
+            name = "Trait_Classroom",
+            joinColumns = { @JoinColumn(name = "trait_id") },
+            inverseJoinColumns = { @JoinColumn(name = "classroom_id") }
+    )
+    @Builder.Default
+    private Set<Classroom> classrooms = new HashSet<>();
 
-    @ManyToOne
-    private Subject subject;
+    @ManyToMany()
+    @JoinTable(
+            name = "Trait_Subject",
+            joinColumns = { @JoinColumn(name = "trait_id") },
+            inverseJoinColumns = { @JoinColumn(name = "subject_id") }
+    )
+    @Builder.Default
+    private Set<Subject> subjects = new HashSet<>();
 
+    @Builder.Default
     private boolean available = true;
 
     @Column(unique=true)

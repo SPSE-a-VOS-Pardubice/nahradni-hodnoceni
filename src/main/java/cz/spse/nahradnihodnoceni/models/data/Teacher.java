@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 public class Teacher {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Builder.Default
@@ -35,7 +35,7 @@ public class Teacher {
     @Column(nullable = false)
     private String suffix;
 
-    @OneToMany(mappedBy="teacher", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="teacher")
     @Builder.Default
     private Set<TeacherSuitability> suitability = new HashSet<>();
 }

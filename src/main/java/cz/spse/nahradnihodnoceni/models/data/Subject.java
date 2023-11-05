@@ -3,6 +3,7 @@ package cz.spse.nahradnihodnoceni.models.data;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -13,8 +14,8 @@ import java.util.Set;
 @Setter
 public class Subject {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Builder.Default
     private boolean available = true;
@@ -25,6 +26,11 @@ public class Subject {
     @Column(nullable = false)
     private String abbreviation;
 
+    @ManyToMany(mappedBy="subjects")
+    @Builder.Default
+    private Set<Trait> traits = new HashSet<>();
+
     @OneToMany(mappedBy="subject")
-    private Set<Trait> traits;
+    @Builder.Default
+    private Set<TeacherSuitability> suitability = new HashSet<>();
 }
