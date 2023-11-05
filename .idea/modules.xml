@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/nahradni-hodnoceni.iml" filepath="$PROJECT_DIR$/.idea/nahradni-hodnoceni.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/nahradni-hodnoceni.main.iml" filepath="$PROJECT_DIR$/.idea/modules/nahradni-hodnoceni.main.iml" />
     </modules>
   </component>

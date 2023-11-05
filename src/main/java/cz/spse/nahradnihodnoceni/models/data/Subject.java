@@ -1,21 +1,22 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Builder
+@Getter
+@Setter
 public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Builder.Default
     private boolean available = true;
 
     @Column(nullable = false)

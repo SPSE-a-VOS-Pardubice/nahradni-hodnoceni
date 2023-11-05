@@ -1,9 +1,7 @@
 package cz.spse.nahradnihodnoceni.models.data;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,12 +9,15 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Builder
+@Getter
+@Setter
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Builder.Default
     private boolean available = true;
 
     @Column(nullable = false)
@@ -32,5 +33,6 @@ public class Teacher {
     private String suffix;
 
     @OneToMany(mappedBy="teacher", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<TeacherSuitability> suitability = new HashSet<>();
 }
