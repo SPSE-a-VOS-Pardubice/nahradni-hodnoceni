@@ -3,8 +3,10 @@ package cz.spse.nahradnihodnoceni.controllers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.spse.nahradnihodnoceni.models.data.Classroom;
 import cz.spse.nahradnihodnoceni.models.data.Subject;
 import cz.spse.nahradnihodnoceni.models.data.Teacher;
+import cz.spse.nahradnihodnoceni.repositories.ClassroomRepository;
 import cz.spse.nahradnihodnoceni.repositories.SubjectRepository;
 import cz.spse.nahradnihodnoceni.repositories.TeacherRepository;
 import lombok.AllArgsConstructor;
@@ -34,12 +36,17 @@ public class BakalariSyncController {
     @Autowired
     private TeacherRepository teacherRepository;
 
+    @Autowired
+    private ClassroomRepository classroomRepository;
+
     @PostMapping("/sync")
     public SyncResult sync() throws IOException {
         Set<String> teacherNames = new HashSet<>();
         Map<String, String> subjectMap = new HashMap<>();
 
-        getClassIds().forEach(classId -> {
+        var scrapedHomepageData = scrapeHomepageData();
+
+        scrapedHomepageData.classIds.forEach(classId -> {
             try {
                 extractDataFromSingleTimetable(classId).forEach(lesson -> {
                     teacherNames.add(lesson.fullTeacherName);
@@ -100,18 +107,45 @@ public class BakalariSyncController {
             insertedTeachers++;
         }
 
+        var classroomLabels = scrapedHomepageData.classroomLabels.toList();
+        int insertedClassrooms = 0;
+        for (var entry : classroomLabels) {
+            var classroom = classroomRepository.findActiveByLabel(entry);
+            if (classroom != null)
+                continue;
+
+            classroom = Classroom.builder()
+                    .label(entry)
+                    .build();
+            classroomRepository.save(classroom);
+            insertedClassrooms++;
+        }
+
         return new SyncResult(
                 subjectMap.size(),
                 insertedSubjects,
                 teacherNames.size(),
-                insertedTeachers
+                insertedTeachers,
+                classroomLabels.size(),
+                insertedClassrooms
         );
     }
 
-    private Stream<String> getClassIds() throws IOException {
+    private ScrapedTimetableHomepageData scrapeHomepageData() throws IOException {
         var doc = Jsoup.connect(TIMETABLE_HOMEPAGE).get();
         var classEls = doc.select("#selectedClass > option[value]");
-        return classEls.stream().map(classEl -> classEl.attr("value"));
+        var classroomEls = doc.select("#selectedRoom > option[value]");
+        return new ScrapedTimetableHomepageData(
+                classEls.stream().map(classEl -> classEl.attr("value")),
+                classroomEls.stream().map(classEl -> classEl.text().strip())
+        );
+    }
+
+    @AllArgsConstructor
+    @Data
+    class ScrapedTimetableHomepageData {
+        private Stream<String> classIds;
+        private Stream<String> classroomLabels;
     }
 
     private Stream<Lesson> extractDataFromSingleTimetable(String classId) throws IOException {
@@ -134,7 +168,9 @@ public class BakalariSyncController {
                             .replaceFirst("^L: ", "")
                             .replaceFirst("^S: ", "");
 
-                    return new Lesson(json.getTeacher(), subject, subjectAbbreviation);
+                    var classroom = lessonEl.select(".first").first().text();
+
+                    return new Lesson(json.getTeacher(), subject, subjectAbbreviation, classroom);
                 });
     }
 
@@ -151,6 +187,7 @@ public class BakalariSyncController {
         private String fullTeacherName;
         private String subject;
         private String subjectAbbreviation;
+        private String classroom;
     }
 
     @AllArgsConstructor
@@ -160,5 +197,7 @@ public class BakalariSyncController {
         private int insertedSubjects;
         private int syncedTeachers;
         private int insertedTeachers;
+        private int syncedClassrooms;
+        private int insertedClassrooms;
     }
 }

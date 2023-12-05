@@ -26,7 +26,7 @@ public class Classroom {
     @Column(nullable = false, unique = true)
     private String label;
 
-    @ManyToMany(mappedBy="classrooms")
+    @ManyToMany(mappedBy="classrooms", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @Builder.Default
     private Set<Trait> traits = new HashSet<>();
 }

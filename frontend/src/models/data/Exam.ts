@@ -16,6 +16,8 @@ interface Exam {
   class_teacher: Teacher | null;
   examiner: Teacher;
   time: number | null;
+  year: number;
+  period: number;
   originalMark: '5' | 'N';
   finalMark: FinalMarkType;
 }

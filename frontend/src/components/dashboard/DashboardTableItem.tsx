@@ -4,7 +4,7 @@ import Exam, {FinalMarkType} from '../../models/data/Exam';
 import _Class from '../../models/data/_Class';
 import './DashboardTableItem.css';
 import {PeriodContext} from '../../contexts/PeriodContext';
-import {checkConflicts, isExamNH, updateExam} from '../../services/ExamService';
+import {checkConflicts, createExam, isExamNH, updateExam} from '../../services/ExamService';
 import {ExamsContext} from '../../contexts/ExamsContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 import {formatTeacher} from '../../services/TeacherService';
@@ -44,15 +44,21 @@ function getResultClassByMark(mark: string | null) {
   }
 }
 
+enum EditGroup {
+  ChairmanAndClassTeacher,
+  DateAndTime,
+  Mark,
+}
+
 const DashboardTableItem = (props: {
     exam: Exam
 }) => {
   const period = useContext(PeriodContext).data;
   const examsContext = useContext(ExamsContext);
   const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
-  const [buttonsOverride, setButtonsOverride] = useState<'dateAndLocation' | 'mark' | null>(null);
+  const [editGroupOverride, setEditGroupOverride] = useState<EditGroup | null>(null);
   const [studentTimeConflicts, setStudentTimeConflicts] = useState<boolean>(false);
-  const [teacherTimeConflicts, setTeacherTimeConflicts] = useState<{onConfirm:() => void} | false>(false);
+  const [examinerTimeConflicts, setExaminerTimeConflicts] = useState<{onConfirm:() => void} | false>(false);
 
   useEffect(() => {
     setSelectedTimestamp(props.exam.time);
@@ -69,11 +75,25 @@ const DashboardTableItem = (props: {
       return;
     }
 
-    setButtonsOverride(null);
+    setEditGroupOverride(null);
 
     const newExam = structuredClone(props.exam);
     newExam.finalMark = newFinalMark;
     await updateExam(examsContext.content, newExam);
+
+    if (isExamNH(props.exam) && newFinalMark === '5') {
+      await createExam(
+        examsContext.content,
+        {
+          examiner: props.exam.examiner,
+          originalMark: '5',
+          student: props.exam.student,
+          subject: props.exam.subject,
+          year: props.exam.year,
+          period: props.exam.period,
+        } as Exam,
+      );
+    }
   }
 
   function setTime(newTime: number | null) {
@@ -83,8 +103,8 @@ const DashboardTableItem = (props: {
     }
 
     const action = async () => {
-      setButtonsOverride(null);
-      setTeacherTimeConflicts(false);
+      setEditGroupOverride(null);
+      setExaminerTimeConflicts(false);
 
       const newExam = structuredClone(props.exam);
       newExam.time = newTime;
@@ -96,19 +116,35 @@ const DashboardTableItem = (props: {
     if (studentConflicts) {
       setStudentTimeConflicts(true);
     } else if (examinerConflicts) {
-      setTeacherTimeConflicts({onConfirm: action});
+      setExaminerTimeConflicts({onConfirm: action});
     } else {
       action();
     }
   }
 
-  const isDateAndLocationRelevant = (props.exam.time === null) || ((period.period === 2) && (props.exam.classroom === null));
-  const isMarkRelevant = !isDateAndLocationRelevant && (props.exam.finalMark === null);
+  let editGroup;
+  if (editGroupOverride === null) {
+    // find relevant edit group
+    if (period.period === 1 && props.exam.time === null) {
+      editGroup = EditGroup.DateAndTime;
+    } else if (props.exam.finalMark === null) {
+      editGroup = EditGroup.Mark;
+    }
+  } else {
+    editGroup = editGroupOverride;
+  }
 
-  let relevantButtons;
-  if (buttonsOverride === 'dateAndLocation' || (buttonsOverride === null && isDateAndLocationRelevant)) {
+  let editGroupButtons;
+  if (editGroup === EditGroup.ChairmanAndClassTeacher) {
+    editGroupButtons = (
+      <>
+        <td>TODO</td>
+        <td>TODO</td>
+      </>
+    );
+  } else if (editGroup === EditGroup.DateAndTime) {
     if (studentTimeConflicts) {
-      relevantButtons = (
+      editGroupButtons = (
         <>
           <td>
             konflikt času zkoušky u studenta
@@ -117,11 +153,11 @@ const DashboardTableItem = (props: {
         </>
       );
     // eslint-disable-next-line no-negated-condition
-    } else if (teacherTimeConflicts !== false) {
-      relevantButtons = (
+    } else if (examinerTimeConflicts !== false) {
+      editGroupButtons = (
         <>
           <td>
-            <button onClick={() => teacherTimeConflicts && teacherTimeConflicts.onConfirm()} className="universal_button secondary">pokračovat i přes konflikt času zkoušky u učitele</button>
+            <button onClick={() => examinerTimeConflicts && examinerTimeConflicts.onConfirm()} className="universal_button secondary">pokračovat i přes konflikt času zkoušky u zkoušejícího</button>
           </td>
           <td></td>
         </>
@@ -151,7 +187,7 @@ const DashboardTableItem = (props: {
         defaultValue = date.toISOString().slice(0, 16);
       }
 
-      relevantButtons = (
+      editGroupButtons = (
         <>
           <td className="dashboard_table_item_datetime_container">
             <input type="datetime-local" defaultValue={defaultValue} onChange={handleChange} step={3600} min={`${examYear}-${examMinMonth}-01T00:00`} max={`${examYear}-${examMaxMonth}-01T00:00`}></input>
@@ -172,8 +208,8 @@ const DashboardTableItem = (props: {
         </>
       );
     }
-  } else if (buttonsOverride === 'mark' || (buttonsOverride === null && isMarkRelevant)) {
-    relevantButtons = (
+  } else if (editGroup === EditGroup.Mark) {
+    editGroupButtons = (
       <>
         <td>
           <button className="select" name="mark_student" id="mark_student">
@@ -190,7 +226,7 @@ const DashboardTableItem = (props: {
       </>
     );
   } else {
-    relevantButtons = (
+    editGroupButtons = (
       <>
         <td></td>
         <td></td>
@@ -219,15 +255,15 @@ const DashboardTableItem = (props: {
         <span className="new_mark_text main_data">Nová známka</span><br />
         <span className="new_mark_value sub_data"><FormattedMark mark={props.exam.finalMark} /></span>
       </td>
-      {relevantButtons}
+      {editGroupButtons}
       <td className="dashboard_table_item_menu">
-        {!studentTimeConflicts && !teacherTimeConflicts && (buttonsOverride === null)
+        {!studentTimeConflicts && !examinerTimeConflicts && (editGroupOverride === null)
           ? (
             <button className="select">
               <span>Seznam akcí</span>
               <div className="dropdown">
-                {!isDateAndLocationRelevant && <option onClick={() => setButtonsOverride('dateAndLocation')}>{period.period === 1 ? 'datum' : 'učebna/datum'}</option>}
-                {!isMarkRelevant && <option onClick={() => setButtonsOverride('mark')}>známka</option>}
+                {editGroup !== EditGroup.DateAndTime && <option onClick={() => setEditGroupOverride(EditGroup.DateAndTime)}>datum</option>}
+                {editGroup !== EditGroup.Mark && <option onClick={() => setEditGroupOverride(EditGroup.Mark)}>známka</option>}
               </div>
             </button>
           )
@@ -236,9 +272,9 @@ const DashboardTableItem = (props: {
               <i className="fa-solid fa-xmark" onClick={() => {
                 // the close button should reset all states
                 setStudentTimeConflicts(false);
-                setTeacherTimeConflicts(false);
+                setExaminerTimeConflicts(false);
                 setSelectedTimestamp(props.exam.time);
-                setButtonsOverride(null);
+                setEditGroupOverride(null);
               }}></i>
             </button>
           )

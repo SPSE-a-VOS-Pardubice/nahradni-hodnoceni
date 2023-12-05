@@ -23,6 +23,12 @@ public abstract class DataController<E, R extends CrudRepository<E, Long>> {
         return mapper.writeValueAsString(entity);
     }
 
+    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String list() throws JsonProcessingException {
+        var entity = repository.findAll();
+        return mapper.writeValueAsString(entity);
+    }
+
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public String post(@RequestBody E entity) throws JsonProcessingException {
         var newEntity = repository.save(entity);

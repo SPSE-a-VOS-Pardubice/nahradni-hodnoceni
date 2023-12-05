@@ -4,7 +4,7 @@ import DashboardTableItem from './DashboardTableItem';
 import {ExamsContext} from '../../contexts/ExamsContext';
 import DashboardSearch from './DashboardSearch';
 import {ExamDisplayRestrictions} from '../../models/ExamDisplayRestrictions';
-import {isExamNH} from '../../services/ExamService';
+import {isExamNH, isExamOZ} from '../../services/ExamService';
 import FilterOptions from './FilterOptions';
 import {Period, PeriodContext} from '../../contexts/PeriodContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
@@ -33,7 +33,7 @@ function applyFilter(examDisplayRestrictions: ExamDisplayRestrictions, exams: Ex
       return false;
     }
     // filter.type
-    if (examDisplayRestrictions.filter.type === 'nahradni_hodnoceni' && !isExamNH(exam)) {
+    if (examDisplayRestrictions.filter.type === 'nahradni_hodnoceni' && isExamOZ(exam)) {
       return false;
     }
     if (examDisplayRestrictions.filter.type === 'opravna_zkouska' && isExamNH(exam)) {

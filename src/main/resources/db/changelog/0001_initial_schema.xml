@@ -253,12 +253,16 @@
                                  baseColumnNames="trait_id"
                                  referencedTableName="Trait"
                                  referencedColumnNames="id"
-                                 constraintName="fk_Trait_Classroom_trait"/>
+                                 constraintName="fk_Trait_Classroom_trait"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
         <addForeignKeyConstraint baseTableName="Trait_Classroom"
                                  baseColumnNames="classroom_id"
                                  referencedTableName="Classroom"
                                  referencedColumnNames="id"
-                                 constraintName="fk_Trait_Classroom_classroom"/>
+                                 constraintName="fk_Trait_Classroom_classroom"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
 
         <addForeignKeyConstraint baseTableName="Trait_Subject"
                                  baseColumnNames="trait_id"

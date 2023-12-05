@@ -3,7 +3,7 @@ import './DashboardStats.css';
 import DashboardLegend from './DashboardLegend';
 import {useContext} from 'react';
 import {ExamsContext} from '../../contexts/ExamsContext';
-import {isExamNH} from '../../services/ExamService';
+import {isExamNH, isExamOZ} from '../../services/ExamService';
 
 const DashboardSingleStat = (props: { value: string; name: string }) => {
   return (
@@ -22,27 +22,26 @@ const DashboardStats = () => {
   }
   const exams = examsContext.content.data;
 
-  const totalNH = exams.filter((exam) => isExamNH(exam)).length;
+  const totalNH = exams.filter(isExamNH).length;
 
   const finishedNH = exams.filter(
     (exam) => isExamNH(exam) && exam.finalMark,
   ).length;
 
-  const totalOZ = exams.filter((exam) => !isExamNH(exam)).length;
+  const totalOZ = exams.filter(isExamOZ).length;
 
   const finishedOZ = exams.filter(
-    (exam) => !isExamNH(exam) && exam.finalMark,
+    (exam) => isExamOZ(exam) && exam.finalMark,
   ).length;
 
   const successful = exams.filter(
     (exam) =>
       exam.finalMark !== null &&
-      exam.finalMark !== '5' &&
-      exam.finalMark !== 'N',
+      exam.finalMark !== '5',
   ).length;
 
   const failed = exams.filter(
-    (exam) => exam.finalMark === '5' || exam.finalMark === 'N',
+    (exam) => exam.finalMark === '5',
   ).length;
 
   const unmarked = exams.filter((exam) => exam.finalMark === null).length;

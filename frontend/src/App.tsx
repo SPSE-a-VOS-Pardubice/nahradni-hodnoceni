@@ -5,6 +5,8 @@ import DashboardPage from './pages/Dashboard';
 import {ExamsContextProvider} from './contexts/ExamsContext';
 import {PeriodContextProvider} from './contexts/PeriodContext';
 import ImportPage from './pages/ImportPage';
+import ClassroomsPage from './pages/Classrooms';
+import {ClassroomsContextProvider} from './contexts/ClassroomsContext';
 // import Create from "./pages/Create";
 // import Edit from "./pages/Edit";
 // import Graf from "./pages/Graf";
@@ -58,23 +60,26 @@ function App() {
     <IntlProvider messages={messages} locale="cs" defaultLocale="cs">
       <PeriodContextProvider>
         <ExamsContextProvider>
-          <Header />
-          <main>
-            <BrowserRouter>
-              <Routes>
-                <Route index element={ <DashboardPage /> } />
-                <Route path="/import" element={ <ImportPage /> } />
+          <ClassroomsContextProvider>
+            <Header />
+            <main>
+              <BrowserRouter>
+                <Routes>
+                  <Route index element={ <DashboardPage /> } />
+                  <Route path="/import" element={ <ImportPage /> } />
+                  <Route path="/classrooms" element={ <ClassroomsPage /> } />
 
-                {/* <Route path='/data/:coll/:id' element={ <GForm /> } />
+                  {/* <Route path='/data/:coll/:id' element={ <GForm /> } />
                 <Route path='/addExamp' element={ <Create /> } />
                 <Route path='/editExamp' element={ <Edit /> } />
                 <Route path='/graf' element={ <Graf /> } />
                 <Route path='/login' element={ <Login /> } />
                 <Route path='/new_pass' element={ <New_Pass /> } /> */
-                }
-              </Routes>
-            </BrowserRouter>
-          </main>
+                  }
+                </Routes>
+              </BrowserRouter>
+            </main>
+          </ClassroomsContextProvider>
         </ExamsContextProvider>
       </PeriodContextProvider>
     </IntlProvider>

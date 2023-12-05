@@ -8,6 +8,19 @@ export function isExamNH(exam: Exam) {
   return exam.originalMark === 'N';
 }
 
+export function isExamOZ(exam: Exam) {
+  return exam.originalMark === '5';
+}
+
+export async function createExam(examsContext: ExamsContextType, newExam: Exam) {
+  // update data on the server
+  const newExamWithId = await uploadData(newExam, 'exam');
+
+  const newExams = structuredClone(examsContext.data);
+  newExams.push(newExamWithId);
+  examsContext.setData(newExams);
+}
+
 /**
  * Aktualizuje data na serveru i lokálně.
  * @param examsContext
@@ -20,7 +33,7 @@ export async function updateExam(examsContext: ExamsContextType, newExam: Exam) 
   // update data locally
   const newExams = structuredClone(examsContext.data)
     .map(exam => exam.id === newExam.id ? newExam : exam);
-  setTimeout(examsContext.setData, 0, newExams);
+  examsContext.setData(newExams);
 }
 
 export function checkConflicts(examsContext: ExamsContextType, previousExam: Exam, newTime: number | null): { examiner: boolean, student: boolean } {
