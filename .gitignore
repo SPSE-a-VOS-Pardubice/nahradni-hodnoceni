@@ -37,3 +37,6 @@ out/
 
 ### Project ###
 /test data
+
+## Docker ##
+docker-compose.yaml

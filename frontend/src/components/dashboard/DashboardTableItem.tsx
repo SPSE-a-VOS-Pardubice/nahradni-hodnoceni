@@ -9,6 +9,7 @@ import {ExamsContext} from '../../contexts/ExamsContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 import {formatTeacher} from '../../services/TeacherService';
 import classNames from 'classnames';
+import Combobox from '../ui/Combobox';
 
 const FormattedClass = (props: {
     _class: _Class
@@ -266,6 +267,12 @@ const DashboardTableItem = (props: {
         <span className="new_mark_value sub_data"><FormattedMark mark={props.exam.finalMark} /></span>
       </td>
       {editGroupButtons}
+      <td>
+        <Combobox selectTarget='učitele' data={["Petr Fišar", "Libor Bajer", "Čestmír Bárta"]} />
+      </td>
+      <td>
+        <Combobox selectTarget='místnosti' data={["B203", "D263", "A002"]} />
+      </td>
       <td className="dashboard_table_item_menu">
         {!studentTimeConflicts && !examinerTimeConflicts && (editGroupOverride === null)
           ? (
