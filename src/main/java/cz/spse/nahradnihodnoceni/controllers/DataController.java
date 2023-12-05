@@ -6,10 +6,7 @@ import cz.spse.nahradnihodnoceni.helpers.MapperHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 public abstract class DataController<E, R extends CrudRepository<E, Long>> {
     @Autowired
@@ -33,5 +30,10 @@ public abstract class DataController<E, R extends CrudRepository<E, Long>> {
     public String post(@RequestBody E entity) throws JsonProcessingException {
         var newEntity = repository.save(entity);
         return mapper.writeValueAsString(newEntity);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable("id") long id) {
+        repository.deleteById(id);
     }
 }

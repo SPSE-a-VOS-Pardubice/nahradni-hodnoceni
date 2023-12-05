@@ -1,5 +1,5 @@
 import Exam from '../models/data/Exam';
-import {uploadData} from './APIService';
+import {deleteData, uploadData} from './APIService';
 import {ExamsContextType} from '../contexts/ExamsContext';
 
 export const EXAM_DURATION = 1 * 60 * 60 * 1000;
@@ -33,6 +33,16 @@ export async function updateExam(examsContext: ExamsContextType, newExam: Exam) 
   // update data locally
   const newExams = structuredClone(examsContext.data)
     .map(exam => exam.id === newExam.id ? newExam : exam);
+  examsContext.setData(newExams);
+}
+
+export async function deleteExam(examsContext: ExamsContextType, examId: number) {
+  // delete data from the server
+  await deleteData('exam', examId);
+
+  // delete data locally
+  const newExams = structuredClone(examsContext.data)
+    .filter(exam => exam.id !== examId);
   examsContext.setData(newExams);
 }
 

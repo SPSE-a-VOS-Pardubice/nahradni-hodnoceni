@@ -4,7 +4,7 @@ import Exam, {FinalMarkType} from '../../models/data/Exam';
 import _Class from '../../models/data/_Class';
 import './DashboardTableItem.css';
 import {PeriodContext} from '../../contexts/PeriodContext';
-import {checkConflicts, createExam, isExamNH, updateExam} from '../../services/ExamService';
+import {checkConflicts, createExam, deleteExam, isExamNH, updateExam} from '../../services/ExamService';
 import {ExamsContext} from '../../contexts/ExamsContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 import {formatTeacher} from '../../services/TeacherService';
@@ -81,7 +81,8 @@ const DashboardTableItem = (props: {
     newExam.finalMark = newFinalMark;
     await updateExam(examsContext.content, newExam);
 
-    if (isExamNH(props.exam) && newFinalMark === '5') {
+    // TODO updateExam's change doesn't update examsContext.content at this point so calling createExam uses the old exams list
+    if (isExamNH(props.exam) && newFinalMark === '5' && examsContext.content.data.filter(exam => exam.student.id === props.exam.student.id && exam.finalMark === '5').length < 2) {
       await createExam(
         examsContext.content,
         {
@@ -120,6 +121,15 @@ const DashboardTableItem = (props: {
     } else {
       action();
     }
+  }
+
+  async function removeExam() {
+    if (examsContext.id !== 'SUCCESS') {
+      console.error('exams must be available');
+      return;
+    }
+
+    await deleteExam(examsContext.content, props.exam.id);
   }
 
   let editGroup;
@@ -264,6 +274,7 @@ const DashboardTableItem = (props: {
               <div className="dropdown">
                 {editGroup !== EditGroup.DateAndTime && <option onClick={() => setEditGroupOverride(EditGroup.DateAndTime)}>datum</option>}
                 {editGroup !== EditGroup.Mark && <option onClick={() => setEditGroupOverride(EditGroup.Mark)}>známka</option>}
+                <option onClick={() => removeExam()}>smazat</option>
               </div>
             </button>
           )
