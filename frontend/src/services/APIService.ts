@@ -25,6 +25,11 @@ export async function fetchClassrooms(): Promise<Classroom[]> {
   return (await axios.get(url)).data;
 }
 
+export async function fetchTeachers(): Promise<Teacher[]> {
+  const url = BASE_URL + DATA_URL + `/teacher/list`;
+  return (await axios.get(url)).data;
+}
+
 export async function fetchPeriodRange(): Promise<PeriodRange | null> {
   const url = BASE_URL + DASHBOARD_PATH + `/exams/period-range`;
   return (await axios.get(url)).data;

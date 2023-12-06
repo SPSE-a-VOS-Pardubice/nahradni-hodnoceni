@@ -10,6 +10,8 @@ import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 import {formatTeacher} from '../../services/TeacherService';
 import classNames from 'classnames';
 import Combobox from '../ui/Combobox';
+import Teacher from '@/models/data/Teacher';
+import {TeachersContext} from '@/contexts/TeachersContext';
 
 const FormattedClass = (props: {
     _class: _Class
@@ -56,7 +58,10 @@ const DashboardTableItem = (props: {
 }) => {
   const period = useContext(PeriodContext).data;
   const examsContext = useContext(ExamsContext);
+  const teachersContext = useContext(TeachersContext);
   const [selectedTimestamp, setSelectedTimestamp] = useState<number | null>(null);
+  const [selectedChairman, setSelectedChairman] = useState<Teacher | null>(null);
+  const [selectedClassTeacher, setSelectedClassTeacher] = useState<Teacher | null>(null);
   const [editGroupOverride, setEditGroupOverride] = useState<EditGroup | null>(null);
   const [studentTimeConflicts, setStudentTimeConflicts] = useState<boolean>(false);
   const [examinerTimeConflicts, setExaminerTimeConflicts] = useState<{onConfirm:() => void} | false>(false);
@@ -66,7 +71,7 @@ const DashboardTableItem = (props: {
   }, [props.exam.time]);
 
   // existence of exams is already checked in DashboardPage
-  if (examsContext.id !== 'SUCCESS') {
+  if (examsContext.id !== 'SUCCESS' || teachersContext.id !== 'SUCCESS') {
     return <></>;
   }
 
@@ -133,11 +138,17 @@ const DashboardTableItem = (props: {
     await deleteExam(examsContext.content, props.exam.id);
   }
 
+  async function setChairmanAndClassTeacher(newChairman: Teacher | null, newClassTeacher: Teacher | null) {
+    console.log(newChairman, newClassTeacher);
+  }
+
   let editGroup;
   if (editGroupOverride === null) {
     // find relevant edit group
     if (period.period === 1 && props.exam.time === null) {
       editGroup = EditGroup.DateAndTime;
+    } else if (period.period === 1 && isExamNH(props.exam) && (props.exam.chairman === null || props.exam.class_teacher)) {
+      editGroup = EditGroup.ChairmanAndClassTeacher;
     } else if (props.exam.finalMark === null) {
       editGroup = EditGroup.Mark;
     }
@@ -149,8 +160,24 @@ const DashboardTableItem = (props: {
   if (editGroup === EditGroup.ChairmanAndClassTeacher) {
     editGroupButtons = (
       <>
-        <td>TODO</td>
-        <td>TODO</td>
+        <td>
+          <Combobox selectTarget="přísedícího" data={teachersContext.content.data.map(formatTeacher)} onChange={console.log} />
+        </td>
+        <td className="dashboard_table_item_class_teacher_container">
+          <Combobox selectTarget="předsedu" data={teachersContext.content.data.map(formatTeacher)} onChange={console.log} />
+          <button
+            onClick={() => setChairmanAndClassTeacher(selectedChairman, selectedClassTeacher)}
+            disabled={props.exam.chairman === selectedChairman && props.exam.class_teacher === selectedClassTeacher}
+            className={classNames(
+              'dashboard_table_item_datetime_submit fa_button',
+              {
+                // eslint-disable-next-line camelcase
+                fa_button_highlight: props.exam.time !== selectedTimestamp,
+              },
+            )}>
+            <i className="fa-solid fa-pen-to-square"></i>
+          </button>
+        </td>
       </>
     );
   } else if (editGroup === EditGroup.DateAndTime) {
@@ -267,12 +294,6 @@ const DashboardTableItem = (props: {
         <span className="new_mark_value sub_data"><FormattedMark mark={props.exam.finalMark} /></span>
       </td>
       {editGroupButtons}
-      <td>
-        <Combobox selectTarget='učitele' data={["Petr Fišar", "Libor Bajer", "Čestmír Bárta"]} />
-      </td>
-      <td>
-        <Combobox selectTarget='místnosti' data={["B203", "D263", "A002"]} />
-      </td>
       <td className="dashboard_table_item_menu">
         {!studentTimeConflicts && !examinerTimeConflicts && (editGroupOverride === null)
           ? (
@@ -280,6 +301,7 @@ const DashboardTableItem = (props: {
               <span>Seznam akcí</span>
               <div className="dropdown">
                 {editGroup !== EditGroup.DateAndTime && <option onClick={() => setEditGroupOverride(EditGroup.DateAndTime)}>datum</option>}
+                {editGroup !== EditGroup.ChairmanAndClassTeacher && <option onClick={() => setEditGroupOverride(EditGroup.ChairmanAndClassTeacher)}>komise</option>}
                 {editGroup !== EditGroup.Mark && <option onClick={() => setEditGroupOverride(EditGroup.Mark)}>známka</option>}
                 <option onClick={() => removeExam()}>smazat</option>
               </div>

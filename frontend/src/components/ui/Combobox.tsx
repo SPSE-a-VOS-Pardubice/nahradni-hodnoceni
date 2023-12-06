@@ -1,29 +1,30 @@
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import * as React from 'react';
+import {Check, ChevronsUpDown} from 'lucide-react';
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import {cn} from '@/lib/utils';
+import {Button} from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command"
+} from '@/components/ui/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover';
 
 interface Props {
     selectTarget: string,
-    data: string[]
+    data: string[],
+    onChange: (newValue: string) => void
 }
 
-function Combobox({ selectTarget, data }: Props) {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+function Combobox({selectTarget, data, onChange}: Props) {
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState('');
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -35,7 +36,7 @@ function Combobox({ selectTarget, data }: Props) {
           className="w-[200px] justify-between bg-[#9c9c9c] rounded-[2.5px] hover:bg-[#479cff] shadow-none"
         >
           {value
-            ? data.find((item) => item.toLowerCase() === value)
+            ? data.find((item) => item === value)
             : `Vyberte ${selectTarget}...`}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 stroke-white" />
         </Button>
@@ -45,19 +46,21 @@ function Combobox({ selectTarget, data }: Props) {
           <CommandInput placeholder={`Hledat ${selectTarget}...`} />
           <CommandEmpty>Žádné výsledky.</CommandEmpty>
           <CommandGroup>
-            {data.map((item, i) => (
+            {data.map((item) => (
               <CommandItem
-                key={i}
+                key={item}
                 value={item}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue)
-                  setOpen(false)
+                onSelect={() => {
+                  const actualNewValue = item === value ? '' : item;
+                  setValue(actualNewValue);
+                  onChange(actualNewValue);
+                  setOpen(false);
                 }}
               >
                 <Check
                   className={cn(
-                    "mr-2 h-4 w-4",
-                    value === item ? "opacity-100" : "opacity-0"
+                    'mr-2 h-4 w-4',
+                    value === item ? 'opacity-100' : 'opacity-0',
                   )}
                 />
                 {item}
@@ -67,7 +70,7 @@ function Combobox({ selectTarget, data }: Props) {
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
 export default Combobox;

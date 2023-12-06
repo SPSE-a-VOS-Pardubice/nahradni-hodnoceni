@@ -1,4 +1,3 @@
-
 .dashboard_table_item {
   border-top: 1px solid var(--color-luminous-gray);
   border-bottom: 1px solid var(--color-luminous-gray);
@@ -9,11 +8,12 @@
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.dashboard_table_item > * {
+.dashboard_table_item>* {
   padding-block: 1em;
 }
 
-.dashboard_table_item_datetime_container > :first-child {
+.dashboard_table_item_class_teacher_container> :first-child,
+.dashboard_table_item_datetime_container> :first-child {
   margin-right: 10px;
 }
 
@@ -28,9 +28,11 @@
   border: 2px solid var(--color-vivid-blue);
   background-color: var(--color-white);
 }
+
 .dashboard_table_item .fa_button:disabled {
   filter: grayscale();
 }
+
 .dashboard_table_item .fa_button:not(:disabled) i {
   cursor: pointer;
 }
