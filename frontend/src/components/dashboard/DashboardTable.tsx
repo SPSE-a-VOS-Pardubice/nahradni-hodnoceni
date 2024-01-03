@@ -148,8 +148,8 @@ const DashboardTable = () => {
     renderedExams = (
       <table className="dashboard_table">
         <tbody>
-          {exams.map((exam, i) => (
-            <DashboardTableItem key={i} exam={exam} />
+          {exams.map(exam => (
+            <DashboardTableItem key={exam.id} exam={exam} />
           ))}
         </tbody>
       </table>

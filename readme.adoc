@@ -1,24 +1,33 @@
-# Náhradní hodnocení
-
-## Development
+= Systém pro správu náhradních hodnocení
+:toc:
+:icons: font
 
 Projekt se skládá ze dvou částí. Pro backend je použit framework Java Spring Boot. Frontend je napsán v TypeScriptu s React framework.
 
-Dokumentace k frontendu je v jeho složce, [zde](frontend/README.md).
+Dokumentace k frontendu je v jeho složce, frontend/readme.adoc[zde].
 
-### Databáze
+Backend je strukturovaný podle MVC architektury, rozdělující
+- kontrolery
+- servisy/helpery
+- modely
+- repozitáře
+
+== Databáze
 
 Jako databáze je použita MySQL, doporučujeme použít MariaDB. Po spuštění serveru je zapotřebí vytvořit db ke které se backend připojí.
 
-### Spuštění
+== Spuštění
 
 Pro správu záležitostí využíváme Gradle systém. Při spuštení se musí nastavit následující argumenty, buď přes CLI, nebo environmental variables:
 - `spring.datasource.url` (`jdbc:mysql://127.0.0.1:3306/nahradni-hodnoceni`)
 - `spring.datasource.username`
 - `spring.datasource.password`
 
-
 Příklad spuštění pomocí CLI argumentů:
-```
+[source]
+----
 gradlew bootRun --args="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/nahradni-hodnoceni --spring.datasource.username=username --spring.datasource.password=password"
-```
+----
+
+== atd.
+na frontendu není nikde použit bakalari sync ale je důležitý pro počáteční import dat, musí se to pak na frontendu dodělat

@@ -4,7 +4,7 @@ import Exam, {FinalMarkType} from '../../models/data/Exam';
 import _Class from '../../models/data/_Class';
 import './DashboardTableItem.css';
 import {PeriodContext} from '../../contexts/PeriodContext';
-import {checkConflicts, createExam, deleteExam, isExamNH, updateExam} from '../../services/ExamService';
+import {checkConflicts, createExam, deleteExam, isExamNH, isExamOZ, updateExam} from '../../services/ExamService';
 import {ExamsContext} from '../../contexts/ExamsContext';
 import {formatClassRelativeToPeriod} from '../../services/_ClassService';
 import {formatTeacher} from '../../services/TeacherService';
@@ -47,6 +47,7 @@ function getResultClassByMark(mark: string | null) {
   }
 }
 
+// TODO ESLint vníma enum jako kolizní
 enum EditGroup {
   ChairmanAndClassTeacher,
   DateAndTime,
@@ -139,7 +140,17 @@ const DashboardTableItem = (props: {
   }
 
   async function setChairmanAndClassTeacher(newChairman: Teacher | null, newClassTeacher: Teacher | null) {
-    console.log(newChairman, newClassTeacher);
+    if (examsContext.id !== 'SUCCESS') {
+      console.error('exams must be available');
+      return;
+    }
+
+    setEditGroupOverride(null);
+
+    const newExam = structuredClone(props.exam);
+    newExam.chairman = newChairman;
+    newExam.class_teacher = newClassTeacher;
+    await updateExam(examsContext.content, newExam);
   }
 
   let editGroup;
@@ -147,7 +158,7 @@ const DashboardTableItem = (props: {
     // find relevant edit group
     if (period.period === 1 && props.exam.time === null) {
       editGroup = EditGroup.DateAndTime;
-    } else if (period.period === 1 && isExamNH(props.exam) && (props.exam.chairman === null || props.exam.class_teacher)) {
+    } else if (period.period === 1 && isExamOZ(props.exam) && (props.exam.chairman === null || props.exam.class_teacher)) {
       editGroup = EditGroup.ChairmanAndClassTeacher;
     } else if (props.exam.finalMark === null) {
       editGroup = EditGroup.Mark;
@@ -161,10 +172,10 @@ const DashboardTableItem = (props: {
     editGroupButtons = (
       <>
         <td>
-          <Combobox selectTarget="přísedícího" data={teachersContext.content.data.map(formatTeacher)} onChange={console.log} />
+          <Combobox selectTarget="přísedícího" data={teachersContext.content.data.map(formatTeacher)} onChange={formattedName => setSelectedChairman(formattedName === '' ? null : teachersContext.content.data.find(t => formatTeacher(t) === formattedName) || null)} />
         </td>
         <td className="dashboard_table_item_class_teacher_container">
-          <Combobox selectTarget="předsedu" data={teachersContext.content.data.map(formatTeacher)} onChange={console.log} />
+          <Combobox selectTarget="předsedu" data={teachersContext.content.data.map(formatTeacher)} onChange={formattedName => setSelectedClassTeacher(formattedName === '' ? null : teachersContext.content.data.find(t => formatTeacher(t) === formattedName) || null)} />
           <button
             onClick={() => setChairmanAndClassTeacher(selectedChairman, selectedClassTeacher)}
             disabled={props.exam.chairman === selectedChairman && props.exam.class_teacher === selectedClassTeacher}
@@ -283,7 +294,9 @@ const DashboardTableItem = (props: {
       </td>
       <td className="subject_teacher">
         <span className="subject main_data">({props.exam.subject.abbreviation}) {props.exam.subject.name}</span><br />
-        <span className="teacher_name sub_data">{formatTeacher(props.exam.examiner)}</span>
+        <div className="teacher_name sub_data">{formatTeacher(props.exam.examiner)}</div>
+        {props.exam.chairman && (<div className="teacher_name sub_data">{formatTeacher(props.exam.chairman)}</div>)}
+        {props.exam.class_teacher && (<div className="teacher_name sub_data">{formatTeacher(props.exam.class_teacher)}</div>)}
       </td>
       <td className="date_school_room">
         <span className="date main_data">{props.exam.time === null ? (<FormattedMessage id="time.unknown" />) : ((<FormattedDate value={props.exam.time} />))}</span><br />

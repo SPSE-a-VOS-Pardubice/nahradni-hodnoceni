@@ -1,0 +1,44 @@
+= Frontend
+:toc:
+
+Frontend je vyvíjen pomocí package manageru `pnpm`.
+Jako build tool je zvolen https://vitejs.dev/[Vite] s https://react.dev/[React] UI frameworkem.
+Stylování tvoří CSS moduly pro jednoltlivé React komponenty a https://tailwindcss.com/[TailwindCSS] utiliy třídy.
+
+Spuštění projektu lokálně pro vývoj:
+
+[source,bash]
+----
+pnpm run dev
+----
+
+Vypsání chyb z ESLint:
+
+[source,bash]
+----
+pnpm run lint
+----
+
+== Struktura
+
+- Stránky, které mají svůj React komponent: `src/pages/`
+- Komponenty a CSS moduly, které mají samostatné soubory: `src/components/`
+- Kontexty pro informace z komponentů: `src/contexts/`
+- Pro data:
+
+- Modely dat tahané z backendu: `src/models/`
+- Služby pro jednotlivé data s prací na frontendu: `src/services/`
+
+== Nedostatky
+
+TailwindCSS je implementován do projektu kvůli ui knihovně https://ui.shadcn.com/[ShadcnUI],
+která byla použita na typ selectu "Combobox", který se nachází v `src/components/ui/Combobox.tsx`.
+Zbylé komponety jsou stylovány přes CSS moduly, které mají stejný název jako samotné komponenty.
+Nejlepší by bylo se rozhodnout zda je třeba přepsat CSS moduly jako Tailwind utility třídy v jednotlivých komponentech či vše dopsat v CSS modulech.
+Soubor pro Tailwind a ShadcnUI stylování se jmenuje `globals.css`, který se nachází v `src/styles/globals.css`
+
+V komponentech sepsaných níže se nachází `//TODO` komentáře pro možné úpravy či dodatky.
+Všechny komponety se nachází v adresáři `src/components/dashboard/`:
+- `DashboardLegend.tsx`
+- `DashboardTable.tsx`
+- `DashboardTableItem.tsx`
