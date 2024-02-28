@@ -4,7 +4,7 @@
 
 Projekt se skládá ze dvou částí. Pro backend je použit framework Java Spring Boot. Frontend je napsán v TypeScriptu s React framework.
 
-Dokumentace k frontendu je v jeho složce, frontend/readme.adoc[zde].
+Dokumentace k frontendu je v jeho složce, link:frontend/readme.adoc[zde].
 
 Backend je strukturovaný podle MVC architektury, rozdělující
 - kontrolery
@@ -14,7 +14,7 @@ Backend je strukturovaný podle MVC architektury, rozdělující
 
 == Databáze
 
-Jako databáze je použita MySQL, doporučujeme použít MariaDB. Po spuštění serveru je zapotřebí vytvořit db ke které se backend připojí.
+Jako databáze je použita MySQL, doporučujeme použít MariaDB (XAMP). Po spuštění serveru je zapotřebí vytvořit db ke které se backend připojí.
 
 == Spuštění
 
@@ -29,5 +29,5 @@ Příklad spuštění pomocí CLI argumentů:
 gradlew bootRun --args="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/nahradni-hodnoceni --spring.datasource.username=username --spring.datasource.password=password"
 ----
 
-== atd.
-na frontendu není nikde použit bakalari sync ale je důležitý pro počáteční import dat, musí se to pak na frontendu dodělat
+== Bakaláři
+Backend obsahuje funkci importu (scraping) dat z rozvrhu, frontend k této funkci není ale ještě dodělaný.
