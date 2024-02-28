@@ -7,10 +7,11 @@ Projekt se skládá ze dvou částí. Pro backend je použit framework Java Spri
 Dokumentace k frontendu je v jeho složce, link:frontend/readme.adoc[zde].
 
 Backend je strukturovaný podle MVC architektury, rozdělující
-- kontrolery
-- servisy/helpery
-- modely
-- repozitáře
+
+* kontrolery
+* servisy/helpery
+* modely
+* repozitáře
 
 == Databáze
 
@@ -19,9 +20,10 @@ Jako databáze je použita MySQL, doporučujeme použít MariaDB (XAMP). Po spu�
 == Spuštění
 
 Pro správu záležitostí využíváme Gradle systém. Při spuštení se musí nastavit následující argumenty, buď přes CLI, nebo environmental variables:
-- `spring.datasource.url` (`jdbc:mysql://127.0.0.1:3306/nahradni-hodnoceni`)
-- `spring.datasource.username`
-- `spring.datasource.password`
+
+* `spring.datasource.url` (`jdbc:mysql://127.0.0.1:3306/nahradni-hodnoceni`)
+* `spring.datasource.username`
+* `spring.datasource.password`
 
 Příklad spuštění pomocí CLI argumentů:
 [source]
